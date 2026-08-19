@@ -1,0 +1,3345 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#09090d"
+>
+
+<title>ส่งสลิป • AMR29</title>
+
+<style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+
+    --bg:
+        #09090d;
+
+    --surface:
+        rgba(20,20,27,.97);
+
+    --surface-2:
+        #202028;
+
+    --input:
+        #25252d;
+
+    --text:
+        #ffffff;
+
+    --text-soft:
+        #b8b8c1;
+
+    --text-muted:
+        #74747f;
+
+    --accent:
+        #ff5b7f;
+
+    --accent-light:
+        #ff819c;
+
+    --success:
+        #63df9b;
+
+    --danger:
+        #ff6b6b;
+
+    --warning:
+        #ffc965;
+
+    --border:
+        rgba(255,255,255,.075);
+}
+
+
+html,
+body {
+
+    margin:
+        0;
+
+    min-height:
+        100%;
+}
+
+
+body {
+
+    min-height:
+        100vh;
+
+    padding:
+        20px 14px 40px;
+
+    color:
+        var(--text);
+
+    background:
+
+        radial-gradient(
+            circle at 50% -5%,
+            rgba(255,91,127,.16),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 100% 10%,
+            rgba(115,80,255,.055),
+            transparent 25%
+        ),
+
+        var(--bg);
+
+    font-family:
+        Inter,
+        "Noto Sans Thai",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+
+    width:
+        100%;
+
+    max-width:
+        480px;
+
+    margin:
+        0 auto;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin:
+        9px 0 22px;
+}
+
+
+.brand-logo {
+
+    width:
+        43px;
+
+    height:
+        43px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        13px;
+
+    font-size:
+        18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    box-shadow:
+        0 9px 28px rgba(255,91,127,.22);
+}
+
+
+.brand-name {
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+}
+
+
+.brand-sub {
+
+    margin-top:
+        1px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        7px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.3px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        24px;
+
+    background:
+        var(--surface);
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.36);
+}
+
+
+.card-body {
+
+    padding:
+        23px 19px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-icon {
+
+    width:
+        50px;
+
+    height:
+        50px;
+
+    margin:
+        0 auto 13px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        15px;
+
+    color:
+        var(--accent-light);
+
+    background:
+        rgba(255,91,127,.08);
+
+    font-size:
+        22px;
+}
+
+
+.header {
+
+    text-align:
+        center;
+}
+
+
+.header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        22px;
+
+    letter-spacing:
+        -.4px;
+}
+
+
+.header p {
+
+    max-width:
+        330px;
+
+    margin:
+        7px auto 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   SESSION STATUS
+========================================================= */
+
+.session-status {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    margin:
+        14px auto 0;
+
+    color:
+        var(--success);
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .7px;
+}
+
+
+.session-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        currentColor;
+
+    box-shadow:
+        0 0 9px currentColor;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary {
+
+    margin-top:
+        20px;
+
+    padding:
+        16px;
+
+    border:
+        1px solid
+        rgba(255,91,127,.11);
+
+    border-radius:
+        16px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,91,127,.06),
+            rgba(255,255,255,.018)
+        );
+}
+
+
+.summary-label {
+
+    color:
+        var(--text-muted);
+
+    text-align:
+        center;
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+}
+
+
+.summary-name {
+
+    margin-top:
+        8px;
+
+    text-align:
+        center;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+}
+
+
+.summary-amount {
+
+    margin-top:
+        3px;
+
+    color:
+        var(--accent-light);
+
+    text-align:
+        center;
+
+    font-size:
+        34px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        -.7px;
+}
+
+
+.summary-message {
+
+    display:
+        none;
+
+    margin-top:
+        12px;
+
+    padding-top:
+        12px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.055);
+
+    color:
+        var(--text-soft);
+
+    text-align:
+        center;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    margin:
+        21px 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+}
+
+
+.divider::before,
+.divider::after {
+
+    content:
+        "";
+
+    flex:
+        1;
+
+    height:
+        1px;
+
+    background:
+        var(--border);
+}
+
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+.file-input {
+
+    display:
+        none;
+}
+
+
+.upload-zone {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    padding:
+        28px 15px;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.17);
+
+    border-radius:
+        17px;
+
+    text-align:
+        center;
+
+    background:
+        rgba(255,255,255,.018);
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+}
+
+
+.upload-zone:active {
+
+    transform:
+        scale(.985);
+}
+
+
+.upload-zone.has-file {
+
+    border-style:
+        solid;
+
+    border-color:
+        rgba(99,223,155,.22);
+
+    background:
+        rgba(99,223,155,.035);
+}
+
+
+.upload-icon {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    margin:
+        0 auto;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        14px;
+
+    color:
+        var(--accent-light);
+
+    background:
+        rgba(255,91,127,.075);
+
+    font-size:
+        22px;
+}
+
+
+.upload-title {
+
+    margin-top:
+        10px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+}
+
+
+.upload-sub {
+
+    margin-top:
+        5px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        8px;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview {
+
+    display:
+        none;
+
+    margin-top:
+        12px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        15px;
+
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+.preview.show {
+
+    display:
+        block;
+}
+
+
+.preview-image-wrap {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    height:
+        240px;
+
+    overflow:
+        hidden;
+
+    background:
+        #111116;
+}
+
+
+.preview-image {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        contain;
+}
+
+
+.preview-info {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        11px 12px;
+}
+
+
+.preview-file {
+
+    min-width:
+        0;
+}
+
+
+.preview-name {
+
+    max-width:
+        270px;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+}
+
+
+.preview-size {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        7px;
+}
+
+
+.change-button {
+
+    flex-shrink:
+        0;
+
+    padding:
+        7px 9px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-soft);
+
+    background:
+        rgba(255,255,255,.035);
+
+    cursor:
+        pointer;
+
+    font:
+        inherit;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.primary-button {
+
+    width:
+        100%;
+
+    min-height:
+        52px;
+
+    margin-top:
+        14px;
+
+    padding:
+        13px 15px;
+
+    border:
+        0;
+
+    border-radius:
+        13px;
+
+    color:
+        white;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff3d68
+        );
+
+    cursor:
+        pointer;
+
+    font:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+
+    box-shadow:
+        0 9px 28px rgba(255,91,127,.18);
+
+    transition:
+        .17s;
+}
+
+
+.primary-button:active:not(:disabled) {
+
+    transform:
+        scale(.985);
+}
+
+
+.primary-button:disabled {
+
+    opacity:
+        .45;
+
+    cursor:
+        not-allowed;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+
+    display:
+        none;
+
+    margin-top:
+        12px;
+
+    padding:
+        11px 12px;
+
+    border-radius:
+        10px;
+
+    text-align:
+        center;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.55;
+}
+
+
+.status.loading {
+
+    display:
+        block;
+
+    color:
+        var(--text-soft);
+
+    background:
+        rgba(255,255,255,.04);
+}
+
+
+.status.error {
+
+    display:
+        block;
+
+    color:
+        var(--danger);
+
+    border:
+        1px solid
+        rgba(255,107,107,.16);
+
+    background:
+        rgba(255,107,107,.065);
+}
+
+
+.status.success {
+
+    display:
+        block;
+
+    color:
+        var(--success);
+
+    border:
+        1px solid
+        rgba(99,223,155,.16);
+
+    background:
+        rgba(99,223,155,.065);
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer-card {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-top:
+        15px;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+.timer-label {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        8px;
+}
+
+
+.timer-value {
+
+    color:
+        var(--accent-light);
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+
+.timer-value.warning {
+
+    color:
+        var(--warning);
+}
+
+
+.timer-value.expired {
+
+    color:
+        var(--danger);
+}
+
+
+/* =========================================================
+   VERIFYING
+========================================================= */
+
+.processing-view {
+
+    display:
+        none;
+
+    padding:
+        30px 12px;
+
+    text-align:
+        center;
+}
+
+
+.spinner {
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    margin:
+        0 auto 17px;
+
+    border:
+        4px solid
+        rgba(255,255,255,.07);
+
+    border-top-color:
+        var(--accent);
+
+    border-radius:
+        50%;
+
+    animation:
+        spin .8s linear infinite;
+}
+
+
+@keyframes spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+}
+
+
+.processing-view h2 {
+
+    margin:
+        0;
+
+    font-size:
+        19px;
+}
+
+
+.processing-view p {
+
+    max-width:
+        300px;
+
+    margin:
+        7px auto 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.6;
+}
+
+
+.processing-steps {
+
+    max-width:
+        300px;
+
+    margin:
+        22px auto 0;
+
+    text-align:
+        left;
+}
+
+
+.processing-step {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    padding:
+        8px 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+}
+
+
+.processing-dot {
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.12);
+}
+
+
+.processing-step.active {
+
+    color:
+        white;
+}
+
+
+.processing-step.active
+.processing-dot {
+
+    background:
+        var(--accent);
+
+    box-shadow:
+        0 0 8px rgba(255,91,127,.7);
+}
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.success-view {
+
+    display:
+        none;
+
+    padding:
+        28px 7px 10px;
+
+    text-align:
+        center;
+}
+
+
+.success-icon {
+
+    width:
+        78px;
+
+    height:
+        78px;
+
+    margin:
+        0 auto 17px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border:
+        1px solid
+        rgba(99,223,155,.24);
+
+    border-radius:
+        50%;
+
+    color:
+        var(--success);
+
+    background:
+        rgba(99,223,155,.08);
+
+    font-size:
+        35px;
+
+    animation:
+        successPop .45s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+@keyframes successPop {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            scale(.6);
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            scale(1);
+    }
+}
+
+
+.success-view h2 {
+
+    margin:
+        0;
+
+    font-size:
+        23px;
+}
+
+
+.success-text {
+
+    max-width:
+        310px;
+
+    margin:
+        7px auto 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.65;
+}
+
+
+.success-amount {
+
+    margin-top:
+        20px;
+
+    color:
+        var(--accent-light);
+
+    font-size:
+        38px;
+
+    font-weight:
+        900;
+}
+
+
+.success-name {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--text-soft);
+
+    font-size:
+        10px;
+}
+
+
+.success-box {
+
+    margin-top:
+        20px;
+
+    padding:
+        13px;
+
+    border:
+        1px solid
+        rgba(99,223,155,.13);
+
+    border-radius:
+        12px;
+
+    color:
+        var(--success);
+
+    background:
+        rgba(99,223,155,.045);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   ERROR / EXPIRED VIEW
+========================================================= */
+
+.error-view {
+
+    display:
+        none;
+
+    padding:
+        30px 8px 15px;
+
+    text-align:
+        center;
+}
+
+
+.error-icon {
+
+    width:
+        68px;
+
+    height:
+        68px;
+
+    margin:
+        0 auto 15px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        50%;
+
+    color:
+        var(--danger);
+
+    background:
+        rgba(255,107,107,.07);
+
+    font-size:
+        28px;
+}
+
+
+.error-view h2 {
+
+    margin:
+        0;
+
+    font-size:
+        19px;
+}
+
+
+.error-text {
+
+    max-width:
+        320px;
+
+    margin:
+        7px auto 0;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   SAFE
+========================================================= */
+
+.safe {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        9px;
+
+    margin-top:
+        17px;
+
+    padding:
+        11px;
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(255,255,255,.022);
+}
+
+
+.safe-icon {
+
+    flex-shrink:
+        0;
+
+    color:
+        var(--success);
+
+    font-size:
+        13px;
+}
+
+
+.safe-title {
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+}
+
+
+.safe-text {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    margin-top:
+        17px;
+
+    text-align:
+        center;
+
+    color:
+        #55555f;
+
+    font-size:
+        7px;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   LOADING PAGE
+========================================================= */
+
+.loading-screen {
+
+    padding:
+        65px 20px;
+
+    text-align:
+        center;
+}
+
+
+.loading-logo {
+
+    width:
+        62px;
+
+    height:
+        62px;
+
+    margin:
+        0 auto 17px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    font-size:
+        25px;
+
+    animation:
+        pulse 1.25s infinite ease-in-out;
+}
+
+
+@keyframes pulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+    }
+
+    50% {
+
+        transform:
+            scale(.94);
+    }
+}
+
+
+.loading-text {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+}
+
+
+/* =========================================================
+   MOBILE SMALL
+========================================================= */
+
+@media (max-width:380px) {
+
+    body {
+
+        padding-left:
+            10px;
+
+        padding-right:
+            10px;
+    }
+
+
+    .card-body {
+
+        padding:
+            20px 15px;
+    }
+
+
+    .summary-amount {
+
+        font-size:
+            30px;
+    }
+
+
+    .preview-image-wrap {
+
+        height:
+            210px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =====================================================
+         BRAND
+    ====================================================== -->
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            ❤️
+        </div>
+
+
+        <div>
+
+            <div class="brand-name">
+                AMR29
+            </div>
+
+            <div class="brand-sub">
+                SECURE MOBILE UPLOAD
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CARD
+    ====================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+
+            <!-- =================================================
+                 INITIAL LOADING
+            ================================================== -->
+
+            <section
+                class="loading-screen"
+                id="loading-view"
+            >
+
+                <div class="loading-logo">
+                    ❤️
+                </div>
+
+
+                <div class="loading-text">
+                    กำลังโหลดข้อมูล Donation...
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 UPLOAD VIEW
+            ================================================== -->
+
+            <section
+                id="upload-view"
+                style="display:none"
+            >
+
+
+                <div class="page-icon">
+                    📱
+                </div>
+
+
+                <div class="header">
+
+                    <h1>
+                        ส่งสลิปการสนับสนุน
+                    </h1>
+
+
+                    <p>
+
+                        เลือกรูปสลิปจากมือถือเครื่องนี้
+                        ระบบจะตรวจสอบและส่ง Donation
+                        ไปยัง AMR29 โดยอัตโนมัติ
+
+                    </p>
+
+
+                    <div class="session-status">
+
+                        <span class="session-dot"></span>
+
+                        SECURE SESSION
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SUMMARY -->
+
+                <div class="summary">
+
+                    <div class="summary-label">
+                        DONATION SUMMARY
+                    </div>
+
+
+                    <div
+                        class="summary-name"
+                        id="summary-name"
+                    >
+                        Anonymous
+                    </div>
+
+
+                    <div
+                        class="summary-amount"
+                        id="summary-amount"
+                    >
+                        ฿0
+                    </div>
+
+
+                    <div
+                        class="summary-message"
+                        id="summary-message"
+                    ></div>
+
+                </div>
+
+
+
+                <div class="divider">
+                    อัปโหลดสลิป
+                </div>
+
+
+
+                <!-- FILE -->
+
+                <input
+                    class="file-input"
+                    id="slip-input"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                >
+
+
+                <div
+                    class="upload-zone"
+                    id="upload-zone"
+                    onclick="openFilePicker()"
+                >
+
+                    <div class="upload-icon">
+                        📎
+                    </div>
+
+
+                    <div class="upload-title">
+                        เลือกรูปสลิป
+                    </div>
+
+
+                    <div class="upload-sub">
+
+                        แตะเพื่อเลือกรูปจากแกลเลอรี<br>
+                        JPG, PNG หรือ WEBP • สูงสุด 4 MB
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PREVIEW -->
+
+                <div
+                    class="preview"
+                    id="preview"
+                >
+
+                    <div class="preview-image-wrap">
+
+                        <img
+                            class="preview-image"
+                            id="preview-image"
+                            alt="Slip preview"
+                        >
+
+                    </div>
+
+
+                    <div class="preview-info">
+
+                        <div class="preview-file">
+
+                            <div
+                                class="preview-name"
+                                id="preview-name"
+                            ></div>
+
+
+                            <div
+                                class="preview-size"
+                                id="preview-size"
+                            ></div>
+
+                        </div>
+
+
+                        <button
+                            class="change-button"
+                            type="button"
+                            onclick="openFilePicker()"
+                        >
+                            เปลี่ยนรูป
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BUTTON -->
+
+                <button
+                    class="primary-button"
+                    id="submit-button"
+                    disabled
+                    onclick="submitSlip()"
+                >
+                    ✓ ยืนยันและส่งสลิป
+                </button>
+
+
+
+                <div
+                    class="status"
+                    id="status"
+                ></div>
+
+
+
+                <!-- TIMER -->
+
+                <div class="timer-card">
+
+                    <div class="timer-label">
+                        Session หมดอายุใน
+                    </div>
+
+
+                    <div
+                        class="timer-value"
+                        id="timer"
+                    >
+                        --:--
+                    </div>
+
+                </div>
+
+
+
+                <!-- SAFE -->
+
+                <div class="safe">
+
+                    <div class="safe-icon">
+                        ✓
+                    </div>
+
+
+                    <div>
+
+                        <div class="safe-title">
+                            ตรวจสอบด้วย EasySlip
+                        </div>
+
+
+                        <div class="safe-text">
+
+                            ระบบจะตรวจสอบยอดเงิน
+                            บัญชีผู้รับ และป้องกันสลิปซ้ำ
+                            ก่อน Donation ขึ้นบนสตรีม
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PROCESSING
+            ================================================== -->
+
+            <section
+                class="processing-view"
+                id="processing-view"
+            >
+
+                <div class="spinner"></div>
+
+
+                <h2>
+                    กำลังตรวจสอบสลิป
+                </h2>
+
+
+                <p>
+
+                    กรุณารอสักครู่
+                    อย่าปิดหน้านี้ระหว่างตรวจสอบข้อมูลการชำระเงิน
+
+                </p>
+
+
+
+                <div class="processing-steps">
+
+
+                    <div
+                        class="processing-step active"
+                        id="process-1"
+                    >
+
+                        <span class="processing-dot"></span>
+
+                        อัปโหลดสลิป
+
+                    </div>
+
+
+                    <div
+                        class="processing-step"
+                        id="process-2"
+                    >
+
+                        <span class="processing-dot"></span>
+
+                        ตรวจสอบธุรกรรม
+
+                    </div>
+
+
+                    <div
+                        class="processing-step"
+                        id="process-3"
+                    >
+
+                        <span class="processing-dot"></span>
+
+                        ยืนยัน Donation
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SUCCESS
+            ================================================== -->
+
+            <section
+                class="success-view"
+                id="success-view"
+            >
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+
+                <h2>
+                    ส่งสลิปสำเร็จ!
+                </h2>
+
+
+                <div class="success-text">
+
+                    ระบบตรวจสอบการชำระเงินเรียบร้อยแล้ว
+                    Donation ถูกส่งไปยัง AMR29 แล้ว ❤️
+
+                </div>
+
+
+                <div
+                    class="success-amount"
+                    id="success-amount"
+                >
+                    ฿0
+                </div>
+
+
+                <div
+                    class="success-name"
+                    id="success-name"
+                ></div>
+
+
+                <div class="success-box">
+
+                    ✓ กลับไปที่หน้าคอมได้เลย<br>
+                    หน้านี้สามารถปิดได้แล้ว
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ERROR VIEW
+            ================================================== -->
+
+            <section
+                class="error-view"
+                id="error-view"
+            >
+
+                <div class="error-icon">
+                    !
+                </div>
+
+
+                <h2 id="error-title">
+                    ไม่สามารถเปิด Session ได้
+                </h2>
+
+
+                <div
+                    class="error-text"
+                    id="error-text"
+                >
+
+                    กรุณากลับไปที่หน้าคอม
+                    แล้วสร้าง QR สำหรับมือถือใหม่
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="footer">
+
+        AMR29 Donation System<br>
+        กรุณาตรวจสอบยอดเงินก่อนส่งสลิปทุกครั้ง
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const sessionId =
+    params.get(
+        "session"
+    );
+
+
+const loadingView =
+    document.getElementById(
+        "loading-view"
+    );
+
+
+const uploadView =
+    document.getElementById(
+        "upload-view"
+    );
+
+
+const processingView =
+    document.getElementById(
+        "processing-view"
+    );
+
+
+const successView =
+    document.getElementById(
+        "success-view"
+    );
+
+
+const errorView =
+    document.getElementById(
+        "error-view"
+    );
+
+
+const slipInput =
+    document.getElementById(
+        "slip-input"
+    );
+
+
+const uploadZone =
+    document.getElementById(
+        "upload-zone"
+    );
+
+
+const preview =
+    document.getElementById(
+        "preview"
+    );
+
+
+const previewImage =
+    document.getElementById(
+        "preview-image"
+    );
+
+
+const previewName =
+    document.getElementById(
+        "preview-name"
+    );
+
+
+const previewSize =
+    document.getElementById(
+        "preview-size"
+    );
+
+
+const submitButton =
+    document.getElementById(
+        "submit-button"
+    );
+
+
+const statusBox =
+    document.getElementById(
+        "status"
+    );
+
+
+const timerElement =
+    document.getElementById(
+        "timer"
+    );
+
+
+let session =
+    null;
+
+
+let selectedFile =
+    null;
+
+
+let previewUrl =
+    null;
+
+
+let timerInterval =
+    null;
+
+
+let verifying =
+    false;
+
+
+let completed =
+    false;
+
+
+/* =========================================================
+   VIEW
+========================================================= */
+
+function showOnly(
+    view
+) {
+
+    [
+        loadingView,
+        uploadView,
+        processingView,
+        successView,
+        errorView
+    ]
+    .forEach(
+        element => {
+
+            element.style.display =
+                "none";
+        }
+    );
+
+
+    view.style.display =
+        "block";
+}
+
+
+/* =========================================================
+   LOAD SESSION
+========================================================= */
+
+async function loadSession() {
+
+    if (!sessionId) {
+
+        showFatalError(
+            "QR ไม่ถูกต้อง",
+            "ไม่พบ Mobile Session กรุณากลับไปสร้าง QR ใหม่จากหน้าคอม"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+
+                "/api/mobile-upload/session/"
+
+                +
+
+                encodeURIComponent(
+                    sessionId
+                )
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+
+                data.message ||
+
+                "ไม่สามารถโหลด Session ได้"
+            );
+        }
+
+
+        session =
+            data.session;
+
+
+        if (
+            session.status ===
+            "verified"
+        ) {
+
+            showSuccess(
+                session.amount,
+                session.name
+            );
+
+            return;
+        }
+
+
+        if (
+            session.status !==
+            "pending"
+        ) {
+
+            throw new Error(
+                "Session นี้กำลังถูกใช้งานอยู่ กรุณาลองใหม่อีกครั้ง"
+            );
+        }
+
+
+        renderSession();
+
+
+        startCountdown();
+
+
+        showOnly(
+            uploadView
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Load Session:",
+            error
+        );
+
+
+        showFatalError(
+
+            "เปิด Session ไม่สำเร็จ",
+
+            error.message
+
+            ||
+
+            "กรุณากลับไปสร้าง QR ใหม่จากหน้าคอม"
+        );
+    }
+}
+
+
+/* =========================================================
+   RENDER SESSION
+========================================================= */
+
+function renderSession() {
+
+    document.getElementById(
+        "summary-name"
+    ).innerText =
+
+        session.name
+
+        ||
+
+        "Anonymous";
+
+
+    document.getElementById(
+        "summary-amount"
+    ).innerText =
+
+        "฿"
+
+        +
+
+        Number(
+            session.amount || 0
+        )
+        .toLocaleString();
+
+
+    const message =
+        String(
+            session.message || ""
+        )
+        .trim();
+
+
+    const messageElement =
+        document.getElementById(
+            "summary-message"
+        );
+
+
+    if (message) {
+
+        messageElement.style.display =
+            "block";
+
+
+        messageElement.innerText =
+
+            `"${message}"`;
+
+    } else {
+
+        messageElement.style.display =
+            "none";
+    }
+}
+
+
+/* =========================================================
+   FILE PICKER
+========================================================= */
+
+function openFilePicker() {
+
+    if (
+        verifying ||
+        completed
+    ) {
+
+        return;
+    }
+
+
+    slipInput.click();
+}
+
+
+slipInput.addEventListener(
+    "change",
+    () => {
+
+        if (
+            !slipInput.files ||
+            !slipInput.files.length
+        ) {
+
+            return;
+        }
+
+
+        handleFile(
+            slipInput.files[0]
+        );
+    }
+);
+
+
+/* =========================================================
+   HANDLE FILE
+========================================================= */
+
+function handleFile(
+    file
+) {
+
+    const allowedTypes = [
+
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        clearSelectedFile();
+
+
+        showStatus(
+            "error",
+            "รองรับเฉพาะไฟล์ JPG, PNG และ WEBP"
+        );
+
+
+        return;
+    }
+
+
+    const maxSize =
+        4 *
+        1024 *
+        1024;
+
+
+    if (
+        file.size >
+        maxSize
+    ) {
+
+        clearSelectedFile();
+
+
+        showStatus(
+            "error",
+            "ไฟล์สลิปต้องมีขนาดไม่เกิน 4 MB"
+        );
+
+
+        return;
+    }
+
+
+    selectedFile =
+        file;
+
+
+    if (previewUrl) {
+
+        URL.revokeObjectURL(
+            previewUrl
+        );
+    }
+
+
+    previewUrl =
+        URL.createObjectURL(
+            file
+        );
+
+
+    previewImage.src =
+        previewUrl;
+
+
+    previewName.innerText =
+        file.name;
+
+
+    previewSize.innerText =
+        formatFileSize(
+            file.size
+        );
+
+
+    preview.classList.add(
+        "show"
+    );
+
+
+    uploadZone.classList.add(
+        "has-file"
+    );
+
+
+    uploadZone.innerHTML = `
+
+        <div class="upload-icon">
+            ✓
+        </div>
+
+        <div class="upload-title">
+            เลือกสลิปแล้ว
+        </div>
+
+        <div class="upload-sub">
+            ตรวจสอบรูปด้านล่างก่อนกดยืนยัน
+        </div>
+    `;
+
+
+    submitButton.disabled =
+        false;
+
+
+    hideStatus();
+}
+
+
+/* =========================================================
+   CLEAR FILE
+========================================================= */
+
+function clearSelectedFile() {
+
+    selectedFile =
+        null;
+
+
+    slipInput.value =
+        "";
+
+
+    if (previewUrl) {
+
+        URL.revokeObjectURL(
+            previewUrl
+        );
+
+
+        previewUrl =
+            null;
+    }
+
+
+    preview.classList.remove(
+        "show"
+    );
+
+
+    submitButton.disabled =
+        true;
+}
+
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+async function submitSlip() {
+
+    if (
+        verifying ||
+        completed
+    ) {
+
+        return;
+    }
+
+
+    if (!selectedFile) {
+
+        showStatus(
+            "error",
+            "กรุณาเลือกสลิปก่อน"
+        );
+
+        return;
+    }
+
+
+    if (
+        !session ||
+        Date.now() >
+        Number(
+            session.expiresAt
+        )
+    ) {
+
+        expireSession();
+
+        return;
+    }
+
+
+    verifying =
+        true;
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        timerInterval =
+            null;
+    }
+
+
+    showOnly(
+        processingView
+    );
+
+
+    startProcessingAnimation();
+
+
+    const form =
+        new FormData();
+
+
+    form.append(
+        "slip",
+        selectedFile
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+
+                "/api/mobile-upload/verify/"
+
+                +
+
+                encodeURIComponent(
+                    sessionId
+                ),
+
+                {
+
+                    method:
+                        "POST",
+
+                    body:
+                        form
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+
+                data.message ||
+
+                "ตรวจสอบสลิปไม่สำเร็จ"
+            );
+        }
+
+
+        completed =
+            true;
+
+
+        await delay(
+            350
+        );
+
+
+        activateProcessingStep(
+            3
+        );
+
+
+        await delay(
+            350
+        );
+
+
+        showSuccess(
+
+            data.donation?.amount
+
+            ||
+
+            session.amount,
+
+            data.donation?.name
+
+            ||
+
+            session.name
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Verify:",
+            error
+        );
+
+
+        verifying =
+            false;
+
+
+        showOnly(
+            uploadView
+        );
+
+
+        startCountdown();
+
+
+        showStatus(
+
+            "error",
+
+            "❌ "
+
+            +
+
+            (
+                error.message ||
+
+                "ตรวจสอบสลิปไม่สำเร็จ"
+            )
+        );
+
+
+        submitButton.disabled =
+            false;
+    }
+}
+
+
+/* =========================================================
+   PROCESSING ANIMATION
+========================================================= */
+
+function startProcessingAnimation() {
+
+    activateProcessingStep(
+        1
+    );
+
+
+    setTimeout(
+        () => {
+
+            if (verifying) {
+
+                activateProcessingStep(
+                    2
+                );
+            }
+        },
+
+        500
+    );
+}
+
+
+function activateProcessingStep(
+    number
+) {
+
+    for (
+        let index = 1;
+        index <= 3;
+        index++
+    ) {
+
+        const step =
+            document.getElementById(
+                `process-${index}`
+            );
+
+
+        if (
+            index <= number
+        ) {
+
+            step.classList.add(
+                "active"
+            );
+
+        } else {
+
+            step.classList.remove(
+                "active"
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+function showSuccess(
+    amount,
+    name
+) {
+
+    completed =
+        true;
+
+
+    verifying =
+        false;
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        timerInterval =
+            null;
+    }
+
+
+    document.getElementById(
+        "success-amount"
+    ).innerText =
+
+        "฿"
+
+        +
+
+        Number(
+            amount || 0
+        )
+        .toLocaleString();
+
+
+    document.getElementById(
+        "success-name"
+    ).innerText =
+
+        name
+
+        ?
+
+        `ขอบคุณ ${name} ❤️`
+
+        :
+
+        "ขอบคุณสำหรับการสนับสนุน ❤️";
+
+
+    showOnly(
+        successView
+    );
+
+
+    window.scrollTo({
+        top:
+            0,
+
+        behavior:
+            "smooth"
+    });
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function startCountdown() {
+
+    if (!session) {
+
+        return;
+    }
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+    }
+
+
+    function updateTimer() {
+
+        const remaining =
+
+            Number(
+                session.expiresAt
+            )
+
+            -
+
+            Date.now();
+
+
+        if (
+            remaining <= 0
+        ) {
+
+            expireSession();
+
+            return;
+        }
+
+
+        const minutes =
+            Math.floor(
+                remaining /
+                60000
+            );
+
+
+        const seconds =
+            Math.floor(
+                (
+                    remaining %
+                    60000
+                )
+                /
+                1000
+            );
+
+
+        timerElement.innerText =
+
+            String(
+                minutes
+            )
+            .padStart(
+                2,
+                "0"
+            )
+
+            +
+
+            ":"
+
+            +
+
+            String(
+                seconds
+            )
+            .padStart(
+                2,
+                "0"
+            );
+
+
+        timerElement.classList.remove(
+            "warning",
+            "expired"
+        );
+
+
+        if (
+            remaining <
+            2 *
+            60 *
+            1000
+        ) {
+
+            timerElement.classList.add(
+                "warning"
+            );
+        }
+    }
+
+
+    updateTimer();
+
+
+    timerInterval =
+        setInterval(
+            updateTimer,
+            1000
+        );
+}
+
+
+/* =========================================================
+   EXPIRED
+========================================================= */
+
+function expireSession() {
+
+    if (completed) {
+
+        return;
+    }
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        timerInterval =
+            null;
+    }
+
+
+    timerElement.innerText =
+        "00:00";
+
+
+    timerElement.classList.add(
+        "expired"
+    );
+
+
+    showFatalError(
+
+        "QR หมดอายุแล้ว",
+
+        "เพื่อความปลอดภัย Session นี้หมดอายุแล้ว กรุณากลับไปที่หน้าคอมและสร้าง QR มือถือใหม่"
+    );
+}
+
+
+/* =========================================================
+   ERROR VIEW
+========================================================= */
+
+function showFatalError(
+    title,
+    message
+) {
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        timerInterval =
+            null;
+    }
+
+
+    document.getElementById(
+        "error-title"
+    ).innerText =
+        title;
+
+
+    document.getElementById(
+        "error-text"
+    ).innerText =
+        message;
+
+
+    showOnly(
+        errorView
+    );
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function showStatus(
+    type,
+    message
+) {
+
+    statusBox.className =
+
+        "status "
+
+        +
+
+        type;
+
+
+    statusBox.innerText =
+        message;
+}
+
+
+function hideStatus() {
+
+    statusBox.className =
+        "status";
+
+
+    statusBox.innerText =
+        "";
+}
+
+
+/* =========================================================
+   UTILS
+========================================================= */
+
+function formatFileSize(
+    bytes
+) {
+
+    if (
+        bytes <
+        1024
+    ) {
+
+        return `${bytes} B`;
+    }
+
+
+    if (
+        bytes <
+        1024 *
+        1024
+    ) {
+
+        return (
+
+            bytes /
+            1024
+        )
+        .toFixed(1)
+
+        +
+
+        " KB";
+    }
+
+
+    return (
+
+        bytes /
+        1024 /
+        1024
+    )
+    .toFixed(2)
+
+    +
+
+    " MB";
+}
+
+
+function delay(
+    milliseconds
+) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
+}
+
+
+/* =========================================================
+   CLEANUP
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (previewUrl) {
+
+            URL.revokeObjectURL(
+                previewUrl
+            );
+        }
+
+
+        if (timerInterval) {
+
+            clearInterval(
+                timerInterval
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadSession();
+
+</script>
+
+</body>
+
+</html>

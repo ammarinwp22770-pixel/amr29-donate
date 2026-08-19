@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>AMR29 Goal Overlay</title>
+
+
+<style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+:root {
+
+    --accent: #ff5b7f;
+    --accent-light: #ff9ab0;
+
+    --gold: #ffd36e;
+    --gold-light: #ffe8a8;
+
+    --success: #63df9b;
+
+    --text: #ffffff;
+    --text-soft: #ededf2;
+    --text-muted: #b0b0bb;
+
+    --panel: rgba(8,8,13,.96);
+
+    --border: rgba(255,255,255,.18);
+}
+
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    background: transparent;
+
+    font-family:
+        "Segoe UI",
+        "Noto Sans Thai",
+        Arial,
+        sans-serif;
+
+    user-select: none;
+}
+
+
+/* =========================================================
+   STAGE
+========================================================= */
+
+.stage {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 25px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   GOAL WRAPPER
+========================================================= */
+
+.goal-wrap {
+
+    position: relative;
+
+    width:
+        min(
+            850px,
+            calc(100vw - 50px)
+        );
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateY(15px)
+        scale(.98);
+
+    transition:
+
+        opacity .35s ease,
+
+        transform .5s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+.goal-wrap.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.goal-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 175px;
+
+    padding:
+        23px
+        28px
+        26px;
+
+    border:
+        2px solid
+        var(--border);
+
+    border-radius: 25px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,91,127,.055),
+            rgba(255,255,255,.012)
+        ),
+
+        var(--panel);
+
+    box-shadow:
+
+        0 25px 80px
+        rgba(0,0,0,.72),
+
+        0 1px 0
+        rgba(255,255,255,.04)
+        inset;
+}
+
+
+/* =========================================================
+   TOP ACCENT
+========================================================= */
+
+.top-accent {
+
+    position: absolute;
+
+    left: 28px;
+    right: 28px;
+    top: 0;
+
+    height: 3px;
+
+    border-radius:
+        0 0 999px 999px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--accent),
+            var(--accent-light),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   GLOW
+========================================================= */
+
+.goal-glow {
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    right: -110px;
+    top: -170px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,91,127,.17);
+
+    filter:
+        blur(65px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.goal-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+}
+
+
+.goal-left {
+
+    min-width: 0;
+}
+
+
+.goal-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color:
+        var(--accent-light);
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.7px;
+
+    text-shadow:
+        0 2px 6px
+        rgba(0,0,0,.9);
+}
+
+
+.goal-title {
+
+    max-width: 590px;
+
+    margin-top: 4px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color:
+        #ffffff;
+
+    font-size: 25px;
+
+    line-height: 1.25;
+
+    font-weight: 900;
+
+    text-shadow:
+
+        0 3px 8px
+        rgba(0,0,0,.95),
+
+        0 1px 2px
+        rgba(0,0,0,1);
+}
+
+
+/* =========================================================
+   PERCENT
+========================================================= */
+
+.goal-percent {
+
+    flex-shrink: 0;
+
+    min-width: 86px;
+
+    padding:
+        9px
+        12px;
+
+    border:
+        1px solid
+        rgba(255,91,127,.27);
+
+    border-radius: 12px;
+
+    color:
+        var(--accent-light);
+
+    background:
+        rgba(255,91,127,.09);
+
+    text-align: center;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+    text-shadow:
+        0 2px 7px
+        rgba(0,0,0,.8);
+}
+
+
+/* =========================================================
+   MONEY
+========================================================= */
+
+.goal-money-row {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+.current-money {
+
+    color:
+        #ffffff;
+
+    font-size: 34px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+    letter-spacing: -.8px;
+
+    text-shadow:
+
+        0 3px 9px
+        rgba(0,0,0,.95);
+}
+
+
+.current-money .baht {
+
+    margin-right: 2px;
+
+    color:
+        var(--accent-light);
+}
+
+
+.target-money {
+
+    color:
+        var(--text-muted);
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-track {
+
+    position: relative;
+
+    z-index: 2;
+
+    height: 17px;
+
+    margin-top: 13px;
+
+    overflow: visible;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.085);
+
+    box-shadow:
+
+        0 2px 10px
+        rgba(0,0,0,.32)
+        inset;
+}
+
+
+.progress-overflow {
+
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    border-radius: inherit;
+}
+
+
+.progress-fill {
+
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #ff3e69,
+            #ff6989,
+            #ffa4b8
+        );
+
+    box-shadow:
+
+        0 0 18px
+        rgba(255,91,127,.40);
+
+    transition:
+        width .9s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+/* =========================================================
+   PROGRESS SHINE
+========================================================= */
+
+.progress-shine {
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    width: 80px;
+
+    left: -100px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.45),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    animation:
+        progressShine
+        3.2s
+        infinite ease-in-out;
+}
+
+
+@keyframes progressShine {
+
+    0% {
+        left: -100px;
+    }
+
+    40%,
+    100% {
+        left: calc(100% + 100px);
+    }
+}
+
+
+/* =========================================================
+   SPARK
+========================================================= */
+
+.progress-spark {
+
+    position: absolute;
+
+    z-index: 5;
+
+    top: 50%;
+    left: 0%;
+
+    width: 13px;
+    height: 13px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        white;
+
+    opacity: 0;
+
+    box-shadow:
+
+        0 0 8px
+        #ffffff,
+
+        0 0 18px
+        var(--accent),
+
+        0 0 28px
+        var(--accent);
+
+    transition:
+
+        left .9s
+        cubic-bezier(.16,1,.3,1),
+
+        opacity .2s ease;
+}
+
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+.goal-bottom {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 11px;
+}
+
+
+.goal-note {
+
+    color:
+        var(--text-muted);
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+.remaining {
+
+    color:
+        var(--text-soft);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   RECENT DONATION POPUP
+========================================================= */
+
+.donation-pop {
+
+    position: absolute;
+
+    z-index: 30;
+
+    left: 50%;
+    bottom: -53px;
+
+    min-width: 280px;
+
+    max-width: 550px;
+
+    padding:
+        10px
+        17px;
+
+    border:
+        1px solid
+        rgba(99,223,155,.25);
+
+    border-radius: 999px;
+
+    color:
+        #ffffff;
+
+    background:
+        rgba(10,14,13,.97);
+
+    box-shadow:
+
+        0 14px 40px
+        rgba(0,0,0,.50),
+
+        0 0 20px
+        rgba(99,223,155,.08);
+
+    text-align: center;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateX(-50%)
+        translateY(-5px)
+        scale(.94);
+
+    transition:
+        .35s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+.donation-pop.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+}
+
+
+.donation-pop .plus {
+
+    color:
+        var(--success);
+
+    font-size: 17px;
+
+    font-weight: 900;
+}
+
+
+.donation-pop .donor {
+
+    color:
+        #ffffff;
+
+    margin-left: 5px;
+}
+
+
+/* =========================================================
+   COMPLETE MODE
+========================================================= */
+
+.goal-wrap.complete
+.goal-card {
+
+    border-color:
+        rgba(255,211,110,.43);
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,195,70,.11),
+            rgba(255,255,255,.015)
+        ),
+
+        rgba(8,8,12,.97);
+
+    box-shadow:
+
+        0 25px 80px
+        rgba(0,0,0,.72),
+
+        0 0 45px
+        rgba(255,195,75,.13);
+}
+
+
+.goal-wrap.complete
+.top-accent {
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            #ffb83e,
+            #ffe99a,
+            transparent
+        );
+}
+
+
+.goal-wrap.complete
+.goal-glow {
+
+    background:
+        rgba(255,195,70,.24);
+}
+
+
+.goal-wrap.complete
+.goal-label,
+.goal-wrap.complete
+.goal-percent,
+.goal-wrap.complete
+.current-money .baht {
+
+    color:
+        var(--gold);
+}
+
+
+.goal-wrap.complete
+.goal-percent {
+
+    border-color:
+        rgba(255,211,110,.32);
+
+    background:
+        rgba(255,211,110,.09);
+}
+
+
+.goal-wrap.complete
+.progress-fill {
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #ffae3d,
+            #ffd36e,
+            #fff0b8
+        );
+
+    box-shadow:
+
+        0 0 20px
+        rgba(255,205,90,.52);
+}
+
+
+.goal-wrap.complete
+.progress-spark {
+
+    box-shadow:
+
+        0 0 8px
+        #ffffff,
+
+        0 0 18px
+        #ffd36e,
+
+        0 0 32px
+        #ffd36e;
+}
+
+
+/* =========================================================
+   COMPLETE TEXT
+========================================================= */
+
+.complete-banner {
+
+    position: absolute;
+
+    z-index: 40;
+
+    left: 50%;
+    top: -50px;
+
+    transform:
+        translateX(-50%)
+        translateY(12px)
+        scale(.92);
+
+    color:
+        #ffe08b;
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    white-space: nowrap;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    text-shadow:
+
+        0 3px 12px
+        rgba(0,0,0,.9),
+
+        0 0 25px
+        rgba(255,195,70,.35);
+
+    transition:
+        .45s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+.complete-banner.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.particles {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+
+.particle {
+
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background:
+        #ffd675;
+
+    box-shadow:
+        0 0 10px
+        rgba(255,214,117,.75);
+
+    opacity: 0;
+
+    animation:
+        particleFly
+        2s
+        ease-out
+        forwards;
+}
+
+
+@keyframes particleFly {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(.3);
+    }
+
+    15% {
+
+        opacity: 1;
+    }
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            translateY(-180px)
+            scale(1.2);
+    }
+}
+
+
+/* =========================================================
+   PULSE ON DONATION
+========================================================= */
+
+.goal-card.donation-pulse {
+
+    animation:
+        donationPulse
+        .75s
+        ease-out;
+}
+
+
+@keyframes donationPulse {
+
+    0% {
+
+        transform:
+            scale(1);
+    }
+
+    35% {
+
+        transform:
+            scale(1.012);
+    }
+
+    100% {
+
+        transform:
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MOBILE / SMALL SOURCE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .stage {
+
+        padding: 12px;
+    }
+
+
+    .goal-wrap {
+
+        width:
+            calc(100vw - 24px);
+    }
+
+
+    .goal-card {
+
+        min-height: 155px;
+
+        padding:
+            18px;
+    }
+
+
+    .goal-title {
+
+        font-size: 20px;
+    }
+
+
+    .goal-percent {
+
+        min-width: 70px;
+
+        padding:
+            8px;
+
+        font-size: 18px;
+    }
+
+
+    .current-money {
+
+        font-size: 28px;
+    }
+
+
+    .target-money {
+
+        font-size: 11px;
+    }
+
+
+    .progress-track {
+
+        height: 14px;
+    }
+
+
+    .goal-bottom {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .donation-pop {
+
+        min-width: 250px;
+
+        max-width:
+            calc(100vw - 35px);
+
+        font-size: 11px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="stage">
+
+
+    <!-- PARTICLES -->
+
+    <div
+        class="particles"
+        id="particles"
+    ></div>
+
+
+
+    <!-- GOAL -->
+
+    <div
+        class="goal-wrap"
+        id="goal-wrap"
+    >
+
+
+        <!-- COMPLETE BANNER -->
+
+        <div
+            class="complete-banner"
+            id="complete-banner"
+        >
+            🎉 GOAL COMPLETE!
+        </div>
+
+
+
+        <div
+            class="goal-card"
+            id="goal-card"
+        >
+
+
+            <div class="top-accent"></div>
+
+
+            <div class="goal-glow"></div>
+
+
+
+            <!-- HEADER -->
+
+            <div class="goal-header">
+
+
+                <div class="goal-left">
+
+
+                    <div class="goal-label">
+                        🎯 STREAM GOAL
+                    </div>
+
+
+                    <div
+                        class="goal-title"
+                        id="goal-title"
+                    >
+                        เป้าหมายสนับสนุน
+                    </div>
+
+
+                </div>
+
+
+
+                <div
+                    class="goal-percent"
+                    id="goal-percent"
+                >
+                    0%
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MONEY -->
+
+            <div class="goal-money-row">
+
+
+                <div
+                    class="current-money"
+                >
+
+                    <span class="baht">
+                        ฿
+                    </span>
+
+                    <span id="goal-total">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="target-money"
+                >
+
+                    เป้าหมาย ฿<span
+                        id="goal-target"
+                    >0</span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- PROGRESS -->
+
+            <div class="progress-track">
+
+
+                <div class="progress-overflow">
+
+
+                    <div
+                        class="progress-fill"
+                        id="progress-fill"
+                    >
+
+                        <div class="progress-shine"></div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                    class="progress-spark"
+                    id="progress-spark"
+                ></div>
+
+
+            </div>
+
+
+
+            <!-- BOTTOM -->
+
+            <div class="goal-bottom">
+
+
+                <div
+                    class="goal-note"
+                    id="goal-note"
+                >
+                    ขอบคุณทุกการสนับสนุน ❤️
+                </div>
+
+
+                <div
+                    class="remaining"
+                    id="remaining"
+                >
+                    เหลือ ฿0
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- RECENT DONATION -->
+
+        <div
+            class="donation-pop"
+            id="donation-pop"
+        >
+
+            <span
+                class="plus"
+                id="donation-pop-amount"
+            >
+                +฿0
+            </span>
+
+
+            <span
+                class="donor"
+                id="donation-pop-name"
+            >
+                Anonymous ❤️
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+
+/*
+ข้อความ +Donation ค้างกี่วินาที
+*/
+
+const DONATION_POP_TIME =
+    4000;
+
+
+/*
+แสดง celebration เมื่อ Goal ครบ
+*/
+
+const COMPLETE_CELEBRATION =
+    true;
+
+
+/*
+จำนวน Particle ตอน Goal ครบ
+*/
+
+const COMPLETE_PARTICLES =
+    50;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const goalWrap =
+    document.getElementById(
+        "goal-wrap"
+    );
+
+
+const goalCard =
+    document.getElementById(
+        "goal-card"
+    );
+
+
+const goalTitle =
+    document.getElementById(
+        "goal-title"
+    );
+
+
+const goalPercent =
+    document.getElementById(
+        "goal-percent"
+    );
+
+
+const goalTotal =
+    document.getElementById(
+        "goal-total"
+    );
+
+
+const goalTarget =
+    document.getElementById(
+        "goal-target"
+    );
+
+
+const progressFill =
+    document.getElementById(
+        "progress-fill"
+    );
+
+
+const progressSpark =
+    document.getElementById(
+        "progress-spark"
+    );
+
+
+const goalNote =
+    document.getElementById(
+        "goal-note"
+    );
+
+
+const remainingElement =
+    document.getElementById(
+        "remaining"
+    );
+
+
+const donationPop =
+    document.getElementById(
+        "donation-pop"
+    );
+
+
+const donationPopAmount =
+    document.getElementById(
+        "donation-pop-amount"
+    );
+
+
+const donationPopName =
+    document.getElementById(
+        "donation-pop-name"
+    );
+
+
+const completeBanner =
+    document.getElementById(
+        "complete-banner"
+    );
+
+
+const particles =
+    document.getElementById(
+        "particles"
+    );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentTotal =
+    0;
+
+
+let currentTarget =
+    1;
+
+
+let currentPercent =
+    0;
+
+
+let initialized =
+    false;
+
+
+let numberAnimation =
+    null;
+
+
+let donationPopTimer =
+    null;
+
+
+let completeTimer =
+    null;
+
+
+/* =========================================================
+   SOCKET
+========================================================= */
+
+const socket =
+    io();
+
+
+socket.on(
+    "connect",
+    () => {
+
+        console.log(
+            "Goal Overlay connected"
+        );
+    }
+);
+
+
+socket.on(
+    "disconnect",
+    () => {
+
+        console.log(
+            "Goal Overlay disconnected"
+        );
+    }
+);
+
+
+/* =========================================================
+   GOAL UPDATE
+========================================================= */
+
+socket.on(
+    "goal-update",
+    goal => {
+
+        if (!goal) {
+
+            return;
+        }
+
+
+        renderGoal(
+            goal,
+            true
+        );
+    }
+);
+
+
+/* =========================================================
+   DONATION
+========================================================= */
+
+socket.on(
+    "donation",
+    donation => {
+
+
+        if (!donation) {
+
+            return;
+        }
+
+
+        /*
+        Test และ Replay
+        ห้ามทำเหมือน Goal เพิ่ม
+        */
+
+        if (
+            donation.isTest ||
+            donation.test ||
+            donation.isReplay ||
+            donation.replay
+        ) {
+
+            return;
+        }
+
+
+        const amount =
+            Number(
+                donation.amount
+            );
+
+
+        if (
+            !Number.isFinite(
+                amount
+            )
+            ||
+            amount <= 0
+        ) {
+
+            return;
+        }
+
+
+        showDonationPop(
+
+            donation.name ||
+            "Anonymous",
+
+            amount
+        );
+
+
+        pulseGoalCard();
+    }
+);
+
+
+/* =========================================================
+   LOAD GOAL
+========================================================= */
+
+async function loadGoal() {
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/goal"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "โหลด Goal ไม่สำเร็จ"
+            );
+        }
+
+
+        renderGoal(
+            data,
+            false
+        );
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Goal Load Error:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   RENDER GOAL
+========================================================= */
+
+function renderGoal(
+    goal,
+    animate
+) {
+
+
+    const enabled =
+        goal.enabled === true ||
+        goal.enabled === 1 ||
+        goal.enabled === "1";
+
+
+    /*
+    ปิด Goal ใน Dashboard
+    = Overlay หาย
+    */
+
+    if (!enabled) {
+
+
+        goalWrap.classList.remove(
+            "show"
+        );
+
+
+        return;
+    }
+
+
+    goalWrap.classList.add(
+        "show"
+    );
+
+
+    const newTotal =
+
+        Math.max(
+
+            0,
+
+            Number(
+                goal.total || 0
+            )
+        );
+
+
+    const newTarget =
+
+        Math.max(
+
+            1,
+
+            Number(
+                goal.target || 1
+            )
+        );
+
+
+    const newPercent =
+
+        Math.min(
+
+            100,
+
+            Math.max(
+
+                0,
+
+                Number.isFinite(
+                    Number(
+                        goal.percent
+                    )
+                )
+
+                ?
+
+                Number(
+                    goal.percent
+                )
+
+                :
+
+                (
+                    newTotal /
+                    newTarget *
+                    100
+                )
+            )
+        );
+
+
+    const wasComplete =
+        currentPercent >= 100;
+
+
+    const nowComplete =
+        newPercent >= 100;
+
+
+    /*
+    TITLE
+    */
+
+    goalTitle.innerText =
+
+        goal.title ||
+
+        "เป้าหมายสนับสนุน";
+
+
+    /*
+    TARGET
+    */
+
+    goalTarget.innerText =
+
+        formatMoney(
+            newTarget
+        );
+
+
+    /*
+    NUMBER ANIMATION
+    */
+
+    if (
+        initialized &&
+        animate
+    ) {
+
+
+        animateTotal(
+
+            currentTotal,
+
+            newTotal,
+
+            900
+        );
+
+
+    } else {
+
+
+        goalTotal.innerText =
+
+            formatMoney(
+                newTotal
+            );
+    }
+
+
+    /*
+    PERCENT
+    */
+
+    goalPercent.innerText =
+
+        `${Math.round(
+            newPercent
+        )}%`;
+
+
+    /*
+    PROGRESS BAR
+    */
+
+    progressFill.style.width =
+
+        `${newPercent}%`;
+
+
+    progressSpark.style.left =
+
+        `${newPercent}%`;
+
+
+    progressSpark.style.opacity =
+
+        newPercent > 0
+
+        ?
+
+        "1"
+
+        :
+
+        "0";
+
+
+    /*
+    REMAINING
+    */
+
+    const remaining =
+
+        Math.max(
+
+            0,
+
+            newTarget -
+            newTotal
+        );
+
+
+    if (nowComplete) {
+
+
+        goalWrap.classList.add(
+            "complete"
+        );
+
+
+        goalNote.innerText =
+            "🎉 เป้าหมายสำเร็จแล้ว ขอบคุณทุกคนมาก ๆ ❤️";
+
+
+        remainingElement.innerText =
+            "GOAL COMPLETE";
+
+
+    } else {
+
+
+        goalWrap.classList.remove(
+            "complete"
+        );
+
+
+        goalNote.innerText =
+            "ขอบคุณทุกการสนับสนุน ❤️";
+
+
+        remainingElement.innerText =
+
+            "เหลืออีก ฿"
+
+            +
+
+            formatMoney(
+                remaining
+            );
+    }
+
+
+    /*
+    เพิ่งครบ Goal จาก Donation
+    */
+
+    if (
+        initialized &&
+        !wasComplete &&
+        nowComplete
+    ) {
+
+
+        celebrateComplete();
+    }
+
+
+    currentTotal =
+        newTotal;
+
+
+    currentTarget =
+        newTarget;
+
+
+    currentPercent =
+        newPercent;
+
+
+    initialized =
+        true;
+}
+
+
+/* =========================================================
+   ANIMATE MONEY
+========================================================= */
+
+function animateTotal(
+    from,
+    to,
+    duration
+) {
+
+
+    if (
+        numberAnimation
+    ) {
+
+
+        cancelAnimationFrame(
+            numberAnimation
+        );
+
+
+        numberAnimation =
+            null;
+    }
+
+
+    const start =
+        performance.now();
+
+
+    function frame(
+        now
+    ) {
+
+
+        const progress =
+
+            Math.min(
+
+                1,
+
+                (
+                    now -
+                    start
+                )
+
+                /
+
+                duration
+            );
+
+
+        /*
+        easeOutCubic
+        */
+
+        const eased =
+
+            1
+
+            -
+
+            Math.pow(
+                1 - progress,
+                3
+            );
+
+
+        const value =
+
+            from
+
+            +
+
+            (
+                to -
+                from
+            )
+
+            *
+
+            eased;
+
+
+        goalTotal.innerText =
+
+            formatMoney(
+
+                Math.round(
+                    value
+                )
+            );
+
+
+        if (
+            progress < 1
+        ) {
+
+
+            numberAnimation =
+
+                requestAnimationFrame(
+                    frame
+                );
+
+
+        } else {
+
+
+            goalTotal.innerText =
+
+                formatMoney(
+                    to
+                );
+
+
+            numberAnimation =
+                null;
+        }
+    }
+
+
+    numberAnimation =
+
+        requestAnimationFrame(
+            frame
+        );
+}
+
+
+/* =========================================================
+   DONATION POP
+========================================================= */
+
+function showDonationPop(
+    name,
+    amount
+) {
+
+
+    if (
+        donationPopTimer
+    ) {
+
+
+        clearTimeout(
+            donationPopTimer
+        );
+    }
+
+
+    donationPopAmount.innerText =
+
+        "+฿"
+
+        +
+
+        formatMoney(
+            amount
+        );
+
+
+    donationPopName.innerText =
+
+        String(
+            name ||
+            "Anonymous"
+        )
+
+        +
+
+        " ❤️";
+
+
+    donationPop.classList.remove(
+        "show"
+    );
+
+
+    /*
+    Restart animation
+    */
+
+    void donationPop.offsetWidth;
+
+
+    donationPop.classList.add(
+        "show"
+    );
+
+
+    donationPopTimer =
+
+        setTimeout(
+            () => {
+
+
+                donationPop.classList.remove(
+                    "show"
+                );
+
+
+            },
+
+            DONATION_POP_TIME
+        );
+}
+
+
+/* =========================================================
+   CARD PULSE
+========================================================= */
+
+function pulseGoalCard() {
+
+
+    goalCard.classList.remove(
+        "donation-pulse"
+    );
+
+
+    void goalCard.offsetWidth;
+
+
+    goalCard.classList.add(
+        "donation-pulse"
+    );
+
+
+    setTimeout(
+        () => {
+
+
+            goalCard.classList.remove(
+                "donation-pulse"
+            );
+
+
+        },
+        800
+    );
+}
+
+
+/* =========================================================
+   GOAL COMPLETE
+========================================================= */
+
+function celebrateComplete() {
+
+
+    if (!COMPLETE_CELEBRATION) {
+
+        return;
+    }
+
+
+    if (
+        completeTimer
+    ) {
+
+
+        clearTimeout(
+            completeTimer
+        );
+    }
+
+
+    completeBanner.classList.add(
+        "show"
+    );
+
+
+    createParticles(
+        COMPLETE_PARTICLES
+    );
+
+
+    completeTimer =
+
+        setTimeout(
+            () => {
+
+
+                completeBanner.classList.remove(
+                    "show"
+                );
+
+
+            },
+            5500
+        );
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+function createParticles(
+    count
+) {
+
+
+    particles.innerHTML =
+        "";
+
+
+    for (
+        let index = 0;
+        index < count;
+        index++
+    ) {
+
+
+        const particle =
+
+            document.createElement(
+                "div"
+            );
+
+
+        particle.className =
+            "particle";
+
+
+        particle.style.left =
+
+            (
+                20
+
+                +
+
+                Math.random() *
+                60
+            )
+
+            +
+
+            "%";
+
+
+        particle.style.bottom =
+
+            (
+                70
+
+                +
+
+                Math.random() *
+                90
+            )
+
+            +
+
+            "px";
+
+
+        particle.style.animationDelay =
+
+            (
+                Math.random() *
+                .8
+            )
+
+            +
+
+            "s";
+
+
+        particle.style.animationDuration =
+
+            (
+                1.3
+
+                +
+
+                Math.random() *
+                1.4
+            )
+
+            +
+
+            "s";
+
+
+        const size =
+
+            4
+
+            +
+
+            Math.random() *
+            7;
+
+
+        particle.style.width =
+
+            size
+
+            +
+
+            "px";
+
+
+        particle.style.height =
+
+            size
+
+            +
+
+            "px";
+
+
+        particles.appendChild(
+            particle
+        );
+    }
+
+
+    setTimeout(
+        () => {
+
+
+            particles.innerHTML =
+                "";
+
+
+        },
+        3500
+    );
+}
+
+
+/* =========================================================
+   FORMAT
+========================================================= */
+
+function formatMoney(
+    value
+) {
+
+
+    return Number(
+        value || 0
+    )
+    .toLocaleString(
+        "th-TH",
+        {
+
+            maximumFractionDigits:
+                2
+        }
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+/* =========================================================
+   DEMO / TEST MODE
+   ?demo=1
+========================================================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const DEMO_MODE =
+    params.get("demo") === "1";
+
+
+async function runDemo() {
+
+    console.log("🧪 GOAL OVERLAY DEMO MODE");
+
+
+    /* STEP 1 */
+
+    renderGoal(
+        {
+            success: true,
+            enabled: true,
+            title: "อัปเกรดอุปกรณ์สตรีม",
+            total: 3150,
+            target: 5000,
+            percent: 63
+        },
+        false
+    );
+
+
+    await demoDelay(1800);
+
+
+    /* STEP 2 - จำลอง Donation */
+
+    showDonationPop(
+        "Ploy",
+        500
+    );
+
+
+    pulseGoalCard();
+
+
+    renderGoal(
+        {
+            success: true,
+            enabled: true,
+            title: "อัปเกรดอุปกรณ์สตรีม",
+            total: 3650,
+            target: 5000,
+            percent: 73
+        },
+        true
+    );
+
+
+    await demoDelay(5000);
+
+
+    /* STEP 3 - อีก Donation */
+
+    showDonationPop(
+        "Beam",
+        850
+    );
+
+
+    pulseGoalCard();
+
+
+    renderGoal(
+        {
+            success: true,
+            enabled: true,
+            title: "อัปเกรดอุปกรณ์สตรีม",
+            total: 4500,
+            target: 5000,
+            percent: 90
+        },
+        true
+    );
+
+
+    await demoDelay(5000);
+
+
+    /* STEP 4 - GOAL COMPLETE */
+
+    showDonationPop(
+        "AMR29 Fan",
+        500
+    );
+
+
+    pulseGoalCard();
+
+
+    renderGoal(
+        {
+            success: true,
+            enabled: true,
+            title: "อัปเกรดอุปกรณ์สตรีม",
+            total: 5000,
+            target: 5000,
+            percent: 100
+        },
+        true
+    );
+}
+
+
+function demoDelay(ms) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+if (DEMO_MODE) {
+
+    runDemo();
+
+} else {
+
+    loadGoal();
+}
+
+</script>
+
+
+</body>
+
+</html>

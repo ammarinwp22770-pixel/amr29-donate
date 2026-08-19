@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AMR29 Test Donation</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0c0c10;
+    --card: rgba(24,24,31,.97);
+    --input: #272730;
+
+    --text: #fff;
+    --text2: #aaaab5;
+
+    --accent: #ff5b7f;
+    --accent2: #ff7895;
+
+    --success: #63df9b;
+    --error: #ff6b6b;
+
+    --border: rgba(255,255,255,.08);
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    font-family:
+        Inter,
+        "Noto Sans Thai",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(255,91,127,.16),
+            transparent 40%
+        ),
+        var(--bg);
+}
+
+.page {
+    width: 100%;
+    max-width: 480px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 20px;
+
+    font-size: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    box-shadow:
+        0 10px 35px
+        rgba(255,91,127,.25);
+}
+
+.header h1 {
+    margin: 0;
+
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.header p {
+    margin: 7px 0 0;
+
+    color: var(--text2);
+
+    font-size: 13px;
+}
+
+.test-badge {
+    display: inline-block;
+
+    margin-top: 10px;
+
+    padding: 5px 10px;
+
+    border:
+        1px solid
+        rgba(255,91,127,.25);
+
+    border-radius: 999px;
+
+    color: var(--accent2);
+
+    background:
+        rgba(255,91,127,.08);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.card {
+    padding: 26px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 22px;
+
+    background: var(--card);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.4);
+}
+
+.field {
+    margin-bottom: 19px;
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.optional {
+    color: #777783;
+    font-size: 11px;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border:
+        1px solid transparent;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    color: white;
+
+    background: var(--input);
+
+    font: inherit;
+
+    transition: .2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color:
+        rgba(255,91,127,.7);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,91,127,.1);
+}
+
+textarea {
+    min-height: 95px;
+    resize: vertical;
+}
+
+.amount-wrap {
+    position: relative;
+}
+
+.amount-wrap input {
+    padding-right: 60px;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.currency {
+    position: absolute;
+
+    top: 50%;
+    right: 15px;
+
+    transform:
+        translateY(-50%);
+
+    color: var(--text2);
+
+    font-size: 13px;
+
+    pointer-events: none;
+}
+
+.quick {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 7px;
+
+    margin-top: 9px;
+}
+
+.quick button {
+    padding: 9px 3px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 9px;
+
+    color: #ddd;
+
+    background:
+        rgba(255,255,255,.04);
+
+    cursor: pointer;
+
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quick button:hover {
+    border-color:
+        rgba(255,91,127,.4);
+
+    color: white;
+}
+
+.send {
+    width: 100%;
+
+    padding: 15px;
+
+    border: 0;
+
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff3d68
+        );
+
+    cursor: pointer;
+
+    font: inherit;
+    font-size: 15px;
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 25px
+        rgba(255,91,127,.2);
+}
+
+.send:hover {
+    transform: translateY(-1px);
+}
+
+.send:disabled {
+    opacity: .55;
+    cursor: wait;
+    transform: none;
+}
+
+.status {
+    display: none;
+
+    margin-top: 13px;
+
+    padding: 12px 14px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+.status.success {
+    display: block;
+
+    color: var(--success);
+
+    border:
+        1px solid
+        rgba(99,223,155,.2);
+
+    background:
+        rgba(99,223,155,.08);
+}
+
+.status.error {
+    display: block;
+
+    color: var(--error);
+
+    border:
+        1px solid
+        rgba(255,107,107,.2);
+
+    background:
+        rgba(255,107,107,.08);
+}
+
+.warning {
+    margin-top: 17px;
+
+    padding: 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 11px;
+
+    color: #888894;
+
+    background:
+        rgba(255,255,255,.025);
+
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.preview {
+    margin-bottom: 18px;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        rgba(255,91,127,.13);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,91,127,.04);
+}
+
+.preview-title {
+    margin-bottom: 7px;
+
+    color: var(--text2);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.preview-name {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.preview-amount {
+    margin-top: 3px;
+
+    color: var(--accent2);
+
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.preview-message {
+    margin-top: 7px;
+
+    color: #aaaab5;
+
+    font-size: 12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+
+        <div class="logo">
+            🧪
+        </div>
+
+        <h1>
+            Test Donation
+        </h1>
+
+        <p>
+            ทดสอบ Alert โดยไม่ต้องโอนเงินจริง
+        </p>
+
+        <div class="test-badge">
+            AMR29 TEST MODE
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+
+        <div class="preview">
+
+            <div class="preview-title">
+                PREVIEW
+            </div>
+
+            <div
+                class="preview-name"
+                id="preview-name"
+            >
+                AMR29 Test
+            </div>
+
+            <div
+                class="preview-amount"
+                id="preview-amount"
+            >
+                100 บาท
+            </div>
+
+            <div
+                class="preview-message"
+                id="preview-message"
+            >
+                ทดสอบโดเนทครับ
+            </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <div class="field-header">
+
+                <label>
+                    ชื่อ
+                </label>
+
+                <span class="optional">
+                    สำหรับเทส
+                </span>
+
+            </div>
+
+            <input
+                id="name"
+                type="text"
+                maxlength="30"
+                value="AMR29 Test"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <div class="field-header">
+
+                <label>
+                    ข้อความ
+                </label>
+
+            </div>
+
+            <textarea
+                id="message"
+                maxlength="200"
+            >ทดสอบโดเนทครับ</textarea>
+
+        </div>
+
+
+        <div class="field">
+
+            <div class="field-header">
+
+                <label>
+                    จำนวนเงิน
+                </label>
+
+                <span class="optional">
+                    กรอกเท่าไรก็ได้
+                </span>
+
+            </div>
+
+
+            <div class="amount-wrap">
+
+                <input
+                    id="amount"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="100"
+                >
+
+                <div class="currency">
+                    บาท
+                </div>
+
+            </div>
+
+
+            <div class="quick">
+
+                <button onclick="setAmount(10)">
+                    10
+                </button>
+
+                <button onclick="setAmount(100)">
+                    100
+                </button>
+
+                <button onclick="setAmount(500)">
+                    500
+                </button>
+
+                <button onclick="setAmount(1000)">
+                    1K
+                </button>
+
+                <button onclick="setAmount(2500)">
+                    2.5K
+                </button>
+
+                <button onclick="setAmount(5000)">
+                    5K
+                </button>
+
+                <button onclick="setAmount(10000)">
+                    10K
+                </button>
+
+                <button onclick="setAmount(100000)">
+                    100K
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="send"
+            id="send-button"
+            onclick="sendTestDonation()"
+        >
+            🧪 ส่ง Test Donation
+        </button>
+
+
+        <div
+            class="status"
+            id="status"
+        ></div>
+
+
+        <div class="warning">
+
+            ⚠️ Test Donation จะไม่ถูกบันทึกลง Database,
+            ไม่เพิ่ม Top Supporters และไม่เพิ่ม Donation Goal
+            ใช้สำหรับทดสอบ Alert/Effect/TTS เท่านั้น
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const nameInput =
+    document.getElementById("name");
+
+const messageInput =
+    document.getElementById("message");
+
+const amountInput =
+    document.getElementById("amount");
+
+const previewName =
+    document.getElementById("preview-name");
+
+const previewAmount =
+    document.getElementById("preview-amount");
+
+const previewMessage =
+    document.getElementById("preview-message");
+
+const sendButton =
+    document.getElementById("send-button");
+
+const statusBox =
+    document.getElementById("status");
+
+
+function setAmount(amount) {
+
+    amountInput.value =
+        amount;
+
+    updatePreview();
+}
+
+
+function updatePreview() {
+
+    const name =
+        nameInput.value.trim()
+        || "AMR29 Test";
+
+    const message =
+        messageInput.value.trim();
+
+    const amount =
+        Number(amountInput.value || 0);
+
+
+    previewName.innerText =
+        name;
+
+
+    previewAmount.innerText =
+
+        amount.toLocaleString()
+
+        + " บาท";
+
+
+    previewMessage.innerText =
+
+        message ||
+
+        "ไม่มีข้อความ";
+}
+
+
+nameInput.addEventListener(
+    "input",
+    updatePreview
+);
+
+messageInput.addEventListener(
+    "input",
+    updatePreview
+);
+
+amountInput.addEventListener(
+    "input",
+    updatePreview
+);
+
+
+async function sendTestDonation() {
+
+    const name =
+        nameInput.value.trim()
+        || "AMR29 Test";
+
+
+    const message =
+        messageInput.value.trim();
+
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+
+    if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ) {
+
+        showStatus(
+            "error",
+            "❌ กรุณากรอกจำนวนเงินที่ถูกต้อง"
+        );
+
+        return;
+    }
+
+
+    sendButton.disabled =
+        true;
+
+
+    sendButton.innerText =
+        "กำลังส่ง Test...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/test-donation",
+                {
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            name,
+
+                            message,
+
+                            amount
+                        })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+
+                data.message ||
+
+                "ส่ง Test Donation ไม่สำเร็จ"
+            );
+        }
+
+
+        showStatus(
+
+            "success",
+
+            "✅ Test Donation "
+
+            + amount.toLocaleString()
+
+            + " บาท ส่งไปที่ OBS แล้ว"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showStatus(
+
+            "error",
+
+            "❌ "
+
+            +
+
+            (
+                error.message ||
+
+                "เชื่อมต่อ Server ไม่สำเร็จ"
+            )
+        );
+
+
+    } finally {
+
+        sendButton.disabled =
+            false;
+
+
+        sendButton.innerText =
+            "🧪 ส่ง Test Donation";
+    }
+}
+
+
+function showStatus(
+    type,
+    text
+) {
+
+    statusBox.className =
+        "status " + type;
+
+
+    statusBox.innerText =
+        text;
+}
+
+
+updatePreview();
+
+</script>
+
+</body>
+</html>

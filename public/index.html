@@ -1,0 +1,8364 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090a0f">
+
+<title>AMR29 Donate</title>
+
+<style>
+/* =========================================================
+   RESET / VARIABLES
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #090a0f;
+    --panel: rgba(18,20,28,.94);
+    --panel-solid: #14171f;
+    --panel-2: #1b1e28;
+    --input: #20232d;
+    --input-hover: #252934;
+
+    --text: #ffffff;
+    --text-2: #b6b8c2;
+    --text-3: #777b88;
+
+    --accent: #ff5b7f;
+    --accent-2: #ff8ca5;
+    --accent-3: #ffb0c2;
+
+    --success: #65e2a0;
+    --warning: #ffcc67;
+    --danger: #ff6d79;
+    --gold: #ffd36e;
+    --blue: #78caff;
+
+    --border: rgba(255,255,255,.075);
+    --border-strong: rgba(255,255,255,.13);
+
+    --shadow: 0 30px 90px rgba(0,0,0,.35);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text);
+    background: var(--bg);
+
+    font-family:
+        Inter,
+        "Noto Sans Thai",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+input,
+textarea {
+    width: 100%;
+}
+
+button,
+input,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -20;
+    overflow: hidden;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 17% -6%,
+            rgba(255,91,127,.15),
+            transparent 31%
+        ),
+        radial-gradient(
+            circle at 92% 12%,
+            rgba(96,101,255,.10),
+            transparent 27%
+        ),
+        radial-gradient(
+            circle at 48% 105%,
+            rgba(255,91,127,.05),
+            transparent 30%
+        ),
+        #090a0f;
+}
+
+.bg-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: .13;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 46px 46px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 85%
+        );
+}
+
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(110px);
+    opacity: .22;
+}
+
+.bg-orb.one {
+    width: 390px;
+    height: 390px;
+    left: -210px;
+    top: 25%;
+    background: #ff4772;
+}
+
+.bg-orb.two {
+    width: 440px;
+    height: 440px;
+    right: -230px;
+    top: 43%;
+    background: #535bff;
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.nav {
+    width: min(1240px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 21px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.brand-logo {
+    width: 45px;
+    height: 45px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    box-shadow:
+        0 12px 35px rgba(255,91,127,.23);
+
+    font-size: 20px;
+}
+
+.brand-name {
+    font-size: 16px;
+    font-weight: 950;
+}
+
+.brand-sub {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 8px;
+    font-weight: 850;
+
+    letter-spacing: 1.5px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.network-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    color: var(--text-2);
+
+    background: rgba(255,255,255,.025);
+
+    backdrop-filter: blur(12px);
+
+    font-size: 8px;
+    font-weight: 850;
+
+    transition: .25s;
+}
+
+.network-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--warning);
+
+    box-shadow:
+        0 0 11px rgba(255,204,103,.7);
+}
+
+.network-status.online {
+    border-color: rgba(101,226,160,.14);
+}
+
+.network-status.online .network-dot {
+    background: var(--success);
+
+    box-shadow:
+        0 0 12px rgba(101,226,160,.85);
+}
+
+.network-status.offline {
+    color: #ff9da5;
+    border-color: rgba(255,109,121,.18);
+}
+
+.network-status.offline .network-dot {
+    background: var(--danger);
+
+    box-shadow:
+        0 0 12px rgba(255,109,121,.8);
+}
+
+.nav-pill {
+    padding: 8px 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    color: var(--text-2);
+
+    background: rgba(255,255,255,.025);
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+    width: min(1240px, calc(100% - 32px));
+    margin: 0 auto 70px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+
+    margin-bottom: 18px;
+    padding: 37px 39px;
+
+    border: 1px solid var(--border);
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,91,127,.105),
+            rgba(255,255,255,.018) 45%,
+            rgba(80,86,255,.05)
+        ),
+        rgba(18,20,28,.82);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow: var(--shadow);
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 290px;
+    height: 290px;
+
+    right: -70px;
+    top: -120px;
+
+    border-radius: 50%;
+
+    background: rgba(255,91,127,.17);
+
+    filter: blur(75px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+
+    max-width: 760px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 6px 9px;
+
+    border: 1px solid rgba(255,91,127,.18);
+    border-radius: 999px;
+
+    color: var(--accent-3);
+
+    background: rgba(255,91,127,.07);
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.hero h1 {
+    margin: 14px 0 8px;
+
+    max-width: 760px;
+
+    font-size: clamp(31px,5vw,51px);
+    line-height: 1.05;
+
+    letter-spacing: -1.7px;
+
+    font-weight: 950;
+}
+
+.hero h1 span {
+    color: var(--accent-2);
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0;
+
+    color: var(--text-2);
+
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.hero-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+
+    margin-top: 20px;
+}
+
+.hero-feature {
+    padding: 7px 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #c8cad1;
+
+    background: rgba(255,255,255,.025);
+
+    font-size: 8px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1.56fr)
+        minmax(320px,.74fr);
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.right-column {
+    position: sticky;
+    top: 18px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: 22px;
+
+    background: rgba(19,21,29,.94);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.20);
+}
+
+.card-head {
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.card-sub {
+    margin-top: 3px;
+
+    color: var(--text-3);
+
+    font-size: 9px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+
+/* =========================================================
+   STEP BAR
+========================================================= */
+
+.stepper {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 7px;
+
+    margin-bottom: 17px;
+}
+
+.step {
+    padding: 10px 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    color: var(--text-3);
+
+    background: rgba(255,255,255,.02);
+
+    font-size: 8px;
+    font-weight: 850;
+
+    transition: .25s;
+}
+
+.step strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #bfc1ca;
+
+    font-size: 9px;
+}
+
+.step.active {
+    color: var(--accent-2);
+
+    border-color: rgba(255,91,127,.28);
+
+    background: rgba(255,91,127,.07);
+}
+
+.step.active strong {
+    color: #ffffff;
+}
+
+.step.done {
+    color: var(--success);
+
+    border-color: rgba(101,226,160,.18);
+
+    background: rgba(101,226,160,.045);
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 11px;
+}
+
+.field {
+    margin-bottom: 13px;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.field-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 6px;
+}
+
+.field label {
+    color: #d6d8de;
+
+    font-size: 10px;
+    font-weight: 850;
+}
+
+.field-info {
+    color: var(--text-3);
+
+    font-size: 8px;
+}
+
+input,
+textarea {
+    padding: 12px 13px;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    outline: none;
+
+    color: #ffffff;
+
+    background: var(--input);
+
+    transition: .2s;
+}
+
+input:hover,
+textarea:hover {
+    background: var(--input-hover);
+}
+
+input:focus,
+textarea:focus {
+    border-color: rgba(255,91,127,.62);
+
+    background: #242732;
+
+    box-shadow:
+        0 0 0 3px rgba(255,91,127,.08);
+}
+
+input:disabled,
+textarea:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #656977;
+}
+
+textarea {
+    min-height: 104px;
+    resize: vertical;
+}
+
+.counter {
+    margin-top: 5px;
+
+    color: var(--text-3);
+
+    text-align: right;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.amount-wrap {
+    position: relative;
+}
+
+.amount-wrap input {
+    padding-right: 52px;
+
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.amount-currency {
+    position: absolute;
+
+    right: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--text-3);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    pointer-events: none;
+}
+
+.quick-amounts {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+.amount-btn {
+    padding: 10px 4px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #b8bac4;
+
+    background: rgba(255,255,255,.025);
+
+    cursor: pointer;
+
+    font-size: 9px;
+    font-weight: 850;
+
+    transition: .18s;
+}
+
+.amount-btn small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 6px;
+}
+
+.amount-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+
+    border-color: rgba(255,91,127,.28);
+}
+
+.amount-btn.active {
+    color: #ffffff;
+
+    border-color: rgba(255,91,127,.6);
+
+    background: rgba(255,91,127,.10);
+}
+
+.amount-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+.sound-box {
+    position: relative;
+    overflow: hidden;
+
+    padding: 15px;
+
+    border: 1px solid rgba(255,91,127,.13);
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,91,127,.05),
+            rgba(255,255,255,.018)
+        );
+}
+
+.sound-box::before {
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    right: -60px;
+    top: -80px;
+
+    border-radius: 50%;
+
+    background: rgba(255,91,127,.11);
+
+    filter: blur(35px);
+
+    pointer-events: none;
+}
+
+.sound-top {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.sound-title {
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.sound-desc {
+    margin-top: 3px;
+
+    color: var(--text-3);
+
+    font-size: 8px;
+}
+
+.sound-tier {
+    align-self: flex-start;
+
+    padding: 5px 8px;
+
+    border: 1px solid rgba(255,91,127,.2);
+    border-radius: 999px;
+
+    color: var(--accent-2);
+
+    background: rgba(255,91,127,.07);
+
+    font-size: 7px;
+    font-weight: 900;
+
+    letter-spacing: .6px;
+}
+
+.sound-current {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        42px
+        minmax(0,1fr)
+        auto;
+
+    gap: 10px;
+
+    align-items: center;
+
+    margin-top: 12px;
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.02);
+}
+
+.sound-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,91,127,.20),
+            rgba(255,91,127,.07)
+        );
+
+    font-size: 17px;
+}
+
+.sound-name {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 10px;
+    font-weight: 850;
+}
+
+.sound-range {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.mini-btn {
+    padding: 7px 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background: rgba(255,255,255,.035);
+
+    cursor: pointer;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    transition: .18s;
+}
+
+.mini-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,.075);
+}
+
+.mini-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   EFFECT CHIPS
+========================================================= */
+
+.effect-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 8px;
+}
+
+.effect-chip {
+    padding: 4px 7px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    color: var(--text-3);
+
+    background: rgba(255,255,255,.022);
+
+    font-size: 6px;
+    font-weight: 800;
+}
+
+.effect-chip.on {
+    color: #ffb3c5;
+
+    border-color: rgba(255,91,127,.18);
+
+    background: rgba(255,91,127,.055);
+}
+
+
+/* =========================================================
+   SOUND OPTIONS
+========================================================= */
+
+.sound-options {
+    display: none;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 7px;
+
+    margin-top: 10px;
+}
+
+.sound-options.show {
+    display: grid;
+}
+
+.sound-option {
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    color: #c4c6cf;
+
+    background: rgba(255,255,255,.018);
+
+    cursor: pointer;
+
+    transition: .18s;
+}
+
+.sound-option:hover {
+    border-color: rgba(255,91,127,.25);
+}
+
+.sound-option.active {
+    color: #ffffff;
+
+    border-color: rgba(255,91,127,.55);
+
+    background: rgba(255,91,127,.075);
+}
+
+.sound-option-title {
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.sound-option-desc {
+    margin-top: 3px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   CUSTOM SOUND
+========================================================= */
+
+.custom-area {
+    display: none;
+
+    margin-top: 8px;
+    padding: 10px;
+
+    border: 1px dashed rgba(255,255,255,.11);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.014);
+}
+
+.custom-area.show {
+    display: block;
+}
+
+.custom-input {
+    display: none;
+}
+
+.custom-file-button {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #ffffff;
+
+    background: #252832;
+
+    cursor: pointer;
+
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.custom-rules {
+    margin-top: 6px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.45;
+}
+
+.custom-file-card {
+    display: none;
+
+    margin-top: 8px;
+    padding: 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.02);
+}
+
+.custom-file-card.show {
+    display: block;
+}
+
+.custom-file-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.custom-file-name {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.custom-file-meta {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.custom-status {
+    margin-top: 6px;
+
+    font-size: 7px;
+    line-height: 1.45;
+}
+
+.custom-status.loading {
+    color: var(--warning);
+}
+
+.custom-status.success {
+    color: var(--success);
+}
+
+.custom-status.error {
+    color: var(--danger);
+}
+
+.custom-lock {
+    margin-top: 8px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.primary-button {
+    width: 100%;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff3d68
+        );
+
+    box-shadow:
+        0 12px 30px rgba(255,91,127,.20);
+
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    transition: .2s;
+}
+
+.primary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+}
+
+.primary-button:disabled {
+    opacity: .55;
+    cursor: wait;
+    transform: none;
+}
+
+.secondary-button {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #c8cad1;
+
+    background: rgba(255,255,255,.025);
+
+    cursor: pointer;
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.payment-section {
+    display: none;
+}
+
+.payment-section.show {
+    display: block;
+}
+
+.payment-header-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.payment-timer {
+    padding: 6px 9px;
+
+    border: 1px solid rgba(255,204,103,.14);
+    border-radius: 999px;
+
+    color: var(--warning);
+
+    background: rgba(255,204,103,.055);
+
+    font-size: 8px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.payment-timer.danger {
+    color: var(--danger);
+
+    border-color: rgba(255,109,121,.20);
+
+    background: rgba(255,109,121,.06);
+}
+
+.payment-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(260px,.8fr)
+        minmax(0,1.2fr);
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   DONATION STATUS TIMELINE
+========================================================= */
+
+.status-timeline {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 7px;
+
+    margin-bottom: 15px;
+}
+
+.timeline-item {
+    position: relative;
+
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.018);
+
+    transition: .25s;
+}
+
+.timeline-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.timeline-icon {
+    width: 20px;
+    height: 20px;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 6px;
+
+    color: var(--text-3);
+
+    background: rgba(255,255,255,.045);
+
+    font-size: 8px;
+    font-weight: 900;
+}
+
+.timeline-title {
+    color: #b8bac3;
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.timeline-desc {
+    margin-top: 4px;
+
+    color: var(--text-3);
+
+    font-size: 6px;
+    line-height: 1.4;
+}
+
+.timeline-item.active {
+    border-color: rgba(255,91,127,.27);
+    background: rgba(255,91,127,.055);
+}
+
+.timeline-item.active .timeline-icon {
+    color: #ffffff;
+
+    background: var(--accent);
+
+    box-shadow:
+        0 0 15px rgba(255,91,127,.27);
+}
+
+.timeline-item.active .timeline-title {
+    color: #ffffff;
+}
+
+.timeline-item.done {
+    border-color: rgba(101,226,160,.15);
+    background: rgba(101,226,160,.035);
+}
+
+.timeline-item.done .timeline-icon {
+    color: #07130d;
+    background: var(--success);
+}
+
+.timeline-item.done .timeline-title {
+    color: var(--success);
+}
+
+
+/* =========================================================
+   QR
+========================================================= */
+
+.qr-side {
+    padding: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,91,127,.045),
+            rgba(255,255,255,.015)
+        );
+}
+
+.qr-label {
+    color: var(--text-3);
+
+    text-align: center;
+
+    font-size: 7px;
+    font-weight: 850;
+
+    letter-spacing: 1px;
+}
+
+.qr-wrapper {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 10px;
+}
+
+.qr-box {
+    position: relative;
+
+    padding: 11px;
+
+    border-radius: 17px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.3);
+}
+
+.qr-expired-cover {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+    place-items: center;
+
+    padding: 20px;
+
+    border-radius: 17px;
+
+    color: #ffffff;
+
+    background: rgba(9,10,15,.88);
+
+    backdrop-filter: blur(6px);
+
+    text-align: center;
+
+    font-size: 10px;
+    font-weight: 850;
+    line-height: 1.5;
+}
+
+.qr-box.expired .qr-expired-cover {
+    display: grid;
+}
+
+#qr-image {
+    display: block;
+
+    width: 220px;
+    height: 220px;
+}
+
+.qr-price {
+    margin-top: 12px;
+
+    text-align: center;
+}
+
+.qr-price span {
+    display: block;
+
+    color: var(--text-3);
+
+    font-size: 8px;
+}
+
+.qr-price strong {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 25px;
+    font-weight: 950;
+}
+
+.qr-countdown-label {
+    margin-top: 8px;
+
+    color: var(--text-3);
+
+    text-align: center;
+
+    font-size: 7px;
+}
+
+.qr-countdown {
+    margin-top: 2px;
+
+    color: var(--warning);
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: .4px;
+}
+
+.qr-countdown.danger {
+    color: var(--danger);
+}
+
+.copy-button {
+    width: 100%;
+
+    margin-top: 10px;
+    padding: 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #d7d8de;
+
+    background: rgba(255,255,255,.03);
+
+    cursor: pointer;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    transition: .18s;
+}
+
+.copy-button.success {
+    color: var(--success);
+
+    border-color: rgba(101,226,160,.17);
+
+    background: rgba(101,226,160,.045);
+}
+
+
+/* =========================================================
+   PAYMENT DETAILS
+========================================================= */
+
+.payment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary {
+    padding: 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.summary-title {
+    color: var(--text-3);
+
+    font-size: 7px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 8px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.04);
+
+    font-size: 9px;
+}
+
+.summary-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-row span:first-child {
+    color: var(--text-3);
+}
+
+.summary-row strong {
+    max-width: 67%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   DROPZONE
+========================================================= */
+
+.dropzone {
+    position: relative;
+
+    padding: 18px;
+
+    border: 1px dashed rgba(255,255,255,.14);
+    border-radius: 12px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,.014);
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.dropzone:hover,
+.dropzone.drag {
+    border-color: rgba(255,91,127,.48);
+
+    background: rgba(255,91,127,.035);
+}
+
+.drop-icon {
+    width: 42px;
+    height: 42px;
+
+    margin: 0 auto 8px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: rgba(255,91,127,.08);
+
+    font-size: 18px;
+}
+
+.drop-title {
+    font-size: 10px;
+    font-weight: 850;
+}
+
+.drop-desc {
+    margin-top: 4px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+#slip {
+    display: none;
+}
+
+.slip-preview {
+    display: none;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 9px;
+    padding: 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.02);
+
+    text-align: left;
+}
+
+.slip-preview.show {
+    display: flex;
+}
+
+.slip-thumb {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 auto;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+
+    background: #222;
+}
+
+.slip-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.slip-name {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.slip-meta {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   VERIFY STATUS
+========================================================= */
+
+.status {
+    display: none;
+
+    padding: 10px 11px;
+
+    border-radius: 9px;
+
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.loading {
+    color: #dedfe4;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    background: rgba(255,255,255,.035);
+}
+
+.status.success {
+    color: var(--success);
+
+    border: 1px solid rgba(101,226,160,.18);
+
+    background: rgba(101,226,160,.055);
+}
+
+.status.error {
+    color: var(--danger);
+
+    border: 1px solid rgba(255,109,121,.18);
+
+    background: rgba(255,109,121,.055);
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: var(--border);
+}
+
+
+/* =========================================================
+   MOBILE SLIP
+========================================================= */
+
+.mobile-upload {
+    padding: 12px;
+
+    border: 1px solid rgba(120,202,255,.12);
+    border-radius: 12px;
+
+    background: rgba(120,202,255,.025);
+
+    transition: .2s;
+}
+
+.mobile-upload.success {
+    border-color: rgba(101,226,160,.22);
+
+    background: rgba(101,226,160,.035);
+}
+
+.mobile-head {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.mobile-icon {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: rgba(120,202,255,.08);
+
+    font-size: 16px;
+}
+
+.mobile-title {
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.mobile-desc {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.mobile-content {
+    display: grid;
+
+    grid-template-columns:
+        120px 1fr;
+
+    gap: 10px;
+
+    align-items: center;
+
+    margin-top: 10px;
+}
+
+.mobile-qr {
+    padding: 7px;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+#mobile-upload-qr {
+    display: block;
+
+    width: 106px;
+    height: 106px;
+}
+
+.mobile-status {
+    color: var(--blue);
+
+    font-size: 8px;
+    font-weight: 800;
+
+    line-height: 1.5;
+}
+
+.mobile-status.success {
+    color: var(--success);
+}
+
+.mobile-status.error {
+    color: var(--danger);
+}
+
+.mobile-expire {
+    margin-top: 5px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.payment-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 7px;
+}
+
+
+/* =========================================================
+   SUCCESS V2
+========================================================= */
+
+.success-screen {
+    position: relative;
+    display: none;
+
+    overflow: hidden;
+
+    padding: 38px 24px 27px;
+
+    text-align: center;
+}
+
+.success-screen.show {
+    display: block;
+}
+
+.success-glow {
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    left: 50%;
+    top: -210px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: rgba(101,226,160,.13);
+
+    filter: blur(75px);
+
+    pointer-events: none;
+}
+
+.success-content {
+    position: relative;
+    z-index: 2;
+}
+
+.success-icon {
+    width: 82px;
+    height: 82px;
+
+    margin: 0 auto 15px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(101,226,160,.25);
+    border-radius: 25px;
+
+    color: var(--success);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(101,226,160,.11),
+            rgba(101,226,160,.035)
+        );
+
+    box-shadow:
+        0 20px 50px rgba(101,226,160,.09);
+
+    font-size: 35px;
+    font-weight: 900;
+}
+
+.success-kicker {
+    color: var(--success);
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+}
+
+.success-screen h2 {
+    margin: 7px 0 0;
+
+    font-size: 25px;
+}
+
+.success-name {
+    margin-top: 5px;
+
+    color: var(--text-2);
+
+    font-size: 11px;
+}
+
+.success-amount {
+    margin-top: 13px;
+
+    color: var(--accent-2);
+
+    font-size: 37px;
+    font-weight: 950;
+
+    letter-spacing: -1px;
+}
+
+.success-message {
+    max-width: 490px;
+
+    margin: 9px auto 0;
+
+    color: var(--text-2);
+
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+.success-details {
+    max-width: 510px;
+
+    margin: 19px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 7px;
+}
+
+.success-detail {
+    padding: 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.success-detail-label {
+    color: var(--text-3);
+
+    font-size: 6px;
+    font-weight: 850;
+
+    letter-spacing: .8px;
+}
+
+.success-detail-value {
+    margin-top: 4px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.success-stream-status {
+    max-width: 510px;
+
+    margin: 8px auto 0;
+    padding: 10px;
+
+    border: 1px solid rgba(101,226,160,.15);
+    border-radius: 10px;
+
+    color: var(--success);
+
+    background: rgba(101,226,160,.045);
+
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.success-actions {
+    max-width: 510px;
+
+    margin: 12px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 7px;
+}
+
+
+/* =========================================================
+   SUCCESS CONFETTI
+========================================================= */
+
+.success-confetti {
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+.success-particle {
+    position: absolute;
+
+    top: -20px;
+
+    width: 7px;
+    height: 11px;
+
+    border-radius: 2px;
+
+    opacity: 0;
+
+    animation:
+        successFall
+        2.2s
+        ease-out
+        forwards;
+}
+
+@keyframes successFall {
+    0% {
+        opacity: 0;
+        transform:
+            translateY(-20px)
+            rotate(0deg);
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translateY(360px)
+            rotate(520deg);
+    }
+}
+
+
+/* =========================================================
+   GOAL
+========================================================= */
+
+.goal-card {
+    padding: 17px;
+}
+
+.side-eyebrow {
+    color: var(--text-3);
+
+    font-size: 7px;
+    font-weight: 900;
+
+    letter-spacing: 1.2px;
+}
+
+.goal-top {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-top: 7px;
+}
+
+.goal-title {
+    max-width: 72%;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.goal-percent {
+    color: var(--accent-2);
+
+    font-size: 15px;
+    font-weight: 950;
+}
+
+.goal-money {
+    margin-top: 10px;
+
+    display: flex;
+    align-items: baseline;
+
+    gap: 5px;
+}
+
+.goal-total {
+    font-size: 22px;
+    font-weight: 950;
+}
+
+.goal-target {
+    color: var(--text-3);
+
+    font-size: 8px;
+}
+
+.goal-progress {
+    position: relative;
+
+    height: 9px;
+
+    margin-top: 10px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.055);
+}
+
+.goal-bar {
+    width: 0;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--accent),
+            #ff98b0
+        );
+
+    transition:
+        width .7s cubic-bezier(.16,1,.3,1);
+}
+
+.goal-spark {
+    position: absolute;
+
+    left: 0%;
+    top: 50%;
+
+    width: 8px;
+    height: 8px;
+
+    transform: translate(-50%,-50%);
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 9px #ffffff,
+        0 0 18px var(--accent-2);
+
+    opacity: 0;
+
+    transition:
+        left .7s cubic-bezier(.16,1,.3,1);
+}
+
+.goal-note {
+    margin-top: 9px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   LIVE SUMMARY
+========================================================= */
+
+.live-summary {
+    padding: 16px;
+}
+
+.live-summary-amount {
+    margin-top: 8px;
+
+    font-size: 30px;
+    font-weight: 950;
+
+    letter-spacing: -.7px;
+}
+
+.live-summary-name {
+    margin-top: 3px;
+
+    color: var(--text-2);
+
+    font-size: 9px;
+}
+
+.live-summary-box {
+    margin-top: 11px;
+    padding: 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.live-summary-row {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding: 5px 0;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+}
+
+.live-summary-row strong {
+    max-width: 65%;
+
+    overflow: hidden;
+
+    color: #dddddf;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   RANKING
+========================================================= */
+
+.ranking {
+    padding: 16px;
+}
+
+.ranking-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 11px;
+}
+
+.ranking-title {
+    margin-top: 4px;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.realtime {
+    padding: 4px 7px;
+
+    border-radius: 999px;
+
+    color: var(--success);
+
+    background: rgba(101,226,160,.06);
+
+    font-size: 6px;
+    font-weight: 900;
+
+    letter-spacing: .7px;
+}
+
+.rank-item {
+    display: grid;
+
+    grid-template-columns:
+        31px
+        minmax(0,1fr)
+        auto;
+
+    gap: 8px;
+
+    align-items: center;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.04);
+}
+
+.rank-item:last-child {
+    border-bottom: 0;
+}
+
+.rank-medal {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.035);
+
+    font-size: 14px;
+}
+
+.rank-name {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.rank-label {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 6px;
+}
+
+.rank-amount {
+    color: var(--accent-2);
+
+    font-size: 9px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.ranking-empty {
+    padding: 20px 0;
+
+    text-align: center;
+
+    color: var(--text-3);
+
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   HOW
+========================================================= */
+
+.how {
+    padding: 16px;
+}
+
+.how-title {
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.how-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    margin-top: 11px;
+}
+
+.how-item {
+    display: grid;
+
+    grid-template-columns:
+        30px 1fr;
+
+    gap: 9px;
+
+    align-items: start;
+}
+
+.how-number {
+    width: 29px;
+    height: 29px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(255,91,127,.14);
+    border-radius: 9px;
+
+    color: var(--accent-2);
+
+    background: rgba(255,91,127,.055);
+
+    font-size: 8px;
+    font-weight: 900;
+}
+
+.how-name {
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.how-desc {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   TRUST
+========================================================= */
+
+.trust {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 6px;
+
+    padding: 13px;
+}
+
+.trust-item {
+    padding: 9px 5px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,.018);
+}
+
+.trust-icon {
+    font-size: 14px;
+}
+
+.trust-title {
+    margin-top: 4px;
+
+    color: #dadbe0;
+
+    font-size: 7px;
+    font-weight: 850;
+}
+
+.trust-desc {
+    margin-top: 2px;
+
+    color: var(--text-3);
+
+    font-size: 6px;
+}
+
+
+/* =========================================================
+   MOBILE BOTTOM BAR
+========================================================= */
+
+.mobile-bottom-bar {
+    display: none;
+
+    position: fixed;
+
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    z-index: 500;
+
+    padding: 8px;
+
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 15px;
+
+    background: rgba(17,19,26,.94);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 18px 55px rgba(0,0,0,.45);
+}
+
+.mobile-bottom-inner {
+    display: grid;
+
+    grid-template-columns:
+        auto 1fr;
+
+    gap: 9px;
+
+    align-items: center;
+}
+
+.mobile-bottom-summary {
+    min-width: 92px;
+    padding-left: 5px;
+}
+
+.mobile-bottom-label {
+    color: var(--text-3);
+
+    font-size: 6px;
+    font-weight: 800;
+}
+
+.mobile-bottom-amount {
+    margin-top: 1px;
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 950;
+}
+
+.mobile-bottom-button {
+    height: 43px;
+
+    border-radius: 11px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff3d68
+        );
+
+    box-shadow:
+        0 9px 24px rgba(255,91,127,.18);
+
+    cursor: pointer;
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.mobile-bottom-button:disabled {
+    opacity: .5;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 9999;
+
+    max-width:
+        min(350px,calc(100vw - 30px));
+
+    padding: 11px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    color: #ffffff;
+
+    background: #20232d;
+
+    box-shadow:
+        0 16px 50px rgba(0,0,0,.42);
+
+    opacity: 0;
+
+    transform: translateY(15px);
+
+    pointer-events: none;
+
+    transition: .24s;
+
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.toast.success {
+    border-color: rgba(101,226,160,.23);
+}
+
+.toast.error {
+    border-color: rgba(255,109,121,.25);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    padding: 28px 0 8px;
+
+    text-align: center;
+
+    color: var(--text-3);
+
+    font-size: 7px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width:1000px) {
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .right-column {
+        position: static;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .trust {
+        grid-column: 1 / -1;
+    }
+}
+
+
+@media (max-width:750px) {
+
+    body {
+        padding-bottom: 82px;
+    }
+
+    .nav {
+        padding: 15px 0;
+    }
+
+    .nav-pill {
+        display: none;
+    }
+
+    .hero {
+        padding: 26px 21px;
+        border-radius: 21px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero p {
+        font-size: 11px;
+    }
+
+    .card {
+        border-radius: 17px;
+    }
+
+    .card-head,
+    .card-body {
+        padding: 15px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+
+    .quick-amounts {
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .payment-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .status-timeline {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .right-column {
+        grid-template-columns: 1fr;
+    }
+
+    .trust {
+        grid-column: auto;
+    }
+
+    .success-details {
+        grid-template-columns: 1fr;
+    }
+
+    .success-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .mobile-bottom-bar {
+        display: block;
+    }
+
+    .mobile-bottom-bar.hidden {
+        display: none;
+    }
+
+    .toast {
+        bottom: 82px;
+    }
+}
+
+
+@media (max-width:520px) {
+
+    .page,
+    .nav {
+        width:
+            min(100% - 22px,1240px);
+    }
+
+    .hero {
+        margin-bottom: 11px;
+    }
+
+    .stepper {
+        gap: 4px;
+    }
+
+    .step {
+        padding: 8px 7px;
+    }
+
+    .sound-options {
+        grid-template-columns: 1fr;
+    }
+
+    .sound-current {
+        grid-template-columns:
+            38px
+            minmax(0,1fr);
+    }
+
+    .sound-current .mini-btn {
+        grid-column: 1 / -1;
+    }
+
+    #qr-image {
+        width: 205px;
+        height: 205px;
+    }
+
+    .mobile-content {
+        grid-template-columns:
+            105px 1fr;
+    }
+
+    #mobile-upload-qr {
+        width: 91px;
+        height: 91px;
+    }
+
+    .payment-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- =========================================================
+     BACKGROUND
+========================================================= -->
+
+<div class="background">
+    <div class="bg-grid"></div>
+    <div class="bg-orb one"></div>
+    <div class="bg-orb two"></div>
+</div>
+
+
+<!-- =========================================================
+     NAV
+========================================================= -->
+
+<nav class="nav">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            ❤️
+        </div>
+
+        <div>
+            <div class="brand-name">
+                AMR29 Donate
+            </div>
+
+            <div class="brand-sub">
+                SUPPORT THE STREAM
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <div
+            class="network-status"
+            id="network-status"
+        >
+            <span class="network-dot"></span>
+
+            <span id="network-status-text">
+                กำลังเชื่อมต่อ...
+            </span>
+        </div>
+
+        <div class="nav-pill">
+            🔒 ตรวจสอบสลิปอัตโนมัติ
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     PAGE
+========================================================= -->
+
+<main class="page">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                ❤️ SUPPORT AMR29
+            </div>
+
+            <h1>
+                ส่งแรงสนับสนุน
+                <span>ขึ้นไลฟ์แบบ Realtime</span>
+            </h1>
+
+            <p>
+                เลือกยอด ฝากข้อความ และเลือกรูปแบบเสียง Alert
+                หลังตรวจสอบสลิปสำเร็จ Donation ของคุณจะถูกส่งเข้าสู่
+                Stream โดยอัตโนมัติ
+            </p>
+
+            <div class="hero-features">
+
+                <div class="hero-feature">
+                    ⚡ Real-time Alert
+                </div>
+
+                <div class="hero-feature">
+                    🔊 Sound Tier
+                </div>
+
+                <div class="hero-feature">
+                    🎧 Custom Sound 100+
+                </div>
+
+                <div class="hero-feature">
+                    ✨ Particle 100+
+                </div>
+
+                <div class="hero-feature">
+                    📱 Mobile Slip
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LAYOUT
+    ====================================================== -->
+
+    <div class="layout">
+
+
+        <!-- =================================================
+             LEFT
+        ================================================== -->
+
+        <div class="left-column">
+
+
+            <!-- =============================================
+                 DONATE FORM
+            ============================================== -->
+
+            <section
+                class="card"
+                id="donate-card"
+            >
+
+                <div class="card-head">
+
+                    <div>
+
+                        <div class="card-title">
+                            สร้าง Donation
+                        </div>
+
+                        <div class="card-sub">
+                            ใส่ข้อมูลของคุณ แล้วสร้าง PromptPay QR
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="stepper">
+
+                        <div
+                            class="step active"
+                            id="step-1"
+                        >
+                            STEP 1
+
+                            <strong>
+                                ตั้งค่า Donation
+                            </strong>
+                        </div>
+
+
+                        <div
+                            class="step"
+                            id="step-2"
+                        >
+                            STEP 2
+
+                            <strong>
+                                ชำระเงิน
+                            </strong>
+                        </div>
+
+
+                        <div
+                            class="step"
+                            id="step-3"
+                        >
+                            STEP 3
+
+                            <strong>
+                                ตรวจสอบสลิป
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div id="donation-form">
+
+
+                        <div class="form-grid">
+
+
+                            <div class="field">
+
+                                <div class="field-head">
+
+                                    <label for="name">
+                                        ชื่อผู้สนับสนุน
+                                    </label>
+
+                                    <span class="field-info">
+                                        ไม่บังคับ
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    id="name"
+                                    type="text"
+                                    maxlength="30"
+                                    placeholder="Anonymous"
+                                >
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <div class="field-head">
+
+                                    <label for="amount">
+                                        จำนวนเงิน
+                                    </label>
+
+                                    <span class="field-info">
+                                        ขั้นต่ำ 10 บาท
+                                    </span>
+
+                                </div>
+
+
+                                <div class="amount-wrap">
+
+                                    <input
+                                        id="amount"
+                                        type="number"
+                                        min="10"
+                                        step="1"
+                                        value="100"
+                                    >
+
+                                    <span class="amount-currency">
+                                        บาท
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- QUICK AMOUNTS -->
+
+                        <div class="quick-amounts">
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="20"
+                                onclick="setAmount(20)"
+                            >
+                                20
+                                <small>Tier 1</small>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="50"
+                                onclick="setAmount(50)"
+                            >
+                                50
+                                <small>Tier 2</small>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="100"
+                                onclick="setAmount(100)"
+                            >
+                                100
+                                <small>Custom</small>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="300"
+                                onclick="setAmount(300)"
+                            >
+                                300
+                                <small>Particle+</small>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="500"
+                                onclick="setAmount(500)"
+                            >
+                                500
+                                <small>BIG</small>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                data-amount="1000"
+                                onclick="setAmount(1000)"
+                            >
+                                1,000
+                                <small>MEGA</small>
+                            </button>
+
+                        </div>
+
+
+                        <!-- MESSAGE -->
+
+                        <div
+                            class="field"
+                            style="margin-top:14px"
+                        >
+
+                            <div class="field-head">
+
+                                <label for="message">
+                                    ข้อความถึง AMR29
+                                </label>
+
+                                <span class="field-info">
+                                    ไม่บังคับ
+                                </span>
+
+                            </div>
+
+
+                            <textarea
+                                id="message"
+                                maxlength="200"
+                                placeholder="ฝากข้อความบน Stream..."
+                            ></textarea>
+
+
+                            <div
+                                class="counter"
+                                id="message-counter"
+                            >
+                                0 / 200
+                            </div>
+
+                        </div>
+
+
+                        <!-- SOUND -->
+
+                        <div
+                            class="sound-box"
+                            id="sound-box"
+                        >
+
+
+                            <div class="sound-top">
+
+                                <div>
+
+                                    <div class="sound-title">
+                                        🔊 Alert Experience
+                                    </div>
+
+                                    <div
+                                        class="sound-desc"
+                                        id="sound-description"
+                                    >
+                                        ระบบเลือกเสียงตามยอด
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="sound-tier"
+                                    id="sound-tier"
+                                >
+                                    TIER 3
+                                </div>
+
+                            </div>
+
+
+                            <div class="sound-current">
+
+                                <div class="sound-icon">
+                                    🎵
+                                </div>
+
+                                <div>
+
+                                    <div
+                                        class="sound-name"
+                                        id="sound-name"
+                                    >
+                                        alert3.mp3
+                                    </div>
+
+                                    <div
+                                        class="sound-range"
+                                        id="sound-range"
+                                    >
+                                        100–299 บาท
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="mini-btn"
+                                    onclick="previewCurrentSound()"
+                                >
+                                    ▶ ทดลองฟัง
+                                </button>
+
+                            </div>
+
+
+                            <div class="effect-row">
+
+                                <span
+                                    class="effect-chip"
+                                    id="effect-particle"
+                                >
+                                    ✨ Particle 12
+                                </span>
+
+                                <span
+                                    class="effect-chip"
+                                    id="effect-custom"
+                                >
+                                    🎧 Custom Sound
+                                </span>
+
+                                <span class="effect-chip on">
+                                    🗣 TTS
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="sound-options"
+                                id="sound-options"
+                            >
+
+                                <div
+                                    class="sound-option active"
+                                    id="sound-option-default"
+                                    onclick="selectSoundMode('default')"
+                                >
+
+                                    <div class="sound-option-title">
+                                        🎵 ใช้เสียงตามยอด
+                                    </div>
+
+                                    <div class="sound-option-desc">
+                                        ระบบเลือก Alert Sound ให้อัตโนมัติ
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="sound-option"
+                                    id="sound-option-custom"
+                                    onclick="selectSoundMode('custom')"
+                                >
+
+                                    <div class="sound-option-title">
+                                        🎧 เลือกเสียงของฉัน
+                                    </div>
+
+                                    <div class="sound-option-desc">
+                                        เลือกไฟล์เสียงจากอุปกรณ์ของคุณ
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="custom-area"
+                                id="custom-area"
+                            >
+
+                                <input
+                                    class="custom-input"
+                                    id="custom-sound-file"
+                                    type="file"
+                                    accept=".mp3,.wav,.ogg,audio/mpeg,audio/wav,audio/ogg"
+                                >
+
+
+                                <button
+                                    type="button"
+                                    class="custom-file-button"
+                                    id="custom-file-button"
+                                    onclick="document.getElementById('custom-sound-file').click()"
+                                >
+                                    📁 เลือกไฟล์เสียง
+                                </button>
+
+
+                                <div class="custom-rules">
+                                    MP3 / WAV / OGG • สูงสุด 3 MB • ไม่เกิน 10 วินาที
+                                </div>
+
+
+                                <div
+                                    class="custom-file-card"
+                                    id="custom-file-card"
+                                >
+
+                                    <div class="custom-file-row">
+
+                                        <div class="sound-icon">
+                                            🎧
+                                        </div>
+
+                                        <div class="custom-file-info">
+
+                                            <div
+                                                class="custom-file-name"
+                                                id="custom-file-name"
+                                            ></div>
+
+                                            <div
+                                                class="custom-file-meta"
+                                                id="custom-file-meta"
+                                            ></div>
+
+                                        </div>
+
+
+                                        <button
+                                            type="button"
+                                            class="mini-btn"
+                                            onclick="previewCustomSound()"
+                                        >
+                                            ▶ ฟัง
+                                        </button>
+
+                                    </div>
+
+
+                                    <div
+                                        class="custom-status"
+                                        id="custom-status"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="custom-lock"
+                                id="custom-lock"
+                            >
+                                🔒 Custom Sound ปลดล็อกเมื่อสนับสนุนตั้งแต่ 100 บาท
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="primary-button"
+                            id="donate-button"
+                            style="margin-top:14px"
+                            onclick="donate()"
+                        >
+                            สนับสนุน AMR29 ❤️
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 PAYMENT
+            ============================================== -->
+
+            <section
+                class="card payment-section"
+                id="payment-section"
+            >
+
+
+                <div class="card-head">
+
+                    <div>
+
+                        <div class="card-title">
+                            ชำระเงินและส่งสลิป
+                        </div>
+
+                        <div class="card-sub">
+                            สแกน PromptPay แล้วส่งสลิปจากคอมหรือมือถือ
+                        </div>
+
+                    </div>
+
+
+                    <div class="payment-header-right">
+
+                        <div
+                            class="payment-timer"
+                            id="payment-timer"
+                        >
+                            15:00
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <!-- DONATION STATUS -->
+
+                    <div class="status-timeline">
+
+
+                        <div
+                            class="timeline-item done"
+                            id="timeline-prepare"
+                        >
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+                                    ✓
+                                </div>
+
+                                <div class="timeline-title">
+                                    พร้อมแล้ว
+                                </div>
+
+                            </div>
+
+                            <div class="timeline-desc">
+                                Donation ถูกสร้างแล้ว
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item active"
+                            id="timeline-payment"
+                        >
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+                                    2
+                                </div>
+
+                                <div class="timeline-title">
+                                    ชำระเงิน
+                                </div>
+
+                            </div>
+
+                            <div class="timeline-desc">
+                                สแกน QR และโอนเงิน
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item"
+                            id="timeline-verify"
+                        >
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+                                    3
+                                </div>
+
+                                <div class="timeline-title">
+                                    ตรวจสลิป
+                                </div>
+
+                            </div>
+
+                            <div class="timeline-desc">
+                                ระบบกำลังรอสลิป
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item"
+                            id="timeline-stream"
+                        >
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+                                    4
+                                </div>
+
+                                <div class="timeline-title">
+                                    ขึ้น Stream
+                                </div>
+
+                            </div>
+
+                            <div class="timeline-desc">
+                                ส่งเข้า Alert Queue
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="payment-layout">
+
+
+                        <!-- QR -->
+
+                        <div class="qr-side">
+
+                            <div class="qr-label">
+                                PROMPTPAY QR
+                            </div>
+
+
+                            <div class="qr-wrapper">
+
+                                <div
+                                    class="qr-box"
+                                    id="qr-box"
+                                >
+
+                                    <img
+                                        id="qr-image"
+                                        alt="PromptPay QR"
+                                    >
+
+                                    <div class="qr-expired-cover">
+
+                                        <div>
+                                            ⌛ เซสชันหมดอายุแล้ว
+                                            <br>
+                                            กรุณาสร้าง QR ใหม่
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="qr-price">
+
+                                <span>
+                                    ยอดที่ต้องโอน
+                                </span>
+
+                                <strong
+                                    id="qr-amount"
+                                >
+                                    ฿0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="qr-countdown-label">
+                                เซสชันการชำระเงินเหลือ
+                            </div>
+
+                            <div
+                                class="qr-countdown"
+                                id="qr-countdown"
+                            >
+                                15:00
+                            </div>
+
+
+                            <button
+                                class="copy-button"
+                                id="copy-amount-button"
+                                onclick="copyDonationAmount()"
+                            >
+                                📋 คัดลอกยอดเงิน
+                            </button>
+
+                        </div>
+
+
+                        <!-- DETAILS -->
+
+                        <div class="payment-details">
+
+
+                            <div class="summary">
+
+                                <div class="summary-title">
+                                    DONATION SUMMARY
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        ผู้สนับสนุน
+                                    </span>
+
+                                    <strong
+                                        id="summary-name"
+                                    >
+                                        Anonymous
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        ยอด
+                                    </span>
+
+                                    <strong
+                                        id="summary-amount"
+                                    >
+                                        ฿0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        Alert Sound
+                                    </span>
+
+                                    <strong
+                                        id="summary-sound"
+                                    >
+                                        alert.mp3
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        Effect
+                                    </span>
+
+                                    <strong
+                                        id="summary-effect"
+                                    >
+                                        Normal Alert
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        ข้อความ
+                                    </span>
+
+                                    <strong
+                                        id="summary-message"
+                                    >
+                                        -
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SLIP -->
+
+                            <div>
+
+                                <div class="field-head">
+
+                                    <label>
+                                        ส่งสลิปจากเครื่องนี้
+                                    </label>
+
+                                    <span class="field-info">
+                                        JPG / PNG / WEBP
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="dropzone"
+                                    id="dropzone"
+                                    onclick="document.getElementById('slip').click()"
+                                >
+
+                                    <div class="drop-icon">
+                                        🧾
+                                    </div>
+
+                                    <div class="drop-title">
+                                        เลือกรูปสลิป
+                                    </div>
+
+                                    <div class="drop-desc">
+                                        คลิกเพื่อเลือก หรือ Drag & Drop รูปมาวาง
+                                    </div>
+
+
+                                    <input
+                                        id="slip"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                    >
+
+
+                                    <div
+                                        class="slip-preview"
+                                        id="slip-preview"
+                                    >
+
+                                        <img
+                                            class="slip-thumb"
+                                            id="slip-thumb"
+                                            alt=""
+                                        >
+
+                                        <div class="slip-info">
+
+                                            <div
+                                                class="slip-name"
+                                                id="slip-name"
+                                            ></div>
+
+                                            <div
+                                                class="slip-meta"
+                                                id="slip-meta"
+                                            ></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                class="primary-button"
+                                id="verify-button"
+                                onclick="verifySlip()"
+                            >
+                                ✅ ตรวจสอบสลิป
+                            </button>
+
+
+                            <div
+                                class="status"
+                                id="verify-status"
+                            ></div>
+
+
+                            <div class="divider">
+                                หรือ
+                            </div>
+
+
+                            <!-- MOBILE -->
+
+                            <div
+                                class="mobile-upload"
+                                id="mobile-upload-card"
+                            >
+
+                                <div class="mobile-head">
+
+                                    <div class="mobile-icon">
+                                        📱
+                                    </div>
+
+                                    <div>
+
+                                        <div class="mobile-title">
+                                            ส่งสลิปจากมือถือ
+                                        </div>
+
+                                        <div class="mobile-desc">
+                                            สแกน QR นี้ แล้วเลือกรูปจากมือถือได้ทันที
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mobile-content">
+
+                                    <div class="mobile-qr">
+
+                                        <img
+                                            id="mobile-upload-qr"
+                                            alt="Mobile Upload QR"
+                                        >
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <div
+                                            class="mobile-status"
+                                            id="mobile-upload-status"
+                                        >
+                                            กำลังสร้าง QR มือถือ...
+                                        </div>
+
+
+                                        <div
+                                            class="mobile-expire"
+                                            id="mobile-upload-expire"
+                                        ></div>
+
+
+                                        <button
+                                            type="button"
+                                            class="mini-btn"
+                                            id="mobile-refresh-button"
+                                            style="margin-top:7px"
+                                            onclick="createMobileUploadSession()"
+                                        >
+                                            🔄 สร้าง QR มือถือใหม่
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="payment-actions">
+
+                                <button
+                                    class="secondary-button"
+                                    onclick="editDonation()"
+                                >
+                                    ← แก้ไขข้อมูล
+                                </button>
+
+
+                                <button
+                                    class="secondary-button"
+                                    id="regenerate-payment-button"
+                                    onclick="regeneratePaymentSession()"
+                                >
+                                    🔄 สร้าง QR ใหม่
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 SUCCESS V2
+            ============================================== -->
+
+            <section
+                class="card success-screen"
+                id="success-screen"
+            >
+
+                <div class="success-glow"></div>
+
+                <div
+                    class="success-confetti"
+                    id="success-confetti"
+                ></div>
+
+
+                <div class="success-content">
+
+                    <div class="success-icon">
+                        ✓
+                    </div>
+
+                    <div class="success-kicker">
+                        DONATION VERIFIED
+                    </div>
+
+                    <h2>
+                        ขอบคุณสำหรับการสนับสนุน ❤️
+                    </h2>
+
+
+                    <div
+                        class="success-name"
+                        id="success-name"
+                    >
+                        Anonymous
+                    </div>
+
+
+                    <div
+                        class="success-amount"
+                        id="success-amount"
+                    >
+                        ฿0
+                    </div>
+
+
+                    <div class="success-message">
+                        ระบบตรวจสอบ Donation สำเร็จแล้ว
+                        และส่งข้อมูลเข้าสู่ระบบ Alert ของ AMR29 เรียบร้อย
+                    </div>
+
+
+                    <div class="success-details">
+
+
+                        <div class="success-detail">
+
+                            <div class="success-detail-label">
+                                ALERT SOUND
+                            </div>
+
+                            <div
+                                class="success-detail-value"
+                                id="success-sound"
+                            >
+                                alert3.mp3
+                            </div>
+
+                        </div>
+
+
+                        <div class="success-detail">
+
+                            <div class="success-detail-label">
+                                EFFECT
+                            </div>
+
+                            <div
+                                class="success-detail-value"
+                                id="success-effect"
+                            >
+                                Particle 12
+                            </div>
+
+                        </div>
+
+
+                        <div class="success-detail">
+
+                            <div class="success-detail-label">
+                                VERIFIED
+                            </div>
+
+                            <div
+                                class="success-detail-value"
+                                id="success-time"
+                            >
+                                -
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="success-stream-status">
+                        ✓ Donation ถูกส่งเข้าสู่ Stream Alert แล้ว
+                    </div>
+
+
+                    <div class="success-actions">
+
+                        <button
+                            class="secondary-button"
+                            onclick="scrollToRanking()"
+                        >
+                            🏆 ดู Top Supporters
+                        </button>
+
+
+                        <button
+                            class="primary-button"
+                            onclick="startNewDonation()"
+                        >
+                            ❤️ สนับสนุนอีกครั้ง
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT
+        ================================================== -->
+
+        <aside class="right-column">
+
+
+            <!-- LIVE SUMMARY -->
+
+            <section class="card live-summary">
+
+                <div class="side-eyebrow">
+                    YOUR DONATION
+                </div>
+
+                <div
+                    class="live-summary-amount"
+                    id="live-summary-amount"
+                >
+                    ฿100
+                </div>
+
+                <div
+                    class="live-summary-name"
+                    id="live-summary-name"
+                >
+                    Anonymous
+                </div>
+
+
+                <div class="live-summary-box">
+
+                    <div class="live-summary-row">
+
+                        <span>
+                            Sound
+                        </span>
+
+                        <strong
+                            id="live-summary-sound"
+                        >
+                            alert3.mp3
+                        </strong>
+
+                    </div>
+
+
+                    <div class="live-summary-row">
+
+                        <span>
+                            Effect
+                        </span>
+
+                        <strong
+                            id="live-summary-effect"
+                        >
+                            Particle 12
+                        </strong>
+
+                    </div>
+
+
+                    <div class="live-summary-row">
+
+                        <span>
+                            Custom Sound
+                        </span>
+
+                        <strong
+                            id="live-summary-custom"
+                        >
+                            ปลดล็อกแล้ว
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- GOAL -->
+
+            <section
+                class="card goal-card"
+                id="goal-card"
+            >
+
+                <div class="side-eyebrow">
+                    DONATION GOAL
+                </div>
+
+
+                <div class="goal-top">
+
+                    <div
+                        class="goal-title"
+                        id="goal-title"
+                    >
+                        เป้าหมายสนับสนุน
+                    </div>
+
+                    <div
+                        class="goal-percent"
+                        id="goal-percent"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+
+                <div class="goal-money">
+
+                    <span
+                        class="goal-total"
+                        id="goal-total"
+                    >
+                        0
+                    </span>
+
+                    <span class="goal-target">
+
+                        /
+
+                        <span
+                            id="goal-target"
+                        >
+                            0
+                        </span>
+
+                        บาท
+
+                    </span>
+
+                </div>
+
+
+                <div class="goal-progress">
+
+                    <div
+                        class="goal-bar"
+                        id="goal-bar"
+                    ></div>
+
+                    <div
+                        class="goal-spark"
+                        id="goal-spark"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    class="goal-note"
+                    id="goal-note"
+                >
+                    ขอบคุณทุกการสนับสนุน ❤️
+                </div>
+
+            </section>
+
+
+            <!-- RANKING -->
+
+            <section
+                class="card ranking"
+                id="ranking-card"
+            >
+
+                <div class="ranking-head">
+
+                    <div>
+
+                        <div class="side-eyebrow">
+                            AMR29 SUPPORTERS
+                        </div>
+
+                        <div class="ranking-title">
+                            🏆 Top Supporters
+                        </div>
+
+                    </div>
+
+                    <span class="realtime">
+                        ● REALTIME
+                    </span>
+
+                </div>
+
+
+                <div id="ranking-list">
+
+                    <div class="ranking-empty">
+                        กำลังโหลดผู้สนับสนุน...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- HOW -->
+
+            <section class="card how">
+
+                <div class="how-title">
+                    ใช้งานยังไง?
+                </div>
+
+
+                <div class="how-list">
+
+                    <div class="how-item">
+
+                        <div class="how-number">
+                            1
+                        </div>
+
+                        <div>
+
+                            <div class="how-name">
+                                ตั้งค่า Donation
+                            </div>
+
+                            <div class="how-desc">
+                                ใส่ชื่อ ข้อความ ยอด และเลือกเสียง
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="how-item">
+
+                        <div class="how-number">
+                            2
+                        </div>
+
+                        <div>
+
+                            <div class="how-name">
+                                สแกน PromptPay
+                            </div>
+
+                            <div class="how-desc">
+                                โอนยอดให้ตรงกับ QR ที่ระบบสร้าง
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="how-item">
+
+                        <div class="how-number">
+                            3
+                        </div>
+
+                        <div>
+
+                            <div class="how-name">
+                                ส่งสลิป
+                            </div>
+
+                            <div class="how-desc">
+                                ระบบตรวจสอบและส่ง Alert ขึ้น Stream
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TRUST -->
+
+            <section class="card trust">
+
+                <div class="trust-item">
+
+                    <div class="trust-icon">
+                        🔒
+                    </div>
+
+                    <div class="trust-title">
+                        Verify
+                    </div>
+
+                    <div class="trust-desc">
+                        ตรวจสลิป
+                    </div>
+
+                </div>
+
+
+                <div class="trust-item">
+
+                    <div class="trust-icon">
+                        ⚡
+                    </div>
+
+                    <div class="trust-title">
+                        Realtime
+                    </div>
+
+                    <div class="trust-desc">
+                        Alert สด
+                    </div>
+
+                </div>
+
+
+                <div class="trust-item">
+
+                    <div class="trust-icon">
+                        ❤️
+                    </div>
+
+                    <div class="trust-title">
+                        AMR29
+                    </div>
+
+                    <div class="trust-desc">
+                        Thank you
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+
+    <footer class="footer">
+
+        AMR29 Donate • Donation จะแสดงบน Stream หลังตรวจสอบสลิปสำเร็จ
+
+        <br>
+
+        โปรดตรวจสอบชื่อและยอดก่อนชำระเงินทุกครั้ง
+
+    </footer>
+
+</main>
+
+
+<!-- =========================================================
+     MOBILE BOTTOM BAR
+========================================================= -->
+
+<div
+    class="mobile-bottom-bar"
+    id="mobile-bottom-bar"
+>
+
+    <div class="mobile-bottom-inner">
+
+        <div class="mobile-bottom-summary">
+
+            <div class="mobile-bottom-label">
+                ยอดสนับสนุน
+            </div>
+
+            <div
+                class="mobile-bottom-amount"
+                id="mobile-bottom-amount"
+            >
+                ฿100
+            </div>
+
+        </div>
+
+
+        <button
+            class="mobile-bottom-button"
+            id="mobile-donate-button"
+            onclick="donate()"
+        >
+            สนับสนุน AMR29 ❤️
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- AUDIO -->
+
+<audio
+    id="preview-player"
+    preload="none"
+></audio>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const CUSTOM_SOUND_MIN_AMOUNT = 100;
+
+const CUSTOM_SOUND_MAX_BYTES =
+    3 * 1024 * 1024;
+
+const CUSTOM_SOUND_MAX_SECONDS = 10;
+
+/*
+ให้ตรงกับ Mobile Session
+ที่ Server ใช้ 15 นาที
+*/
+const PAYMENT_SESSION_TTL_MS =
+    15 * 60 * 1000;
+
+
+/* =========================================================
+   SOCKET
+========================================================= */
+
+const socket = io();
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const nameInput =
+    document.getElementById("name");
+
+const messageInput =
+    document.getElementById("message");
+
+const amountInput =
+    document.getElementById("amount");
+
+const donateButton =
+    document.getElementById("donate-button");
+
+const mobileDonateButton =
+    document.getElementById("mobile-donate-button");
+
+const paymentSection =
+    document.getElementById("payment-section");
+
+const qrImage =
+    document.getElementById("qr-image");
+
+const qrAmount =
+    document.getElementById("qr-amount");
+
+const qrBox =
+    document.getElementById("qr-box");
+
+const qrCountdown =
+    document.getElementById("qr-countdown");
+
+const paymentTimerElement =
+    document.getElementById("payment-timer");
+
+const verifyButton =
+    document.getElementById("verify-button");
+
+const verifyStatus =
+    document.getElementById("verify-status");
+
+const slipInput =
+    document.getElementById("slip");
+
+const dropzone =
+    document.getElementById("dropzone");
+
+const previewPlayer =
+    document.getElementById("preview-player");
+
+const customSoundFile =
+    document.getElementById("custom-sound-file");
+
+const mobileCard =
+    document.getElementById("mobile-upload-card");
+
+const mobileQR =
+    document.getElementById("mobile-upload-qr");
+
+const mobileStatus =
+    document.getElementById("mobile-upload-status");
+
+const mobileExpire =
+    document.getElementById("mobile-upload-expire");
+
+const mobileRefresh =
+    document.getElementById("mobile-refresh-button");
+
+const mobileBottomBar =
+    document.getElementById("mobile-bottom-bar");
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentPageStage = "form";
+
+let donationSnapshot = null;
+
+let soundMode = "default";
+
+let customSoundToken = null;
+
+let customSoundExpiresAt = 0;
+
+let customSoundObjectUrl = null;
+
+let customSoundDuration = 0;
+
+let customSoundUploadAmount = null;
+
+let customSoundUploading = false;
+
+let slipObjectUrl = null;
+
+let currentMobileSessionId = null;
+
+let currentMobileExpiresAt = 0;
+
+let mobileTimer = null;
+
+let paymentExpiresAt = 0;
+
+let paymentTimer = null;
+
+let toastTimer = null;
+
+let connectionState = "connecting";
+
+
+/* =========================================================
+   NETWORK STATUS
+========================================================= */
+
+function setNetworkStatus(state) {
+
+    connectionState = state;
+
+    const box =
+        document.getElementById(
+            "network-status"
+        );
+
+    const text =
+        document.getElementById(
+            "network-status-text"
+        );
+
+    box.classList.remove(
+        "online",
+        "offline"
+    );
+
+    if (state === "online") {
+
+        box.classList.add("online");
+
+        text.innerText =
+            "ระบบออนไลน์ • Realtime";
+
+        return;
+    }
+
+    if (state === "offline") {
+
+        box.classList.add("offline");
+
+        text.innerText =
+            "การเชื่อมต่อขาดหาย";
+
+        return;
+    }
+
+    text.innerText =
+        "กำลังเชื่อมต่อ...";
+}
+
+
+socket.on(
+    "connect",
+    () => {
+
+        setNetworkStatus(
+            "online"
+        );
+    }
+);
+
+
+socket.on(
+    "disconnect",
+    () => {
+
+        setNetworkStatus(
+            "offline"
+        );
+
+        if (
+            currentPageStage ===
+            "payment"
+        ) {
+
+            showToast(
+                "Realtime หลุดชั่วคราว ระบบกำลังพยายามเชื่อมต่อใหม่",
+                "error"
+            );
+        }
+    }
+);
+
+
+socket.on(
+    "connect_error",
+    () => {
+
+        setNetworkStatus(
+            "offline"
+        );
+    }
+);
+
+
+socket.io.on(
+    "reconnect_attempt",
+    () => {
+
+        setNetworkStatus(
+            "connecting"
+        );
+    }
+);
+
+
+/* =========================================================
+   PAGE STAGE
+========================================================= */
+
+function setPageStage(stage) {
+
+    currentPageStage = stage;
+
+    if (stage === "form") {
+
+        mobileBottomBar
+            .classList
+            .remove(
+                "hidden"
+            );
+
+    } else {
+
+        mobileBottomBar
+            .classList
+            .add(
+                "hidden"
+            );
+    }
+}
+
+
+/* =========================================================
+   SOUND TIER
+========================================================= */
+
+function getTier(amount) {
+
+    const value =
+        Number(amount) || 0;
+
+    if (value >= 1000) {
+
+        return {
+            key: "1000+",
+            label: "MEGA",
+            file: "alert5.mp3",
+            url: "/sounds/alert5.mp3",
+            range: "1,000 บาทขึ้นไป",
+            particle: 48,
+            effect: "MEGA Particle"
+        };
+    }
+
+    if (value >= 500) {
+
+        return {
+            key: "500-999",
+            label: "BIG",
+            file: "alert5.mp3",
+            url: "/sounds/alert5.mp3",
+            range: "500–999 บาท",
+            particle: 30,
+            effect: "Gold Particle"
+        };
+    }
+
+    if (value >= 300) {
+
+        return {
+            key: "300-499",
+            label: "TIER 4",
+            file: "alert4.mp3",
+            url: "/sounds/alert4.mp3",
+            range: "300–499 บาท",
+            particle: 20,
+            effect: "Particle 20"
+        };
+    }
+
+    if (value >= 100) {
+
+        return {
+            key: "100-299",
+            label: "TIER 3",
+            file: "alert3.mp3",
+            url: "/sounds/alert3.mp3",
+            range: "100–299 บาท",
+            particle: 12,
+            effect: "Particle 12"
+        };
+    }
+
+    if (value >= 50) {
+
+        return {
+            key: "50-99",
+            label: "TIER 2",
+            file: "alert2.mp3",
+            url: "/sounds/alert2.mp3",
+            range: "50–99 บาท",
+            particle: 0,
+            effect: "Normal Alert"
+        };
+    }
+
+    return {
+        key: "1-49",
+        label: "TIER 1",
+        file: "alert.mp3",
+        url: "/sounds/alert.mp3",
+        range: "1–49 บาท",
+        particle: 0,
+        effect: "Normal Alert"
+    };
+}
+
+
+/* =========================================================
+   INPUT EVENTS
+========================================================= */
+
+messageInput.addEventListener(
+    "input",
+    () => {
+
+        document
+            .getElementById(
+                "message-counter"
+            )
+            .innerText =
+            `${messageInput.value.length} / 200`;
+
+        updateLiveSummary();
+    }
+);
+
+
+nameInput.addEventListener(
+    "input",
+    updateLiveSummary
+);
+
+
+amountInput.addEventListener(
+    "input",
+    handleAmountChanged
+);
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+function setAmount(amount) {
+
+    if (donationSnapshot) {
+        return;
+    }
+
+    amountInput.value = amount;
+
+    handleAmountChanged();
+}
+
+
+function handleAmountChanged() {
+
+    updateAmountButtons();
+
+    updateSoundUI();
+
+    updateLiveSummary();
+
+    updateMobileBottomBar();
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+    /*
+    Custom token ผูกกับยอด
+    ถ้าเปลี่ยนยอด จะเตรียมใหม่
+    */
+    if (
+        customSoundToken &&
+        customSoundUploadAmount !== amount
+    ) {
+
+        customSoundToken = null;
+
+        customSoundExpiresAt = 0;
+
+        customSoundUploadAmount = null;
+
+        const status =
+            document.getElementById(
+                "custom-status"
+            );
+
+        status.className =
+            "custom-status";
+
+        status.innerText =
+            "ยอดเปลี่ยนแล้ว ระบบจะเตรียม Custom Sound ใหม่";
+    }
+
+    if (
+        amount <
+        CUSTOM_SOUND_MIN_AMOUNT &&
+        soundMode === "custom"
+    ) {
+
+        selectSoundMode(
+            "default"
+        );
+    }
+}
+
+
+function updateAmountButtons() {
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+    document
+        .querySelectorAll(
+            ".amount-btn"
+        )
+        .forEach(
+            button => {
+
+                button
+                    .classList
+                    .toggle(
+                        "active",
+                        Number(
+                            button.dataset.amount
+                        ) === amount
+                    );
+            }
+        );
+}
+
+
+/* =========================================================
+   MOBILE BOTTOM BAR
+========================================================= */
+
+function updateMobileBottomBar() {
+
+    document
+        .getElementById(
+            "mobile-bottom-amount"
+        )
+        .innerText =
+        money(
+            amountInput.value
+        );
+}
+
+
+function setDonateLoading(
+    loading,
+    text = "สนับสนุน AMR29 ❤️"
+) {
+
+    donateButton.disabled =
+        loading;
+
+    mobileDonateButton.disabled =
+        loading;
+
+    donateButton.innerText =
+        text;
+
+    mobileDonateButton.innerText =
+        loading
+            ? "กำลังเตรียม..."
+            : "สนับสนุน AMR29 ❤️";
+}
+
+
+/* =========================================================
+   SOUND UI
+========================================================= */
+
+function updateSoundUI() {
+
+    const amount =
+        Number(
+            amountInput.value
+        ) || 0;
+
+    const tier =
+        getTier(amount);
+
+    document
+        .getElementById(
+            "sound-tier"
+        )
+        .innerText =
+        tier.label;
+
+
+    document
+        .getElementById(
+            "sound-name"
+        )
+        .innerText =
+        soundMode === "custom" &&
+        customSoundFile.files.length
+
+            ? customSoundFile.files[0].name
+            : tier.file;
+
+
+    document
+        .getElementById(
+            "sound-range"
+        )
+        .innerText =
+        soundMode === "custom"
+
+            ? "Custom Sound"
+            : tier.range;
+
+
+    document
+        .getElementById(
+            "sound-description"
+        )
+        .innerText =
+        soundMode === "custom"
+
+            ? "Donation นี้จะใช้เสียงที่คุณเลือก"
+            : "ระบบเลือกเสียง Alert ตามยอดสนับสนุน";
+
+
+    const particle =
+        document.getElementById(
+            "effect-particle"
+        );
+
+    particle.innerText =
+        tier.particle
+
+            ? `✨ Particle ${tier.particle}`
+            : "✨ Particle OFF";
+
+    particle.classList.toggle(
+        "on",
+        tier.particle > 0
+    );
+
+
+    document
+        .getElementById(
+            "effect-custom"
+        )
+        .classList
+        .toggle(
+            "on",
+            amount >=
+            CUSTOM_SOUND_MIN_AMOUNT
+        );
+
+
+    const options =
+        document.getElementById(
+            "sound-options"
+        );
+
+    const lock =
+        document.getElementById(
+            "custom-lock"
+        );
+
+    if (
+        amount >=
+        CUSTOM_SOUND_MIN_AMOUNT
+    ) {
+
+        options.classList.add(
+            "show"
+        );
+
+        lock.style.display =
+            "none";
+
+    } else {
+
+        options.classList.remove(
+            "show"
+        );
+
+        lock.style.display =
+            "block";
+    }
+
+
+    document
+        .getElementById(
+            "custom-area"
+        )
+        .classList
+        .toggle(
+            "show",
+            soundMode === "custom"
+        );
+}
+
+
+/* =========================================================
+   SOUND MODE
+========================================================= */
+
+function selectSoundMode(mode) {
+
+    if (donationSnapshot) {
+        return;
+    }
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+    if (
+        mode === "custom" &&
+        amount <
+        CUSTOM_SOUND_MIN_AMOUNT
+    ) {
+
+        showToast(
+            "Custom Sound ใช้ได้ตั้งแต่ 100 บาทขึ้นไป",
+            "error"
+        );
+
+        return;
+    }
+
+    soundMode = mode;
+
+    document
+        .getElementById(
+            "sound-option-default"
+        )
+        .classList
+        .toggle(
+            "active",
+            mode === "default"
+        );
+
+    document
+        .getElementById(
+            "sound-option-custom"
+        )
+        .classList
+        .toggle(
+            "active",
+            mode === "custom"
+        );
+
+    stopPreview();
+
+    updateSoundUI();
+
+    updateLiveSummary();
+}
+
+
+/* =========================================================
+   SOUND PREVIEW
+========================================================= */
+
+async function previewCurrentSound() {
+
+    if (
+        soundMode === "custom" &&
+        customSoundObjectUrl
+    ) {
+
+        return previewCustomSound();
+    }
+
+    const tier =
+        getTier(
+            amountInput.value
+        );
+
+    await playPreviewSource(
+        tier.url
+    );
+}
+
+
+async function previewCustomSound() {
+
+    if (!customSoundObjectUrl) {
+
+        showToast(
+            "กรุณาเลือกไฟล์เสียงก่อน",
+            "error"
+        );
+
+        return;
+    }
+
+    await playPreviewSource(
+        customSoundObjectUrl
+    );
+}
+
+
+async function playPreviewSource(src) {
+
+    stopPreview();
+
+    previewPlayer.src = src;
+
+    previewPlayer.currentTime = 0;
+
+    try {
+
+        await previewPlayer.play();
+
+        setTimeout(
+            () => {
+
+                if (
+                    !previewPlayer.paused
+                ) {
+
+                    stopPreview();
+                }
+
+            },
+            10000
+        );
+
+    } catch {
+
+        showToast(
+            "ไม่สามารถเล่นเสียงนี้ได้",
+            "error"
+        );
+    }
+}
+
+
+function stopPreview() {
+
+    try {
+
+        previewPlayer.pause();
+
+        previewPlayer.currentTime = 0;
+
+    } catch {}
+}
+
+
+/* =========================================================
+   CUSTOM SOUND FILE
+========================================================= */
+
+customSoundFile.addEventListener(
+    "change",
+    async () => {
+
+        stopPreview();
+
+        const file =
+            customSoundFile.files[0];
+
+        if (!file) {
+
+            clearCustomSound();
+
+            return;
+        }
+
+        const amount =
+            Number(
+                amountInput.value
+            );
+
+        if (
+            amount <
+            CUSTOM_SOUND_MIN_AMOUNT
+        ) {
+
+            showToast(
+                "Custom Sound ใช้ได้ตั้งแต่ 100 บาทขึ้นไป",
+                "error"
+            );
+
+            customSoundFile.value = "";
+
+            selectSoundMode(
+                "default"
+            );
+
+            return;
+        }
+
+        if (
+            file.size >
+            CUSTOM_SOUND_MAX_BYTES
+        ) {
+
+            showToast(
+                "ไฟล์เสียงต้องไม่เกิน 3 MB",
+                "error"
+            );
+
+            customSoundFile.value = "";
+
+            return;
+        }
+
+        try {
+
+            customSoundDuration =
+                await getAudioDuration(
+                    file
+                );
+
+        } catch {
+
+            showToast(
+                "ไม่สามารถอ่านไฟล์เสียงนี้ได้",
+                "error"
+            );
+
+            customSoundFile.value = "";
+
+            return;
+        }
+
+        if (
+            customSoundDuration >
+            CUSTOM_SOUND_MAX_SECONDS + .15
+        ) {
+
+            showToast(
+                `เสียงยาว ${customSoundDuration.toFixed(1)} วินาที รองรับสูงสุด 10 วินาที`,
+                "error"
+            );
+
+            customSoundFile.value = "";
+
+            return;
+        }
+
+        if (customSoundObjectUrl) {
+
+            URL.revokeObjectURL(
+                customSoundObjectUrl
+            );
+        }
+
+        customSoundObjectUrl =
+            URL.createObjectURL(
+                file
+            );
+
+        customSoundToken = null;
+
+        customSoundExpiresAt = 0;
+
+        customSoundUploadAmount = null;
+
+
+        document
+            .getElementById(
+                "custom-file-card"
+            )
+            .classList
+            .add(
+                "show"
+            );
+
+
+        document
+            .getElementById(
+                "custom-file-name"
+            )
+            .innerText =
+            file.name;
+
+
+        document
+            .getElementById(
+                "custom-file-meta"
+            )
+            .innerText =
+            `${formatBytes(file.size)} • ${customSoundDuration.toFixed(1)} วินาที`;
+
+
+        const status =
+            document.getElementById(
+                "custom-status"
+            );
+
+        status.className =
+            "custom-status";
+
+        status.innerText =
+            "พร้อมเตรียม Custom Sound";
+
+
+        updateSoundUI();
+
+        updateLiveSummary();
+
+        try {
+
+            await uploadCustomSound();
+
+        } catch {}
+    }
+);
+
+
+/* =========================================================
+   AUDIO DURATION
+========================================================= */
+
+function getAudioDuration(file) {
+
+    return new Promise(
+        (resolve,reject) => {
+
+            const audio =
+                document.createElement(
+                    "audio"
+                );
+
+            const url =
+                URL.createObjectURL(
+                    file
+                );
+
+            audio.preload =
+                "metadata";
+
+            audio.onloadedmetadata =
+                () => {
+
+                    const duration =
+                        Number(
+                            audio.duration
+                        );
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                    if (
+                        !Number.isFinite(
+                            duration
+                        )
+                    ) {
+
+                        reject();
+
+                        return;
+                    }
+
+                    resolve(
+                        duration
+                    );
+                };
+
+            audio.onerror =
+                () => {
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                    reject();
+                };
+
+            audio.src = url;
+        }
+    );
+}
+
+
+/* =========================================================
+   CUSTOM SOUND UPLOAD
+========================================================= */
+
+async function uploadCustomSound() {
+
+    const file =
+        customSoundFile.files[0];
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+    if (!file) {
+
+        throw new Error(
+            "กรุณาเลือก Custom Sound"
+        );
+    }
+
+    if (
+        amount <
+        CUSTOM_SOUND_MIN_AMOUNT
+    ) {
+
+        throw new Error(
+            "Custom Sound ใช้ได้ตั้งแต่ 100 บาทขึ้นไป"
+        );
+    }
+
+    if (customSoundUploading) {
+
+        return waitCustomUpload();
+    }
+
+    /*
+    Token ยังไม่หมดอายุ
+    */
+    if (
+        customSoundToken &&
+        customSoundUploadAmount === amount &&
+        customSoundExpiresAt >
+        Date.now() + 60000
+    ) {
+
+        return customSoundToken;
+    }
+
+    customSoundUploading = true;
+
+    customSoundToken = null;
+
+    customSoundExpiresAt = 0;
+
+    const status =
+        document.getElementById(
+            "custom-status"
+        );
+
+    status.className =
+        "custom-status loading";
+
+    status.innerText =
+        "⏳ กำลังเตรียม Custom Sound...";
+
+    try {
+
+        const form =
+            new FormData();
+
+        form.append(
+            "sound",
+            file
+        );
+
+        form.append(
+            "amount",
+            String(amount)
+        );
+
+        const response =
+            await fetch(
+                "/api/custom-sound/upload",
+                {
+                    method: "POST",
+                    body: form
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "อัปโหลด Custom Sound ไม่สำเร็จ"
+            );
+        }
+
+        customSoundToken =
+            data.customSound?.token ||
+            null;
+
+        customSoundExpiresAt =
+            Number(
+                data.customSound?.expiresAt
+            ) || 0;
+
+        if (!customSoundToken) {
+
+            throw new Error(
+                "ไม่พบ Custom Sound Token"
+            );
+        }
+
+        customSoundUploadAmount =
+            amount;
+
+        status.className =
+            "custom-status success";
+
+        status.innerText =
+            "✅ Custom Sound พร้อมใช้กับ Donation นี้แล้ว";
+
+        return customSoundToken;
+
+    } catch (error) {
+
+        customSoundToken = null;
+
+        customSoundExpiresAt = 0;
+
+        customSoundUploadAmount = null;
+
+        status.className =
+            "custom-status error";
+
+        status.innerText =
+            "❌ " +
+            (
+                error.message ||
+                "เตรียมเสียงไม่สำเร็จ"
+            );
+
+        throw error;
+
+    } finally {
+
+        customSoundUploading = false;
+    }
+}
+
+
+/* =========================================================
+   WAIT CUSTOM SOUND
+========================================================= */
+
+function waitCustomUpload() {
+
+    return new Promise(
+        (resolve,reject) => {
+
+            const started =
+                Date.now();
+
+            const timer =
+                setInterval(
+                    () => {
+
+                        if (
+                            !customSoundUploading
+                        ) {
+
+                            clearInterval(
+                                timer
+                            );
+
+                            if (
+                                customSoundToken
+                            ) {
+
+                                resolve(
+                                    customSoundToken
+                                );
+
+                            } else {
+
+                                reject(
+                                    new Error(
+                                        "Custom Sound ไม่พร้อมใช้งาน"
+                                    )
+                                );
+                            }
+
+                            return;
+                        }
+
+                        if (
+                            Date.now() -
+                            started >
+                            30000
+                        ) {
+
+                            clearInterval(
+                                timer
+                            );
+
+                            reject(
+                                new Error(
+                                    "เตรียมเสียงใช้เวลานานเกินไป"
+                                )
+                            );
+                        }
+
+                    },
+                    150
+                );
+        }
+    );
+}
+
+
+/* =========================================================
+   CLEAR CUSTOM
+========================================================= */
+
+function clearCustomSound() {
+
+    customSoundToken = null;
+
+    customSoundExpiresAt = 0;
+
+    customSoundUploadAmount = null;
+
+    customSoundDuration = 0;
+
+    if (customSoundObjectUrl) {
+
+        URL.revokeObjectURL(
+            customSoundObjectUrl
+        );
+
+        customSoundObjectUrl = null;
+    }
+
+    document
+        .getElementById(
+            "custom-file-card"
+        )
+        .classList
+        .remove(
+            "show"
+        );
+
+    document
+        .getElementById(
+            "custom-status"
+        )
+        .innerText = "";
+
+    updateSoundUI();
+}
+
+
+/* =========================================================
+   LIVE SUMMARY
+========================================================= */
+
+function updateLiveSummary() {
+
+    const amount =
+        Number(
+            amountInput.value
+        ) || 0;
+
+    const name =
+        nameInput.value.trim() ||
+        "Anonymous";
+
+    const tier =
+        getTier(amount);
+
+    document
+        .getElementById(
+            "live-summary-amount"
+        )
+        .innerText =
+        money(amount);
+
+
+    document
+        .getElementById(
+            "live-summary-name"
+        )
+        .innerText =
+        name;
+
+
+    document
+        .getElementById(
+            "live-summary-sound"
+        )
+        .innerText =
+        soundMode === "custom" &&
+        customSoundFile.files.length
+
+            ? customSoundFile.files[0].name
+            : tier.file;
+
+
+    document
+        .getElementById(
+            "live-summary-effect"
+        )
+        .innerText =
+        tier.effect;
+
+
+    document
+        .getElementById(
+            "live-summary-custom"
+        )
+        .innerText =
+        amount >= 100
+
+            ? (
+                soundMode === "custom"
+                    ? "ใช้งาน"
+                    : "ปลดล็อกแล้ว"
+            )
+
+            : "ต้องการยอด 100+";
+}
+
+
+/* =========================================================
+   DONATE
+========================================================= */
+
+async function donate() {
+
+    if (
+        donateButton.disabled
+    ) {
+
+        return;
+    }
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+    const name =
+        nameInput.value.trim() ||
+        "Anonymous";
+
+    const message =
+        messageInput.value.trim();
+
+    if (
+        !Number.isFinite(amount) ||
+        amount < 10
+    ) {
+
+        showToast(
+            "ยอดสนับสนุนขั้นต่ำ 10 บาท",
+            "error"
+        );
+
+        amountInput.focus();
+
+        return;
+    }
+
+    if (
+        name.length >
+        30
+    ) {
+
+        showToast(
+            "ชื่อต้องไม่เกิน 30 ตัวอักษร",
+            "error"
+        );
+
+        return;
+    }
+
+    if (
+        message.length >
+        200
+    ) {
+
+        showToast(
+            "ข้อความต้องไม่เกิน 200 ตัวอักษร",
+            "error"
+        );
+
+        return;
+    }
+
+    setDonateLoading(
+        true,
+        "กำลังเตรียม Donation..."
+    );
+
+    try {
+
+        let finalToken = null;
+
+        if (
+            soundMode ===
+            "custom"
+        ) {
+
+            if (
+                !customSoundFile
+                    .files
+                    .length
+            ) {
+
+                throw new Error(
+                    "กรุณาเลือก Custom Sound ก่อน"
+                );
+            }
+
+            setDonateLoading(
+                true,
+                "กำลังเตรียม Custom Sound..."
+            );
+
+            finalToken =
+                await uploadCustomSound();
+        }
+
+        const tier =
+            getTier(amount);
+
+        donationSnapshot = {
+            amount,
+            name,
+            message,
+
+            soundMode:
+                finalToken
+                    ? "custom"
+                    : "default",
+
+            customSoundToken:
+                finalToken || null,
+
+            soundName:
+                finalToken
+                    ? (
+                        customSoundFile
+                            .files[0]
+                            ?.name ||
+                        "Custom Sound"
+                    )
+                    : tier.file,
+
+            effect:
+                tier.effect,
+
+            particle:
+                tier.particle
+        };
+
+        setDonateLoading(
+            true,
+            "กำลังสร้าง PromptPay QR..."
+        );
+
+        await generatePaymentQR();
+
+        renderPaymentSummary();
+
+        setStep(2);
+
+        setDonationTimeline(
+            "payment"
+        );
+
+        lockDonationForm(
+            true
+        );
+
+        clearSlip();
+
+        setStatus(
+            "",
+            ""
+        );
+
+        paymentSection
+            .classList
+            .add(
+                "show"
+            );
+
+        setPageStage(
+            "payment"
+        );
+
+        await createMobileUploadSession();
+
+        startPaymentCountdown(
+            Date.now() +
+            PAYMENT_SESSION_TTL_MS
+        );
+
+        setTimeout(
+            () => {
+
+                paymentSection
+                    .scrollIntoView(
+                        {
+                            behavior: "smooth",
+                            block: "start"
+                        }
+                    );
+
+            },
+            100
+        );
+
+    } catch (error) {
+
+        donationSnapshot = null;
+
+        lockDonationForm(
+            false
+        );
+
+        setPageStage(
+            "form"
+        );
+
+        showToast(
+            error.message ||
+            "ไม่สามารถสร้าง Donation ได้",
+            "error"
+        );
+
+    } finally {
+
+        setDonateLoading(
+            false
+        );
+    }
+}
+
+
+/* =========================================================
+   GENERATE QR
+========================================================= */
+
+async function generatePaymentQR() {
+
+    if (!donationSnapshot) {
+
+        throw new Error(
+            "ไม่พบข้อมูล Donation"
+        );
+    }
+
+    const response =
+        await fetch(
+            "/generate-qr/" +
+            encodeURIComponent(
+                donationSnapshot.amount
+            )
+        );
+
+    const data =
+        await response.json();
+
+    if (
+        !response.ok ||
+        data.success === false
+    ) {
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            "สร้าง QR ไม่สำเร็จ"
+        );
+    }
+
+    qrImage.src =
+        data.qr;
+
+    qrBox.classList.remove(
+        "expired"
+    );
+}
+
+
+/* =========================================================
+   REGENERATE PAYMENT SESSION
+========================================================= */
+
+async function regeneratePaymentSession() {
+
+    if (!donationSnapshot) {
+        return;
+    }
+
+    const button =
+        document.getElementById(
+            "regenerate-payment-button"
+        );
+
+    button.disabled = true;
+
+    button.innerText =
+        "กำลังสร้างใหม่...";
+
+    try {
+
+        /*
+        ถ้า Custom Sound ใกล้หมดอายุ
+        ให้ Upload ใหม่ก่อน
+        */
+        if (
+            donationSnapshot.soundMode ===
+            "custom"
+        ) {
+
+            if (
+                customSoundExpiresAt <=
+                Date.now() + 60000
+            ) {
+
+                customSoundToken = null;
+
+                customSoundExpiresAt = 0;
+
+                const token =
+                    await uploadCustomSound();
+
+                donationSnapshot
+                    .customSoundToken =
+                    token;
+            }
+        }
+
+        await generatePaymentQR();
+
+        await createMobileUploadSession();
+
+        startPaymentCountdown(
+            Date.now() +
+            PAYMENT_SESSION_TTL_MS
+        );
+
+        setDonationTimeline(
+            "payment"
+        );
+
+        setStatus(
+            "",
+            ""
+        );
+
+        showToast(
+            "สร้าง QR และ Session ใหม่แล้ว",
+            "success"
+        );
+
+    } catch (error) {
+
+        showToast(
+            error.message ||
+            "สร้าง QR ใหม่ไม่สำเร็จ",
+            "error"
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.innerText =
+            "🔄 สร้าง QR ใหม่";
+    }
+}
+
+
+/* =========================================================
+   PAYMENT COUNTDOWN
+========================================================= */
+
+function startPaymentCountdown(
+    expiresAt
+) {
+
+    paymentExpiresAt =
+        Number(
+            expiresAt
+        );
+
+    if (paymentTimer) {
+
+        clearInterval(
+            paymentTimer
+        );
+    }
+
+    qrBox.classList.remove(
+        "expired"
+    );
+
+    qrCountdown.classList.remove(
+        "danger"
+    );
+
+    paymentTimerElement
+        .classList
+        .remove(
+            "danger"
+        );
+
+
+    function update() {
+
+        const remaining =
+            paymentExpiresAt -
+            Date.now();
+
+        if (
+            remaining <= 0
+        ) {
+
+            clearInterval(
+                paymentTimer
+            );
+
+            paymentTimer = null;
+
+            qrCountdown.innerText =
+                "หมดอายุ";
+
+            paymentTimerElement.innerText =
+                "SESSION EXPIRED";
+
+            qrCountdown
+                .classList
+                .add(
+                    "danger"
+                );
+
+            paymentTimerElement
+                .classList
+                .add(
+                    "danger"
+                );
+
+            qrBox
+                .classList
+                .add(
+                    "expired"
+                );
+
+            mobileStatus.className =
+                "mobile-status error";
+
+            mobileStatus.innerText =
+                "⌛ Session หมดอายุ กรุณาสร้าง QR ใหม่";
+
+            mobileExpire.innerText = "";
+
+            return;
+        }
+
+        const minutes =
+            Math.floor(
+                remaining /
+                60000
+            );
+
+        const seconds =
+            Math.floor(
+                (
+                    remaining %
+                    60000
+                ) /
+                1000
+            );
+
+        const text =
+            `${minutes}:${String(seconds).padStart(2,"0")}`;
+
+        qrCountdown.innerText =
+            text;
+
+        paymentTimerElement.innerText =
+            text;
+
+        const danger =
+            remaining <
+            2 * 60 * 1000;
+
+        qrCountdown
+            .classList
+            .toggle(
+                "danger",
+                danger
+            );
+
+        paymentTimerElement
+            .classList
+            .toggle(
+                "danger",
+                danger
+            );
+    }
+
+    update();
+
+    paymentTimer =
+        setInterval(
+            update,
+            1000
+        );
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+function renderPaymentSummary() {
+
+    if (!donationSnapshot) {
+        return;
+    }
+
+    const data =
+        donationSnapshot;
+
+    qrAmount.innerText =
+        money(
+            data.amount
+        );
+
+    document
+        .getElementById(
+            "summary-name"
+        )
+        .innerText =
+        data.name;
+
+    document
+        .getElementById(
+            "summary-amount"
+        )
+        .innerText =
+        money(
+            data.amount
+        );
+
+    document
+        .getElementById(
+            "summary-sound"
+        )
+        .innerText =
+        data.soundMode === "custom"
+
+            ? "🎧 " + data.soundName
+            : "🎵 " + data.soundName;
+
+    document
+        .getElementById(
+            "summary-effect"
+        )
+        .innerText =
+        data.effect;
+
+    document
+        .getElementById(
+            "summary-message"
+        )
+        .innerText =
+        data.message || "-";
+}
+
+
+/* =========================================================
+   COPY AMOUNT
+========================================================= */
+
+async function copyDonationAmount() {
+
+    if (!donationSnapshot) {
+        return;
+    }
+
+    const button =
+        document.getElementById(
+            "copy-amount-button"
+        );
+
+    try {
+
+        await navigator.clipboard
+            .writeText(
+                String(
+                    donationSnapshot.amount
+                )
+            );
+
+        button.classList.add(
+            "success"
+        );
+
+        button.innerText =
+            "✓ คัดลอกแล้ว";
+
+        setTimeout(
+            () => {
+
+                button.classList.remove(
+                    "success"
+                );
+
+                button.innerText =
+                    "📋 คัดลอกยอดเงิน";
+
+            },
+            1600
+        );
+
+    } catch {
+
+        showToast(
+            "คัดลอกไม่สำเร็จ",
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   LOCK FORM
+========================================================= */
+
+function lockDonationForm(
+    locked
+) {
+
+    nameInput.disabled =
+        locked;
+
+    messageInput.disabled =
+        locked;
+
+    amountInput.disabled =
+        locked;
+
+    document
+        .querySelectorAll(
+            ".amount-btn"
+        )
+        .forEach(
+            button => {
+
+                button.disabled =
+                    locked;
+            }
+        );
+
+    document
+        .getElementById(
+            "sound-option-default"
+        )
+        .style
+        .pointerEvents =
+        locked
+            ? "none"
+            : "";
+
+    document
+        .getElementById(
+            "sound-option-custom"
+        )
+        .style
+        .pointerEvents =
+        locked
+            ? "none"
+            : "";
+
+    document
+        .getElementById(
+            "custom-file-button"
+        )
+        .disabled =
+        locked;
+}
+
+
+/* =========================================================
+   EDIT DONATION
+========================================================= */
+
+function editDonation() {
+
+    donationSnapshot = null;
+
+    paymentSection
+        .classList
+        .remove(
+            "show"
+        );
+
+    stopPaymentCountdown();
+
+    setStep(1);
+
+    setDonationTimeline(
+        "payment"
+    );
+
+    lockDonationForm(
+        false
+    );
+
+    clearSlip();
+
+    resetMobileSession();
+
+    setStatus(
+        "",
+        ""
+    );
+
+    setPageStage(
+        "form"
+    );
+
+    amountInput.focus();
+}
+
+
+/* =========================================================
+   STOP PAYMENT COUNTDOWN
+========================================================= */
+
+function stopPaymentCountdown() {
+
+    paymentExpiresAt = 0;
+
+    if (paymentTimer) {
+
+        clearInterval(
+            paymentTimer
+        );
+
+        paymentTimer = null;
+    }
+
+    qrBox.classList.remove(
+        "expired"
+    );
+}
+
+
+/* =========================================================
+   STEP
+========================================================= */
+
+function setStep(current) {
+
+    [1,2,3].forEach(
+        step => {
+
+            const element =
+                document.getElementById(
+                    `step-${step}`
+                );
+
+            element.classList.remove(
+                "active",
+                "done"
+            );
+
+            if (
+                step <
+                current
+            ) {
+
+                element.classList.add(
+                    "done"
+                );
+            }
+
+            if (
+                step ===
+                current
+            ) {
+
+                element.classList.add(
+                    "active"
+                );
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   DONATION TIMELINE
+========================================================= */
+
+function setDonationTimeline(stage) {
+
+    const ids = [
+        "timeline-prepare",
+        "timeline-payment",
+        "timeline-verify",
+        "timeline-stream"
+    ];
+
+    ids.forEach(
+        id => {
+
+            document
+                .getElementById(id)
+                .classList
+                .remove(
+                    "active",
+                    "done"
+                );
+        }
+    );
+
+
+    const prepare =
+        document.getElementById(
+            "timeline-prepare"
+        );
+
+    const payment =
+        document.getElementById(
+            "timeline-payment"
+        );
+
+    const verify =
+        document.getElementById(
+            "timeline-verify"
+        );
+
+    const stream =
+        document.getElementById(
+            "timeline-stream"
+        );
+
+
+    if (
+        stage === "payment"
+    ) {
+
+        prepare.classList.add(
+            "done"
+        );
+
+        payment.classList.add(
+            "active"
+        );
+
+        return;
+    }
+
+
+    if (
+        stage === "verify"
+    ) {
+
+        prepare.classList.add(
+            "done"
+        );
+
+        payment.classList.add(
+            "done"
+        );
+
+        verify.classList.add(
+            "active"
+        );
+
+        return;
+    }
+
+
+    if (
+        stage === "stream"
+    ) {
+
+        prepare.classList.add(
+            "done"
+        );
+
+        payment.classList.add(
+            "done"
+        );
+
+        verify.classList.add(
+            "done"
+        );
+
+        stream.classList.add(
+            "active"
+        );
+
+        return;
+    }
+
+
+    if (
+        stage === "success"
+    ) {
+
+        ids.forEach(
+            id => {
+
+                document
+                    .getElementById(id)
+                    .classList
+                    .add(
+                        "done"
+                    );
+            }
+        );
+    }
+}
+
+
+/* =========================================================
+   SLIP INPUT
+========================================================= */
+
+slipInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            slipInput.files[0];
+
+        if (file) {
+
+            showSlip(
+                file
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   DRAG & DROP
+========================================================= */
+
+[
+    "dragenter",
+    "dragover"
+]
+.forEach(
+    eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                dropzone
+                    .classList
+                    .add(
+                        "drag"
+                    );
+            }
+        );
+    }
+);
+
+
+[
+    "dragleave",
+    "drop"
+]
+.forEach(
+    eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                dropzone
+                    .classList
+                    .remove(
+                        "drag"
+                    );
+            }
+        );
+    }
+);
+
+
+dropzone.addEventListener(
+    "drop",
+    event => {
+
+        const files =
+            event.dataTransfer.files;
+
+        if (!files.length) {
+            return;
+        }
+
+        const file =
+            files[0];
+
+        if (
+            !isSlipTypeAllowed(
+                file
+            )
+        ) {
+
+            showToast(
+                "รองรับเฉพาะ JPG, PNG และ WEBP",
+                "error"
+            );
+
+            return;
+        }
+
+        const transfer =
+            new DataTransfer();
+
+        transfer.items.add(
+            file
+        );
+
+        slipInput.files =
+            transfer.files;
+
+        showSlip(
+            file
+        );
+    }
+);
+
+
+/* =========================================================
+   SLIP CHECK
+========================================================= */
+
+function isSlipTypeAllowed(file) {
+
+    return [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ].includes(
+        file.type
+    );
+}
+
+
+function showSlip(file) {
+
+    if (
+        !isSlipTypeAllowed(
+            file
+        )
+    ) {
+
+        showToast(
+            "รองรับเฉพาะ JPG, PNG และ WEBP",
+            "error"
+        );
+
+        slipInput.value = "";
+
+        return;
+    }
+
+    /*
+    server จำกัด 4 MB
+    */
+    if (
+        file.size >
+        4 * 1024 * 1024
+    ) {
+
+        showToast(
+            "รูปสลิปต้องไม่เกิน 4 MB",
+            "error"
+        );
+
+        slipInput.value = "";
+
+        return;
+    }
+
+    if (slipObjectUrl) {
+
+        URL.revokeObjectURL(
+            slipObjectUrl
+        );
+    }
+
+    slipObjectUrl =
+        URL.createObjectURL(
+            file
+        );
+
+    document
+        .getElementById(
+            "slip-thumb"
+        )
+        .src =
+        slipObjectUrl;
+
+
+    document
+        .getElementById(
+            "slip-name"
+        )
+        .innerText =
+        file.name;
+
+
+    document
+        .getElementById(
+            "slip-meta"
+        )
+        .innerText =
+        formatBytes(
+            file.size
+        );
+
+
+    document
+        .getElementById(
+            "slip-preview"
+        )
+        .classList
+        .add(
+            "show"
+        );
+
+    setStep(3);
+
+    setDonationTimeline(
+        "verify"
+    );
+}
+
+
+/* =========================================================
+   CLEAR SLIP
+========================================================= */
+
+function clearSlip() {
+
+    slipInput.value = "";
+
+    document
+        .getElementById(
+            "slip-preview"
+        )
+        .classList
+        .remove(
+            "show"
+        );
+
+    if (slipObjectUrl) {
+
+        URL.revokeObjectURL(
+            slipObjectUrl
+        );
+
+        slipObjectUrl = null;
+    }
+}
+
+
+/* =========================================================
+   VERIFY SLIP
+========================================================= */
+
+async function verifySlip() {
+
+    if (!donationSnapshot) {
+
+        setStatus(
+            "error",
+            "กรุณาสร้าง Donation ใหม่"
+        );
+
+        return;
+    }
+
+    const file =
+        slipInput.files[0];
+
+    if (!file) {
+
+        showToast(
+            "กรุณาเลือกสลิปก่อน",
+            "error"
+        );
+
+        return;
+    }
+
+    verifyButton.disabled = true;
+
+    verifyButton.innerText =
+        "กำลังตรวจสอบสลิป...";
+
+    setDonationTimeline(
+        "verify"
+    );
+
+    setStatus(
+        "loading",
+        "⏳ กำลังตรวจสอบยอดและข้อมูลธุรกรรม..."
+    );
+
+    const form =
+        new FormData();
+
+    form.append(
+        "slip",
+        file
+    );
+
+    form.append(
+        "amount",
+        String(
+            donationSnapshot.amount
+        )
+    );
+
+    form.append(
+        "name",
+        donationSnapshot.name
+    );
+
+    form.append(
+        "message",
+        donationSnapshot.message
+    );
+
+    if (
+        donationSnapshot
+            .customSoundToken
+    ) {
+
+        form.append(
+            "customSoundToken",
+            donationSnapshot
+                .customSoundToken
+        );
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "/verify-slip",
+                {
+                    method: "POST",
+                    body: form
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "ตรวจสอบสลิปไม่สำเร็จ"
+            );
+        }
+
+        setDonationTimeline(
+            "stream"
+        );
+
+        await delay(250);
+
+        donationSuccess(
+            data.donation ||
+            donationSnapshot
+        );
+
+    } catch (error) {
+
+        setStatus(
+            "error",
+            "❌ " +
+            (
+                error.message ||
+                "ตรวจสอบสลิปไม่สำเร็จ"
+            )
+        );
+
+    } finally {
+
+        verifyButton.disabled = false;
+
+        verifyButton.innerText =
+            "✅ ตรวจสอบสลิป";
+    }
+}
+
+
+/* =========================================================
+   MOBILE SESSION
+========================================================= */
+
+async function createMobileUploadSession() {
+
+    if (!donationSnapshot) {
+        return;
+    }
+
+    if (mobileTimer) {
+
+        clearInterval(
+            mobileTimer
+        );
+
+        mobileTimer = null;
+    }
+
+    mobileRefresh.disabled = true;
+
+    mobileCard.classList.remove(
+        "success"
+    );
+
+    mobileStatus.className =
+        "mobile-status";
+
+    mobileStatus.innerText =
+        "⏳ กำลังสร้าง QR สำหรับมือถือ...";
+
+    mobileExpire.innerText = "";
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/mobile-upload/create",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            amount:
+                                donationSnapshot.amount,
+
+                            name:
+                                donationSnapshot.name,
+
+                            message:
+                                donationSnapshot.message,
+
+                            customSoundToken:
+                                donationSnapshot
+                                    .customSoundToken ||
+                                null,
+
+                            origin:
+                                window.location.origin
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "สร้าง QR มือถือไม่สำเร็จ"
+            );
+        }
+
+        currentMobileSessionId =
+            data.sessionId;
+
+        currentMobileExpiresAt =
+            Number(
+                data.expiresAt
+            );
+
+        mobileQR.src =
+            data.qr;
+
+        mobileStatus.innerText =
+            donationSnapshot
+                .soundMode ===
+                "custom"
+
+                ? "📱 สแกนเพื่อส่งสลิป • Custom Sound พร้อมแล้ว"
+                : "📱 สแกน QR นี้ด้วยมือถือเพื่อส่งสลิป";
+
+        startMobileCountdown();
+
+    } catch (error) {
+
+        currentMobileSessionId =
+            null;
+
+        mobileStatus.className =
+            "mobile-status error";
+
+        mobileStatus.innerText =
+            "❌ " +
+            (
+                error.message ||
+                "สร้าง QR มือถือไม่สำเร็จ"
+            );
+
+    } finally {
+
+        mobileRefresh.disabled =
+            false;
+    }
+}
+
+
+/* =========================================================
+   MOBILE COUNTDOWN
+========================================================= */
+
+function startMobileCountdown() {
+
+    if (mobileTimer) {
+
+        clearInterval(
+            mobileTimer
+        );
+    }
+
+    function update() {
+
+        const remaining =
+            currentMobileExpiresAt -
+            Date.now();
+
+        if (
+            remaining <= 0
+        ) {
+
+            clearInterval(
+                mobileTimer
+            );
+
+            mobileTimer = null;
+
+            mobileStatus.className =
+                "mobile-status error";
+
+            mobileStatus.innerText =
+                "⌛ QR มือถือหมดอายุแล้ว";
+
+            mobileExpire.innerText =
+                "กดสร้าง QR ใหม่เพื่อใช้งานต่อ";
+
+            return;
+        }
+
+        const minutes =
+            Math.floor(
+                remaining /
+                60000
+            );
+
+        const seconds =
+            Math.floor(
+                (
+                    remaining %
+                    60000
+                ) /
+                1000
+            );
+
+        mobileExpire.innerText =
+            `QR หมดอายุใน ${minutes}:${String(seconds).padStart(2,"0")}`;
+    }
+
+    update();
+
+    mobileTimer =
+        setInterval(
+            update,
+            1000
+        );
+}
+
+
+/* =========================================================
+   RESET MOBILE
+========================================================= */
+
+function resetMobileSession() {
+
+    currentMobileSessionId = null;
+
+    currentMobileExpiresAt = 0;
+
+    if (mobileTimer) {
+
+        clearInterval(
+            mobileTimer
+        );
+
+        mobileTimer = null;
+    }
+
+    mobileQR.removeAttribute(
+        "src"
+    );
+
+    mobileExpire.innerText = "";
+}
+
+
+/* =========================================================
+   MOBILE SUCCESS
+========================================================= */
+
+socket.on(
+    "mobile-slip-success",
+    payload => {
+
+        if (
+            payload.sessionId !==
+            currentMobileSessionId
+        ) {
+
+            return;
+        }
+
+        if (mobileTimer) {
+
+            clearInterval(
+                mobileTimer
+            );
+
+            mobileTimer = null;
+        }
+
+        mobileCard.classList.add(
+            "success"
+        );
+
+        mobileStatus.className =
+            "mobile-status success";
+
+        mobileStatus.innerText =
+            "✅ ตรวจสอบสลิปจากมือถือสำเร็จแล้ว";
+
+        mobileExpire.innerText = "";
+
+        setDonationTimeline(
+            "success"
+        );
+
+        donationSuccess({
+            amount: payload.amount,
+            name: payload.name
+        });
+    }
+);
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+function donationSuccess(
+    donation = {}
+) {
+
+    const amount =
+        Number(
+            donation.amount
+        ) ||
+        donationSnapshot?.amount ||
+        0;
+
+    const name =
+        donation.name ||
+        donationSnapshot?.name ||
+        "Anonymous";
+
+    const tier =
+        getTier(
+            amount
+        );
+
+    const soundName =
+        donationSnapshot
+            ?.soundMode ===
+            "custom"
+
+            ? (
+                donationSnapshot
+                    ?.soundName ||
+                "Custom Sound"
+            )
+
+            : tier.file;
+
+    setDonationTimeline(
+        "success"
+    );
+
+    stopPaymentCountdown();
+
+    setStatus(
+        "success",
+        "✅ ตรวจสอบสำเร็จ Donation ถูกส่งเข้าสู่ Stream แล้ว"
+    );
+
+    paymentSection
+        .classList
+        .remove(
+            "show"
+        );
+
+    document
+        .getElementById(
+            "donate-card"
+        )
+        .style
+        .display =
+        "none";
+
+    const success =
+        document.getElementById(
+            "success-screen"
+        );
+
+    success.classList.add(
+        "show"
+    );
+
+    document
+        .getElementById(
+            "success-name"
+        )
+        .innerText =
+        name;
+
+    document
+        .getElementById(
+            "success-amount"
+        )
+        .innerText =
+        money(
+            amount
+        );
+
+    document
+        .getElementById(
+            "success-sound"
+        )
+        .innerText =
+        soundName;
+
+    document
+        .getElementById(
+            "success-effect"
+        )
+        .innerText =
+        tier.effect;
+
+    document
+        .getElementById(
+            "success-time"
+        )
+        .innerText =
+        new Date()
+            .toLocaleTimeString(
+                "th-TH",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+    setPageStage(
+        "success"
+    );
+
+    resetMobileSession();
+
+    createSuccessConfetti();
+
+    loadRanking();
+
+    loadGoal();
+
+    setTimeout(
+        () => {
+
+            success
+                .scrollIntoView(
+                    {
+                        behavior: "smooth",
+                        block: "center"
+                    }
+                );
+
+        },
+        100
+    );
+}
+
+
+/* =========================================================
+   SUCCESS CONFETTI
+========================================================= */
+
+function createSuccessConfetti() {
+
+    const box =
+        document.getElementById(
+            "success-confetti"
+        );
+
+    box.innerHTML = "";
+
+    const colors = [
+        "#ff5b7f",
+        "#ff9eb4",
+        "#65e2a0",
+        "#ffd36e",
+        "#78caff"
+    ];
+
+    for (
+        let index = 0;
+        index < 36;
+        index++
+    ) {
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+        particle.className =
+            "success-particle";
+
+        particle.style.left =
+            `${Math.random() * 100}%`;
+
+        particle.style.background =
+            colors[
+                Math.floor(
+                    Math.random() *
+                    colors.length
+                )
+            ];
+
+        particle.style.animationDelay =
+            `${Math.random() * .7}s`;
+
+        particle.style.animationDuration =
+            `${1.7 + Math.random() * 1.2}s`;
+
+        box.appendChild(
+            particle
+        );
+    }
+}
+
+
+/* =========================================================
+   START NEW DONATION
+========================================================= */
+
+function startNewDonation() {
+
+    donationSnapshot = null;
+
+    document
+        .getElementById(
+            "success-screen"
+        )
+        .classList
+        .remove(
+            "show"
+        );
+
+    document
+        .getElementById(
+            "donate-card"
+        )
+        .style
+        .display =
+        "";
+
+    paymentSection
+        .classList
+        .remove(
+            "show"
+        );
+
+    lockDonationForm(
+        false
+    );
+
+    clearSlip();
+
+    resetMobileSession();
+
+    stopPaymentCountdown();
+
+    setStep(1);
+
+    setStatus(
+        "",
+        ""
+    );
+
+    setPageStage(
+        "form"
+    );
+
+    /*
+    เก็บชื่อไว้
+    แต่ล้างข้อความ
+    */
+    messageInput.value = "";
+
+    document
+        .getElementById(
+            "message-counter"
+        )
+        .innerText =
+        "0 / 200";
+
+    updateLiveSummary();
+
+    amountInput.focus();
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+    type,
+    text
+) {
+
+    verifyStatus.className =
+        "status";
+
+    verifyStatus.innerText =
+        text;
+
+    if (!type) {
+        return;
+    }
+
+    verifyStatus
+        .classList
+        .add(
+            "show",
+            type
+        );
+}
+
+
+/* =========================================================
+   GOAL
+========================================================= */
+
+async function loadGoal() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/goal",
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (data.success) {
+
+            renderGoal(
+                data
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Goal:",
+            error
+        );
+    }
+}
+
+
+function renderGoal(goal) {
+
+    const card =
+        document.getElementById(
+            "goal-card"
+        );
+
+    const enabled =
+        goal.enabled === true ||
+        goal.enabled === 1 ||
+        goal.enabled === "1";
+
+    card.style.display =
+        enabled
+            ? ""
+            : "none";
+
+    if (!enabled) {
+        return;
+    }
+
+    const total =
+        Number(
+            goal.total || 0
+        );
+
+    const target =
+        Number(
+            goal.target || 1
+        );
+
+    let percent =
+        Number(
+            goal.percent
+        );
+
+    if (
+        !Number.isFinite(
+            percent
+        )
+    ) {
+
+        percent =
+            target > 0
+                ? total / target * 100
+                : 0;
+    }
+
+    percent =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                percent
+            )
+        );
+
+    document
+        .getElementById(
+            "goal-title"
+        )
+        .innerText =
+        goal.title ||
+        "เป้าหมายสนับสนุน";
+
+
+    document
+        .getElementById(
+            "goal-percent"
+        )
+        .innerText =
+        `${Math.round(percent)}%`;
+
+
+    document
+        .getElementById(
+            "goal-total"
+        )
+        .innerText =
+        total.toLocaleString(
+            "th-TH"
+        );
+
+
+    document
+        .getElementById(
+            "goal-target"
+        )
+        .innerText =
+        target.toLocaleString(
+            "th-TH"
+        );
+
+
+    document
+        .getElementById(
+            "goal-bar"
+        )
+        .style
+        .width =
+        `${percent}%`;
+
+
+    const spark =
+        document.getElementById(
+            "goal-spark"
+        );
+
+    spark.style.left =
+        `${percent}%`;
+
+    spark.style.opacity =
+        percent > 0
+            ? "1"
+            : "0";
+
+
+    const remaining =
+        Math.max(
+            0,
+            target - total
+        );
+
+    document
+        .getElementById(
+            "goal-note"
+        )
+        .innerText =
+        percent >= 100
+
+            ? "🎉 เป้าหมายสำเร็จแล้ว ขอบคุณทุกคนมาก ๆ ❤️"
+
+            : `เหลืออีก ${remaining.toLocaleString("th-TH")} บาท ถึงเป้าหมาย`;
+}
+
+
+socket.on(
+    "goal-update",
+    goal => {
+
+        renderGoal(
+            goal
+        );
+    }
+);
+
+
+/* =========================================================
+   RANKING
+========================================================= */
+
+async function loadRanking() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/top-donors",
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (data.success) {
+
+            renderRanking(
+                data.donors || []
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ranking:",
+            error
+        );
+    }
+}
+
+
+socket.on(
+    "ranking-update",
+    donors => {
+
+        renderRanking(
+            donors || []
+        );
+    }
+);
+
+
+function renderRanking(donors) {
+
+    const box =
+        document.getElementById(
+            "ranking-list"
+        );
+
+    if (!donors.length) {
+
+        box.innerHTML = `
+            <div class="ranking-empty">
+                ยังไม่มีผู้สนับสนุน<br>
+                เป็นคนแรกได้เลย ❤️
+            </div>
+        `;
+
+        return;
+    }
+
+    const medals = [
+        "🥇",
+        "🥈",
+        "🥉",
+        "4",
+        "5"
+    ];
+
+    box.innerHTML =
+        donors
+            .slice(0,5)
+            .map(
+                (donor,index) => `
+                    <div class="rank-item">
+
+                        <div class="rank-medal">
+                            ${medals[index]}
+                        </div>
+
+                        <div>
+
+                            <div class="rank-name">
+                                ${escapeHTML(
+                                    donor.name ||
+                                    "Anonymous"
+                                )}
+                            </div>
+
+                            <div class="rank-label">
+                                Supporter #${index + 1}
+                            </div>
+
+                        </div>
+
+                        <div class="rank-amount">
+                            ${money(
+                                donor.amount
+                            )}
+                        </div>
+
+                    </div>
+                `
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   SCROLL RANKING
+========================================================= */
+
+function scrollToRanking() {
+
+    document
+        .getElementById(
+            "ranking-card"
+        )
+        .scrollIntoView(
+            {
+                behavior: "smooth",
+                block: "center"
+            }
+        );
+}
+
+
+/* =========================================================
+   BEFORE UNLOAD WARNING
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    event => {
+
+        if (
+            currentPageStage ===
+            "payment" &&
+            donationSnapshot
+        ) {
+
+            event.preventDefault();
+
+            event.returnValue =
+                "";
+        }
+    }
+);
+
+
+/* =========================================================
+   FORMAT
+========================================================= */
+
+function formatBytes(bytes) {
+
+    const value =
+        Number(bytes) || 0;
+
+    if (value < 1024) {
+
+        return `${value} B`;
+    }
+
+    if (
+        value <
+        1024 * 1024
+    ) {
+
+        return `${(value / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(value / 1024 / 1024).toFixed(2)} MB`;
+}
+
+
+function money(value) {
+
+    return (
+        "฿" +
+        Number(
+            value || 0
+        )
+        .toLocaleString(
+            "th-TH"
+        )
+    );
+}
+
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        String(
+            value || ""
+        );
+
+    return div.innerHTML;
+}
+
+
+function delay(ms) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    text,
+    type = "success"
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.className =
+        `toast ${type}`;
+
+    toast.innerText =
+        text;
+
+    requestAnimationFrame(
+        () => {
+
+            toast
+                .classList
+                .add(
+                    "show"
+                );
+        }
+    );
+
+    if (toastTimer) {
+
+        clearTimeout(
+            toastTimer
+        );
+    }
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast
+                    .classList
+                    .remove(
+                        "show"
+                    );
+
+            },
+            3200
+        );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function start() {
+
+    setNetworkStatus(
+        "connecting"
+    );
+
+    setPageStage(
+        "form"
+    );
+
+    updateAmountButtons();
+
+    updateSoundUI();
+
+    updateLiveSummary();
+
+    updateMobileBottomBar();
+
+    loadGoal();
+
+    loadRanking();
+}
+
+
+start();
+
+
+/* =========================================================
+   CLEANUP
+========================================================= */
+
+window.addEventListener(
+    "unload",
+    () => {
+
+        if (
+            customSoundObjectUrl
+        ) {
+
+            URL.revokeObjectURL(
+                customSoundObjectUrl
+            );
+        }
+
+        if (slipObjectUrl) {
+
+            URL.revokeObjectURL(
+                slipObjectUrl
+            );
+        }
+
+        if (mobileTimer) {
+
+            clearInterval(
+                mobileTimer
+            );
+        }
+
+        if (paymentTimer) {
+
+            clearInterval(
+                paymentTimer
+            );
+        }
+    }
+);
+
+</script>
+
+</body>
+</html>

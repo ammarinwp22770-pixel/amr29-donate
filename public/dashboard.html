@@ -1,0 +1,8208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AMR29 Donation Studio</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+
+    --bg:
+        #08090d;
+
+    --panel:
+        #13151c;
+
+    --panel2:
+        #191c25;
+
+    --panel3:
+        #20232d;
+
+    --input:
+        #232731;
+
+    --text:
+        #ffffff;
+
+    --muted:
+        #a7aab4;
+
+    --muted2:
+        #717682;
+
+    --accent:
+        #ff5b7f;
+
+    --accent2:
+        #ff8ca5;
+
+    --success:
+        #63df9b;
+
+    --danger:
+        #ff6b6b;
+
+    --warn:
+        #ffcc67;
+
+    --gold:
+        #ffd36e;
+
+    --border:
+        rgba(255,255,255,.075);
+
+    --shadow:
+        0 24px 70px rgba(0,0,0,.35);
+}
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
+html,
+body {
+
+    margin:
+        0;
+
+    min-height:
+        100%;
+
+    background:
+        var(--bg);
+
+    color:
+        var(--text);
+
+    font-family:
+        Inter,
+        "Noto Sans Thai",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+body {
+
+    padding:
+        18px;
+
+    background:
+
+        radial-gradient(
+            circle at 10% -10%,
+            rgba(255,91,127,.14),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 95% 0%,
+            rgba(92,93,255,.08),
+            transparent 27%
+        ),
+
+        var(--bg);
+}
+
+
+button,
+input,
+textarea {
+
+    font:
+        inherit;
+}
+
+
+button {
+
+    border:
+        0;
+}
+
+
+input,
+textarea {
+
+    width:
+        100%;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid transparent;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    color:
+        #ffffff;
+
+    background:
+        var(--input);
+
+    transition:
+        .18s;
+}
+
+
+input:focus,
+textarea:focus {
+
+    border-color:
+        rgba(255,91,127,.65);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(255,91,127,.08);
+}
+
+
+textarea {
+
+    min-height:
+        96px;
+
+    resize:
+        vertical;
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+}
+
+
+.muted {
+
+    color:
+        var(--muted2);
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        10px 12px;
+
+    border-radius:
+        10px;
+
+    cursor:
+        pointer;
+
+    font-weight:
+        800;
+
+    transition:
+        .18s;
+
+    white-space:
+        nowrap;
+}
+
+
+.btn:hover:not(:disabled) {
+
+    transform:
+        translateY(-1px);
+}
+
+
+.btn:disabled {
+
+    opacity:
+        .5;
+
+    cursor:
+        wait;
+
+    transform:
+        none;
+}
+
+
+.btn-primary {
+
+    color:
+        #ffffff;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff3d68
+        );
+
+    box-shadow:
+
+        0 8px 24px
+        rgba(255,91,127,.14);
+}
+
+
+.btn-soft {
+
+    color:
+        #e8e8eb;
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255,255,255,.04);
+}
+
+
+.btn-soft:hover:not(:disabled) {
+
+    background:
+        rgba(255,255,255,.075);
+}
+
+
+.btn-danger {
+
+    color:
+        #ff9b9b;
+
+    border:
+        1px solid
+        rgba(255,107,107,.18);
+
+    background:
+        rgba(255,107,107,.06);
+}
+
+
+.btn-small {
+
+    padding:
+        7px 9px;
+
+    font-size:
+        9px;
+
+    border-radius:
+        8px;
+}
+
+
+.btn-wide {
+
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.field {
+
+    margin-bottom:
+        12px;
+}
+
+
+.field label {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        6px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+}
+
+
+.field label small {
+
+    color:
+        var(--muted2);
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.login {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        9999;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        #08090d;
+}
+
+
+.login-card {
+
+    width:
+        100%;
+
+    max-width:
+        410px;
+
+    padding:
+        30px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        24px;
+
+    background:
+        var(--panel);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.login-logo {
+
+    width:
+        62px;
+
+    height:
+        62px;
+
+    margin:
+        0 auto 16px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        19px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    font-size:
+        28px;
+}
+
+
+.login-card h1 {
+
+    margin:
+        0;
+
+    text-align:
+        center;
+
+    font-size:
+        24px;
+}
+
+
+.login-card p {
+
+    margin:
+        7px 0 22px;
+
+    text-align:
+        center;
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+}
+
+
+.login-error {
+
+    display:
+        none;
+
+    margin-top:
+        10px;
+
+    padding:
+        10px;
+
+    border-radius:
+        9px;
+
+    color:
+        var(--danger);
+
+    background:
+        rgba(255,107,107,.08);
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+
+    display:
+        none;
+
+    width:
+        100%;
+
+    max-width:
+        1540px;
+
+    margin:
+        auto;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        14px;
+
+    margin-bottom:
+        12px;
+}
+
+
+.brand {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+}
+
+
+.brand-logo {
+
+    width:
+        44px;
+
+    height:
+        44px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        13px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #ff365f
+        );
+
+    font-size:
+        20px;
+}
+
+
+.brand h1 {
+
+    margin:
+        0;
+
+    font-size:
+        19px;
+}
+
+
+.brand p {
+
+    margin:
+        3px 0 0;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        8px;
+
+    letter-spacing:
+        1.3px;
+
+    font-weight:
+        800;
+}
+
+
+.top-actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        7px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+.status-pill {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        8px 10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        999px;
+
+    color:
+        var(--muted);
+
+    background:
+        rgba(255,255,255,.025);
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+}
+
+
+.status-dot {
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--danger);
+
+    box-shadow:
+
+        0 0 10px
+        rgba(255,107,107,.65);
+}
+
+
+.status-pill.online
+.status-dot {
+
+    background:
+        var(--success);
+
+    box-shadow:
+
+        0 0 10px
+        rgba(99,223,155,.8);
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:
+        9px;
+
+    margin-bottom:
+        11px;
+}
+
+
+.stat {
+
+    padding:
+        13px 15px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(19,21,28,.94);
+}
+
+
+.stat-label {
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.3px;
+}
+
+
+.stat-row {
+
+    display:
+        flex;
+
+    align-items:
+        flex-end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    margin-top:
+        5px;
+}
+
+
+.stat-value {
+
+    font-size:
+        22px;
+
+    font-weight:
+        950;
+}
+
+
+.stat-count {
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+}
+
+
+/* =========================================================
+   STUDIO LAYOUT
+
+   ซ้าย = Editor
+   ขวา = Preview
+========================================================= */
+
+.studio {
+
+    height:
+        calc(100vh - 159px);
+
+    min-height:
+        590px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+
+        minmax(560px,1fr)
+
+        minmax(430px,520px);
+
+    gap:
+        11px;
+
+    overflow:
+        hidden;
+}
+
+
+.editor,
+.preview-shell {
+
+    height:
+        100%;
+
+    min-width:
+        0;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        17px;
+
+    background:
+        rgba(18,20,27,.98);
+
+    box-shadow:
+
+        0 16px 55px
+        rgba(0,0,0,.2);
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+.editor {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.editor-head {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        12px 13px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255,255,255,.01);
+}
+
+
+.editor-title {
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+}
+
+
+.editor-sub {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        8px;
+}
+
+
+/* =========================================================
+   UNSAVED STATUS
+========================================================= */
+
+.dirty {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+}
+
+
+.dirty.on {
+
+    color:
+        var(--warn);
+}
+
+
+.dirty-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        currentColor;
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs {
+
+    display:
+        flex;
+
+    gap:
+        4px;
+
+    padding:
+        8px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    overflow-x:
+        auto;
+
+    background:
+        rgba(0,0,0,.08);
+}
+
+
+.tab {
+
+    flex:
+        1;
+
+    min-width:
+        90px;
+
+    padding:
+        9px 8px;
+
+    border-radius:
+        9px;
+
+    color:
+        var(--muted);
+
+    background:
+        transparent;
+
+    cursor:
+        pointer;
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+
+    transition:
+        .18s;
+}
+
+
+.tab:hover {
+
+    background:
+        rgba(255,255,255,.04);
+}
+
+
+.tab.active {
+
+    color:
+        #ffffff;
+
+    background:
+        rgba(255,91,127,.11);
+
+    box-shadow:
+
+        inset 0 0 0 1px
+        rgba(255,91,127,.2);
+}
+
+
+/* =========================================================
+   EDITOR BODY
+========================================================= */
+
+.editor-body {
+
+    flex:
+        1;
+
+    min-height:
+        0;
+
+    overflow-y:
+        auto;
+
+    padding:
+        12px;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        #353945 transparent;
+}
+
+
+.editor-body::-webkit-scrollbar {
+
+    width:
+        7px;
+}
+
+
+.editor-body::-webkit-scrollbar-thumb {
+
+    background:
+        #353945;
+
+    border-radius:
+        999px;
+}
+
+
+.tab-panel {
+
+    display:
+        none;
+}
+
+
+.tab-panel.active {
+
+    display:
+        block;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section {
+
+    margin-bottom:
+        10px;
+
+    padding:
+        12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255,255,255,.018);
+}
+
+
+.section:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+.section-head {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        10px;
+}
+
+
+.section-title {
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+}
+
+
+.section-sub {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.45;
+}
+
+
+.badge {
+
+    padding:
+        4px 7px;
+
+    border-radius:
+        999px;
+
+    color:
+        var(--accent2);
+
+    background:
+        rgba(255,91,127,.08);
+
+    font-size:
+        7px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .7px;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid2 {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:
+        8px;
+}
+
+
+/* =========================================================
+   SETTING CARD
+========================================================= */
+
+.setting {
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+.setting-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+}
+
+
+.setting-title {
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+}
+
+
+.setting-desc {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.4;
+}
+
+
+.setting-input {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    margin-top:
+        7px;
+}
+
+
+.setting-input input {
+
+    padding:
+        8px 9px;
+
+    font-size:
+        9px;
+}
+
+
+.unit {
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+}
+
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.switch {
+
+    position:
+        relative;
+
+    width:
+        36px;
+
+    height:
+        21px;
+
+    flex:
+        0 0 auto;
+}
+
+
+.switch input {
+
+    display:
+        none;
+}
+
+
+.switch span {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    border-radius:
+        999px;
+
+    background:
+        #3a3d47;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+}
+
+
+.switch span::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        15px;
+
+    height:
+        15px;
+
+    left:
+        3px;
+
+    top:
+        3px;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+
+    transition:
+        .2s;
+}
+
+
+.switch input:checked + span {
+
+    background:
+        var(--accent);
+}
+
+
+.switch input:checked + span::after {
+
+    transform:
+        translateX(15px);
+}
+
+
+/* =========================================================
+   EDITOR FOOTER
+========================================================= */
+
+.editor-footer {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    padding:
+        10px 12px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    background:
+        #13151c;
+}
+
+
+.editor-footer-note {
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.4;
+}
+
+
+.editor-footer-actions {
+
+    display:
+        flex;
+
+    gap:
+        7px;
+}
+
+
+/* =========================================================
+   SOUND TIERS
+========================================================= */
+
+.tiers {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:
+        7px;
+}
+
+
+.tier {
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    cursor:
+        pointer;
+
+    text-align:
+        left;
+
+    color:
+        #ffffff;
+
+    transition:
+        .18s;
+}
+
+
+.tier:hover {
+
+    border-color:
+        rgba(255,91,127,.25);
+
+    background:
+        rgba(255,91,127,.035);
+}
+
+
+.tier.active {
+
+    border-color:
+        rgba(255,91,127,.55);
+
+    background:
+        rgba(255,91,127,.07);
+}
+
+
+.tier-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        5px;
+}
+
+
+.tier-money {
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+}
+
+
+.tier-file {
+
+    margin-top:
+        4px;
+
+    color:
+        var(--accent2);
+
+    font-size:
+        7px;
+
+    font-weight:
+        850;
+}
+
+
+.tier-effect {
+
+    margin-top:
+        4px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        6px;
+}
+
+
+/* =========================================================
+   QUICK TEST
+========================================================= */
+
+.quick {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap:
+        5px;
+
+    margin-top:
+        7px;
+}
+
+
+.quick button {
+
+    padding:
+        8px 3px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    color:
+        #bbbbbb;
+
+    background:
+        rgba(255,255,255,.025);
+
+    cursor:
+        pointer;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+}
+
+
+.quick button.active {
+
+    color:
+        #ffffff;
+
+    border-color:
+        rgba(255,91,127,.6);
+
+    background:
+        rgba(255,91,127,.1);
+}
+
+
+.quick small {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        6px;
+}
+
+
+/* =========================================================
+   TEST SUMMARY
+========================================================= */
+
+.test-summary {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        rgba(255,91,127,.13);
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,91,127,.035);
+}
+
+
+.test-sound {
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+}
+
+
+.test-range {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+}
+
+
+.actions2 {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        7px;
+}
+
+
+/* =========================================================
+   GOAL
+========================================================= */
+
+.goal-preview {
+
+    padding:
+        12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+.goal-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+}
+
+
+.goal-name {
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+}
+
+
+.goal-percent {
+
+    color:
+        var(--accent2);
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+}
+
+
+.goal-bar {
+
+    height:
+        8px;
+
+    margin-top:
+        10px;
+
+    border-radius:
+        999px;
+
+    overflow:
+        hidden;
+
+    background:
+        rgba(255,255,255,.06);
+}
+
+
+.goal-fill {
+
+    height:
+        100%;
+
+    width:
+        0;
+
+    border-radius:
+        inherit;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            var(--accent),
+            #ff9eb4
+        );
+
+    transition:
+        .5s;
+}
+
+
+.goal-money {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    margin-top:
+        7px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+}
+
+
+.check {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
+}
+
+
+.check input {
+
+    width:
+        auto;
+}
+
+
+/* =========================================================
+   TOP DONORS
+========================================================= */
+
+.top-donors {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:
+        7px;
+}
+
+
+.donor {
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+.donor-rank {
+
+    font-size:
+        15px;
+}
+
+
+.donor-name {
+
+    margin-top:
+        5px;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+}
+
+
+.donor-amount {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--accent2);
+
+    font-size:
+        8px;
+
+    font-weight:
+        850;
+}
+
+
+.empty {
+
+    padding:
+        24px;
+
+    text-align:
+        center;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        9px;
+}
+
+
+/* =========================================================
+   HISTORY TABLE
+========================================================= */
+
+.table-wrap {
+
+    overflow:
+        auto;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+}
+
+
+table {
+
+    width:
+        100%;
+
+    border-collapse:
+        collapse;
+
+    min-width:
+        650px;
+}
+
+
+th {
+
+    padding:
+        8px;
+
+    color:
+        var(--muted2);
+
+    text-align:
+        left;
+
+    font-size:
+        7px;
+
+    letter-spacing:
+        .7px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+td {
+
+    padding:
+        9px 8px;
+
+    color:
+        #dddddd;
+
+    font-size:
+        9px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.035);
+}
+
+
+td.money {
+
+    color:
+        var(--accent2);
+
+    font-weight:
+        850;
+
+    white-space:
+        nowrap;
+}
+
+
+td.time {
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    white-space:
+        nowrap;
+}
+
+
+.msg {
+
+    max-width:
+        220px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+    color:
+        var(--muted);
+}
+
+
+/* =========================================================
+   PREVIEW SHELL
+========================================================= */
+
+.preview-shell {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.preview-head {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    padding:
+        12px 13px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+.preview-title-wrap {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+}
+
+
+.live-dot {
+
+    width:
+        8px;
+
+    height:
+        8px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--success);
+
+    box-shadow:
+
+        0 0 12px
+        rgba(99,223,155,.8);
+}
+
+
+.preview-title {
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+}
+
+
+.preview-sub {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+}
+
+
+.preview-tools {
+
+    display:
+        flex;
+
+    gap:
+        5px;
+}
+
+
+.mode-btn {
+
+    padding:
+        6px 8px;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--muted);
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255,255,255,.03);
+
+    cursor:
+        pointer;
+
+    font-size:
+        7px;
+
+    font-weight:
+        850;
+}
+
+
+.mode-btn.active {
+
+    color:
+        #ffffff;
+
+    border-color:
+        rgba(255,91,127,.3);
+
+    background:
+        rgba(255,91,127,.08);
+}
+
+
+/* =========================================================
+   PREVIEW STAGE
+========================================================= */
+
+.preview-stage-wrap {
+
+    flex:
+        1;
+
+    min-height:
+        0;
+
+    padding:
+        12px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+}
+
+
+.preview-stage {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    aspect-ratio:
+        16 / 9;
+
+    max-height:
+        100%;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    border-radius:
+        16px;
+
+    background:
+
+        radial-gradient(
+            circle at 50% 38%,
+            rgba(92,104,255,.2),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            145deg,
+            #07172b,
+            #07141f 40%,
+            #021012 74%,
+            #020607
+        );
+
+    box-shadow:
+
+        inset 0 0 0 1px
+        rgba(255,255,255,.015),
+
+        0 18px 45px
+        rgba(0,0,0,.35);
+}
+
+
+.preview-stage.grid::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    opacity:
+        .15;
+
+    background-image:
+
+        linear-gradient(
+            rgba(110,115,255,.2) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(110,115,255,.2) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        27px 27px;
+}
+
+
+.preview-stage.transparent {
+
+    background:
+
+        repeating-conic-gradient(
+            #171a21 0 25%,
+            #11131a 0 50%
+        )
+
+        50% /
+        24px 24px;
+}
+
+
+.watermark {
+
+    position:
+        absolute;
+
+    top:
+        10px;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index:
+        3;
+
+    color:
+        rgba(255,255,255,.5);
+
+    font-size:
+        7px;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        .8px;
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.particles {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        2;
+
+    overflow:
+        hidden;
+
+    pointer-events:
+        none;
+}
+
+
+.particle {
+
+    position:
+        absolute;
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    opacity:
+        0;
+
+    animation:
+
+        fly
+        1.45s
+        ease-out
+        forwards;
+}
+
+
+.particle.pink {
+
+    background:
+        #ff7da2;
+
+    box-shadow:
+
+        0 0 12px
+        rgba(255,125,162,.85);
+}
+
+
+.particle.gold {
+
+    background:
+        #ffd772;
+
+    box-shadow:
+
+        0 0 12px
+        rgba(255,215,114,.9);
+}
+
+
+.particle.mega {
+
+    background:
+        #fff0a5;
+
+    box-shadow:
+
+        0 0 12px
+        rgba(255,230,140,1),
+
+        0 0 24px
+        rgba(255,180,60,.7);
+}
+
+
+@keyframes fly {
+
+    0% {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(20px)
+            scale(.4);
+    }
+
+    18% {
+
+        opacity:
+            1;
+    }
+
+    100% {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(-135px)
+            scale(1.2);
+    }
+}
+
+
+/* =========================================================
+   PREVIEW ALERT
+========================================================= */
+
+.alert-card {
+
+    position:
+        absolute;
+
+    z-index:
+        4;
+
+    left:
+        5.5%;
+
+    right:
+        5.5%;
+
+    bottom:
+        8%;
+
+    display:
+        grid;
+
+    grid-template-columns:
+
+        48px
+
+        minmax(0,1fr)
+
+        auto;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    min-height:
+        80px;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(7,7,11,.97);
+
+    box-shadow:
+
+        0 12px 36px
+        rgba(0,0,0,.65);
+
+    transform:
+        translateY(20px)
+        scale(.96);
+
+    opacity:
+        .35;
+
+    transition:
+
+        .38s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+.alert-card.show {
+
+    transform:
+        translateY(0)
+        scale(1);
+
+    opacity:
+        1;
+}
+
+
+.alert-card.big {
+
+    border-color:
+        rgba(255,211,110,.4);
+
+    box-shadow:
+
+        0 12px 36px
+        rgba(0,0,0,.65),
+
+        0 0 28px
+        rgba(255,190,70,.14);
+}
+
+
+.alert-card.mega {
+
+    box-shadow:
+
+        0 12px 36px
+        rgba(0,0,0,.65),
+
+        0 0 44px
+        rgba(255,190,70,.25);
+}
+
+
+/* =========================================================
+   PREVIEW AVATAR
+========================================================= */
+
+.avatar {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        11px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,91,127,.34),
+            rgba(255,91,127,.12)
+        );
+
+    font-weight:
+        900;
+}
+
+
+.alert-card.big
+.avatar {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,197,75,.34),
+            rgba(255,170,50,.12)
+        );
+}
+
+
+/* =========================================================
+   PREVIEW TEXT
+========================================================= */
+
+.copy {
+
+    min-width:
+        0;
+}
+
+
+.alert-label {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    color:
+        var(--accent2);
+
+    font-size:
+        6px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .9px;
+}
+
+
+.alert-card.big
+.alert-label {
+
+    color:
+        var(--gold);
+}
+
+
+.sound-badge {
+
+    padding:
+        2px 5px;
+
+    border-radius:
+        999px;
+
+    color:
+        #a8e8ff;
+
+    background:
+        rgba(86,200,255,.1);
+
+    font-size:
+        5px;
+
+    letter-spacing:
+        .3px;
+}
+
+
+.p-name {
+
+    margin-top:
+        2px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+}
+
+
+.p-message {
+
+    margin-top:
+        3px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+    color:
+        #f2f2f4;
+
+    font-size:
+        7px;
+
+    font-weight:
+        650;
+}
+
+
+.p-amount {
+
+    padding-left:
+        7px;
+
+    color:
+        #ff9eb3;
+
+    font-size:
+        20px;
+
+    font-weight:
+        950;
+
+    white-space:
+        nowrap;
+}
+
+
+.alert-card.big
+.p-amount {
+
+    color:
+        var(--gold);
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    height:
+        3px;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+.progress span {
+
+    display:
+        block;
+
+    width:
+        68%;
+
+    height:
+        100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #ff3e69,
+            #ff95ae
+        );
+}
+
+
+.alert-card.big
+.progress span {
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #ffa833,
+            #ffd36e,
+            #fff0bb
+        );
+}
+
+
+/* =========================================================
+   PREVIEW META
+========================================================= */
+
+.preview-meta {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        5px;
+
+    padding:
+        0 12px 9px;
+}
+
+
+.chip {
+
+    padding:
+        5px 7px;
+
+    border-radius:
+        999px;
+
+    color:
+        #dddddd;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    background:
+        rgba(255,255,255,.035);
+
+    font-size:
+        6px;
+
+    font-weight:
+        850;
+}
+
+
+.chip.effect {
+
+    color:
+        #ffb4c6;
+
+    border-color:
+        rgba(255,91,127,.18);
+
+    background:
+        rgba(255,91,127,.06);
+}
+
+
+/* =========================================================
+   PREVIEW ACTIONS
+========================================================= */
+
+.preview-actions {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:
+        6px;
+
+    padding:
+        0 12px 10px;
+}
+
+
+.preview-actions
+.btn {
+
+    padding:
+        9px 5px;
+
+    font-size:
+        8px;
+}
+
+
+.preview-note {
+
+    padding:
+        0 12px 12px;
+
+    text-align:
+        center;
+
+    color:
+        var(--muted2);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+
+    position:
+        fixed;
+
+    right:
+        20px;
+
+    bottom:
+        20px;
+
+    z-index:
+        10000;
+
+    max-width:
+        340px;
+
+    padding:
+        11px 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    color:
+        #ffffff;
+
+    background:
+        #20232d;
+
+    box-shadow:
+
+        0 14px 42px
+        rgba(0,0,0,.42);
+
+    opacity:
+        0;
+
+    transform:
+        translateY(14px);
+
+    pointer-events:
+        none;
+
+    transition:
+        .22s;
+
+    font-size:
+        9px;
+}
+
+
+.toast.show {
+
+    opacity:
+        1;
+
+    transform:
+        translateY(0);
+}
+
+
+.toast.success {
+
+    border-color:
+        rgba(99,223,155,.25);
+}
+
+
+.toast.error {
+
+    border-color:
+        rgba(255,107,107,.25);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width:1150px) {
+
+    body {
+
+        padding:
+            13px;
+    }
+
+
+    .studio {
+
+        height:
+            auto;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        overflow:
+            visible;
+    }
+
+
+    .preview-shell {
+
+        order:
+            -1;
+
+        height:
+            auto;
+    }
+
+
+    .preview-stage-wrap {
+
+        min-height:
+            300px;
+    }
+
+
+    .editor {
+
+        height:
+            auto;
+    }
+
+
+    .editor-body {
+
+        max-height:
+            none;
+
+        overflow:
+            visible;
+    }
+
+
+    .editor-footer {
+
+        position:
+            sticky;
+
+        bottom:
+            0;
+
+        z-index:
+            10;
+    }
+}
+
+
+@media (max-width:720px) {
+
+    .topbar {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .stats {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .grid2,
+    .actions2 {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .tiers {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .quick {
+
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+
+    .preview-stage-wrap {
+
+        min-height:
+            0;
+    }
+
+
+    .alert-card {
+
+        left:
+            4%;
+
+        right:
+            4%;
+
+        grid-template-columns:
+
+            40px
+
+            minmax(0,1fr);
+    }
+
+
+    .avatar {
+
+        width:
+            36px;
+
+        height:
+            36px;
+    }
+
+
+    .p-amount {
+
+        grid-column:
+            2;
+
+        padding-left:
+            0;
+
+        font-size:
+            16px;
+    }
+
+
+    .preview-actions {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .editor-footer {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .editor-footer-actions {
+
+        width:
+            100%;
+    }
+
+
+    .editor-footer-actions
+    .btn {
+
+        flex:
+            1;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div
+    class="login"
+    id="login-screen"
+>
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            ❤️
+        </div>
+
+        <h1>
+            AMR29 Donation Studio
+        </h1>
+
+        <p>
+            จัดการ Alert, Test, Goal และดู Preview แบบสด
+        </p>
+
+
+        <div class="field">
+
+            <label>
+                ADMIN KEY
+            </label>
+
+            <input
+                id="admin-key-input"
+                type="password"
+                placeholder="ใส่ ADMIN_KEY"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button
+            class="btn btn-primary btn-wide"
+            onclick="login()"
+        >
+            เข้าสู่ Dashboard
+        </button>
+
+
+        <div
+            class="login-error"
+            id="login-error"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<div
+    class="app"
+    id="dashboard"
+>
+
+
+    <!-- =====================================================
+         TOPBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ❤️
+            </div>
+
+
+            <div>
+
+                <h1>
+                    AMR29 Donation Studio
+                </h1>
+
+                <p>
+                    LIVE ALERT CONTROL CENTER
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="top-actions">
+
+
+            <div
+                class="status-pill"
+                id="connection"
+            >
+
+                <span
+                    class="status-dot"
+                ></span>
+
+                <span
+                    id="connection-text"
+                >
+                    Connecting
+                </span>
+
+            </div>
+
+
+
+            <button
+                class="btn btn-soft"
+                onclick="window.open('/','_blank')"
+            >
+                🌐 Donate
+            </button>
+
+
+
+            <button
+                class="btn btn-soft"
+                onclick="window.open('/overlay.html','_blank')"
+            >
+                🖥 Overlay
+            </button>
+
+
+
+            <button
+                class="btn btn-soft"
+                onclick="refreshDashboard()"
+            >
+                ↻ Refresh
+            </button>
+
+
+
+            <button
+                class="btn btn-danger"
+                onclick="logout()"
+            >
+                ออกจากระบบ
+            </button>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         STATS
+    ====================================================== -->
+
+    <section class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                TODAY
+            </div>
+
+            <div class="stat-row">
+
+                <div
+                    class="stat-value"
+                    id="today-total"
+                >
+                    ฿0
+                </div>
+
+                <div
+                    class="stat-count"
+                    id="today-count"
+                >
+                    0 Donations
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                THIS MONTH
+            </div>
+
+            <div class="stat-row">
+
+                <div
+                    class="stat-value"
+                    id="month-total"
+                >
+                    ฿0
+                </div>
+
+                <div
+                    class="stat-count"
+                    id="month-count"
+                >
+                    0 Donations
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                ALL TIME
+            </div>
+
+            <div class="stat-row">
+
+                <div
+                    class="stat-value"
+                    id="all-total"
+                >
+                    ฿0
+                </div>
+
+                <div
+                    class="stat-count"
+                    id="all-count"
+                >
+                    0 Donations
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         STUDIO
+    ====================================================== -->
+
+    <main class="studio">
+
+
+        <!-- =================================================
+             EDITOR
+        ================================================== -->
+
+        <section class="editor">
+
+
+            <div class="editor-head">
+
+                <div>
+
+                    <div class="editor-title">
+                        ⚙️ Alert Studio
+                    </div>
+
+                    <div class="editor-sub">
+                        เลือกหมวดด้านล่าง — Preview ด้านขวาอยู่ตลอด
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="dirty"
+                    id="dirty-indicator"
+                >
+
+                    <span
+                        class="dirty-dot"
+                    ></span>
+
+                    <span
+                        id="dirty-text"
+                    >
+                        Saved
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 TABS
+            ============================================== -->
+
+            <nav class="tabs">
+
+
+                <button
+                    class="tab active"
+                    data-tab="alert"
+                    onclick="switchTab('alert')"
+                >
+                    🔔 Alert
+                </button>
+
+
+                <button
+                    class="tab"
+                    data-tab="test"
+                    onclick="switchTab('test')"
+                >
+                    🧪 Test
+                </button>
+
+
+                <button
+                    class="tab"
+                    data-tab="goal"
+                    onclick="switchTab('goal')"
+                >
+                    🎯 Goal
+                </button>
+
+
+                <button
+                    class="tab"
+                    data-tab="history"
+                    onclick="switchTab('history')"
+                >
+                    📊 History
+                </button>
+
+
+            </nav>
+
+
+
+            <!-- =============================================
+                 EDITOR BODY
+            ============================================== -->
+
+            <div class="editor-body">
+
+
+
+                <!-- =========================================
+                     ALERT TAB
+                ========================================== -->
+
+                <div
+                    class="tab-panel active"
+                    id="tab-alert"
+                >
+
+
+                    <!-- TTS -->
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    เสียงพูดและเวลา
+                                </div>
+
+                                <div class="section-sub">
+                                    ค่าเหล่านี้ Save แล้วส่งเข้า OBS แบบ Realtime
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                LIVE
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="grid2">
+
+
+                            <div class="setting">
+
+                                <div class="setting-row">
+
+                                    <div>
+
+                                        <div class="setting-title">
+                                            Text-to-Speech
+                                        </div>
+
+                                        <div class="setting-desc">
+                                            อ่านชื่อและยอดโดเนท
+                                        </div>
+
+                                    </div>
+
+
+                                    <label class="switch">
+
+                                        <input
+                                            id="alert-tts-enabled"
+                                            type="checkbox"
+                                        >
+
+                                        <span></span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="setting">
+
+                                <div class="setting-row">
+
+                                    <div>
+
+                                        <div class="setting-title">
+                                            อ่านข้อความ
+                                        </div>
+
+                                        <div class="setting-desc">
+                                            อ่านข้อความจากผู้สนับสนุน
+                                        </div>
+
+                                    </div>
+
+
+                                    <label class="switch">
+
+                                        <input
+                                            id="alert-read-message"
+                                            type="checkbox"
+                                        >
+
+                                        <span></span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="setting">
+
+                                <div class="setting-title">
+                                    TTS Speed
+                                </div>
+
+                                <div class="setting-desc">
+                                    0.5x – 2.0x
+                                </div>
+
+
+                                <div class="setting-input">
+
+                                    <input
+                                        id="alert-tts-rate"
+                                        type="number"
+                                        min="0.5"
+                                        max="2"
+                                        step="0.1"
+                                    >
+
+                                    <span class="unit">
+                                        x
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="setting">
+
+                                <div class="setting-title">
+                                    ค้างหลัง TTS
+                                </div>
+
+                                <div class="setting-desc">
+                                    เวลาหลังอ่านจบ
+                                </div>
+
+
+                                <div class="setting-input">
+
+                                    <input
+                                        id="alert-after-tts"
+                                        type="number"
+                                        min="0"
+                                        max="10"
+                                        step="0.1"
+                                    >
+
+                                    <span class="unit">
+                                        sec
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="setting">
+
+                                <div class="setting-title">
+                                    Alert Duration
+                                </div>
+
+                                <div class="setting-desc">
+                                    ใช้ตอนปิด TTS
+                                </div>
+
+
+                                <div class="setting-input">
+
+                                    <input
+                                        id="alert-duration"
+                                        type="number"
+                                        min="1"
+                                        max="30"
+                                        step="0.1"
+                                    >
+
+                                    <span class="unit">
+                                        sec
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- BIG / MEGA -->
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    ระดับ Alert
+                                </div>
+
+                                <div class="section-sub">
+                                    Preview จะเปลี่ยนทันที แม้ยังไม่กด Save
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                EFFECT
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="grid2">
+
+
+                            <div class="setting">
+
+                                <div class="setting-title">
+                                    BIG Donation
+                                </div>
+
+                                <div class="setting-desc">
+                                    ยอดขั้นต่ำ BIG Effect
+                                </div>
+
+                                <div class="setting-input">
+
+                                    <span class="unit">
+                                        ฿
+                                    </span>
+
+                                    <input
+                                        id="alert-big-amount"
+                                        type="number"
+                                        min="1"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="setting">
+
+                                <div class="setting-title">
+                                    MEGA Donation
+                                </div>
+
+                                <div class="setting-desc">
+                                    ต้องมากกว่า BIG
+                                </div>
+
+                                <div class="setting-input">
+
+                                    <span class="unit">
+                                        ฿
+                                    </span>
+
+                                    <input
+                                        id="alert-mega-amount"
+                                        type="number"
+                                        min="2"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- SOUND TIERS -->
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    Sound Tier + Particle
+                                </div>
+
+                                <div class="section-sub">
+                                    กดแต่ละ Tier เพื่อเปลี่ยนยอด Test และดู Preview ทันที
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                6 TIERS
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="tiers"
+                            id="tier-matrix"
+                        ></div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     TEST TAB
+                ========================================== -->
+
+                <div
+                    class="tab-panel"
+                    id="tab-test"
+                >
+
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    ข้อมูล Test Donation
+                                </div>
+
+                                <div class="section-sub">
+                                    พิมพ์แล้ว Preview ขวาเปลี่ยนสด
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                NO DB
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="grid2">
+
+
+                            <div class="field">
+
+                                <label>
+                                    ชื่อ
+
+                                    <small>
+                                        สูงสุด 30 ตัว
+                                    </small>
+                                </label>
+
+                                <input
+                                    id="test-name"
+                                    type="text"
+                                    maxlength="30"
+                                    value="AMR29 Test"
+                                >
+
+                            </div>
+
+
+
+                            <div class="field">
+
+                                <label>
+                                    จำนวนเงิน
+                                </label>
+
+                                <input
+                                    id="test-amount"
+                                    type="number"
+                                    min="1"
+                                    value="100"
+                                >
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="quick">
+
+
+                            <button
+                                data-test-amount="20"
+                                onclick="setTestAmount(20)"
+                            >
+                                ฿20
+
+                                <small>
+                                    alert
+                                </small>
+                            </button>
+
+
+                            <button
+                                data-test-amount="50"
+                                onclick="setTestAmount(50)"
+                            >
+                                ฿50
+
+                                <small>
+                                    alert2
+                                </small>
+                            </button>
+
+
+                            <button
+                                data-test-amount="100"
+                                onclick="setTestAmount(100)"
+                            >
+                                ฿100
+
+                                <small>
+                                    alert3
+                                </small>
+                            </button>
+
+
+                            <button
+                                data-test-amount="300"
+                                onclick="setTestAmount(300)"
+                            >
+                                ฿300
+
+                                <small>
+                                    alert4
+                                </small>
+                            </button>
+
+
+                            <button
+                                data-test-amount="500"
+                                onclick="setTestAmount(500)"
+                            >
+                                ฿500
+
+                                <small>
+                                    alert5
+                                </small>
+                            </button>
+
+
+                            <button
+                                data-test-amount="1000"
+                                onclick="setTestAmount(1000)"
+                            >
+                                ฿1K
+
+                                <small>
+                                    alert5
+                                </small>
+                            </button>
+
+
+                        </div>
+
+
+
+                        <div
+                            class="field"
+                            style="margin-top:10px"
+                        >
+
+                            <label>
+
+                                ข้อความ
+
+                                <small>
+                                    สูงสุด 200 ตัว
+                                </small>
+
+                            </label>
+
+                            <textarea
+                                id="test-message"
+                                maxlength="200"
+                            >ทดสอบ Donation ครับ</textarea>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="section">
+
+
+                        <div class="test-summary">
+
+
+                            <div>
+
+                                <div
+                                    class="test-sound"
+                                    id="test-sound-name"
+                                >
+                                    alert3.mp3
+                                </div>
+
+                                <div
+                                    class="test-range"
+                                    id="test-sound-range"
+                                >
+                                    100–299 บาท
+                                </div>
+
+                            </div>
+
+
+                            <span
+                                class="badge"
+                                id="test-tier-badge"
+                            >
+                                TIER 3
+                            </span>
+
+
+                        </div>
+
+
+
+                        <div
+                            class="actions2"
+                            style="margin-top:8px"
+                        >
+
+
+                            <button
+                                class="btn btn-soft"
+                                onclick="previewTestSound()"
+                            >
+                                🔊 ฟังเสียง
+                            </button>
+
+
+                            <button
+                                class="btn btn-soft"
+                                onclick="playPreviewAnimation()"
+                            >
+                                ✨ เล่น Preview
+                            </button>
+
+
+                        </div>
+
+
+
+                        <button
+                            class="btn btn-primary btn-wide"
+                            id="test-button"
+                            style="margin-top:7px"
+                            onclick="sendTestDonation()"
+                        >
+                            🧪 ส่ง Test Donation เข้า OBS
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     GOAL TAB
+                ========================================== -->
+
+                <div
+                    class="tab-panel"
+                    id="tab-goal"
+                >
+
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    Donation Goal
+                                </div>
+
+                                <div class="section-sub">
+                                    แก้ชื่อ เป้าหมาย และเปิด/ปิด Widget
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                REALTIME
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="goal-preview">
+
+
+                            <div class="goal-top">
+
+                                <div
+                                    class="goal-name"
+                                    id="goal-name"
+                                >
+                                    Donation Goal
+                                </div>
+
+                                <div
+                                    class="goal-percent"
+                                    id="goal-percent"
+                                >
+                                    0%
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="goal-bar">
+
+                                <div
+                                    class="goal-fill"
+                                    id="goal-fill"
+                                ></div>
+
+                            </div>
+
+
+
+                            <div class="goal-money">
+
+                                <span
+                                    id="goal-current"
+                                >
+                                    ฿0
+                                </span>
+
+                                <span
+                                    id="goal-target-text"
+                                >
+                                    / ฿0
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div
+                            class="field"
+                            style="margin-top:12px"
+                        >
+
+                            <label>
+                                ชื่อ Goal
+                            </label>
+
+                            <input
+                                id="goal-title-input"
+                                type="text"
+                                maxlength="60"
+                            >
+
+                        </div>
+
+
+
+                        <div class="field">
+
+                            <label>
+                                เป้าหมาย
+                            </label>
+
+                            <input
+                                id="goal-target-input"
+                                type="number"
+                                min="1"
+                            >
+
+                        </div>
+
+
+
+                        <label class="check">
+
+                            <input
+                                id="goal-enabled-input"
+                                type="checkbox"
+                            >
+
+                            เปิดแสดง Donation Goal
+
+                        </label>
+
+
+
+                        <div
+                            class="actions2"
+                            style="margin-top:10px"
+                        >
+
+                            <button
+                                class="btn btn-primary"
+                                onclick="saveGoal()"
+                            >
+                                💾 บันทึก Goal
+                            </button>
+
+
+                            <button
+                                class="btn btn-danger"
+                                onclick="resetGoal()"
+                            >
+                                ↺ Reset Goal
+                            </button>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     HISTORY TAB
+                ========================================== -->
+
+                <div
+                    class="tab-panel"
+                    id="tab-history"
+                >
+
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    Top Supporters
+                                </div>
+
+                                <div class="section-sub">
+                                    3 อันดับผู้สนับสนุนสูงสุด
+                                </div>
+
+                            </div>
+
+
+                            <span class="badge">
+                                TOP 3
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="top-donors"
+                            id="top-donors"
+                        ></div>
+
+
+                    </div>
+
+
+
+                    <div class="section">
+
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <div class="section-title">
+                                    Donation ล่าสุด
+                                </div>
+
+                                <div class="section-sub">
+                                    Replay Alert ได้โดยไม่เพิ่มยอด
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                class="btn btn-soft btn-small"
+                                onclick="refreshDashboard()"
+                            >
+                                ↻ Refresh
+                            </button>
+
+                        </div>
+
+
+
+                        <div class="table-wrap">
+
+
+                            <table>
+
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            เวลา
+                                        </th>
+
+                                        <th>
+                                            ชื่อ
+                                        </th>
+
+                                        <th>
+                                            ยอด
+                                        </th>
+
+                                        <th>
+                                            ข้อความ
+                                        </th>
+
+                                        <th>
+                                            Alert
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody
+                                    id="recent-body"
+                                ></tbody>
+
+
+                            </table>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =============================================
+                 EDITOR FOOTER
+            ============================================== -->
+
+            <footer class="editor-footer">
+
+
+                <div class="editor-footer-note">
+
+                    <b>Tip:</b>
+                    Preview ใช้ค่าที่กำลังแก้ทันที
+                    ส่วน OBS จะใช้ค่าที่ Save แล้ว
+
+                </div>
+
+
+                <div class="editor-footer-actions">
+
+
+                    <button
+                        class="btn btn-soft"
+                        onclick="reloadSavedSettings()"
+                    >
+                        ↺ คืนค่าที่ Save
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="save-alert-button"
+                        onclick="saveAlertSettings()"
+                    >
+                        💾 Save Alert
+                    </button>
+
+
+                </div>
+
+
+            </footer>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             PREVIEW
+        ================================================== -->
+
+        <aside class="preview-shell">
+
+
+            <!-- HEADER -->
+
+            <div class="preview-head">
+
+
+                <div class="preview-title-wrap">
+
+
+                    <span
+                        class="live-dot"
+                    ></span>
+
+
+                    <div>
+
+                        <div class="preview-title">
+                            LIVE ALERT PREVIEW
+                        </div>
+
+                        <div class="preview-sub">
+                            ไม่ต้องเลื่อนกลับขึ้นมาดู
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="preview-tools">
+
+
+                    <button
+                        class="mode-btn active"
+                        id="scene-mode"
+                        onclick="setPreviewMode('scene')"
+                    >
+                        SCENE
+                    </button>
+
+
+                    <button
+                        class="mode-btn"
+                        id="transparent-mode"
+                        onclick="setPreviewMode('transparent')"
+                    >
+                        ALPHA
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- STAGE -->
+
+            <div class="preview-stage-wrap">
+
+
+                <div
+                    class="preview-stage grid"
+                    id="preview-stage"
+                >
+
+
+                    <div class="watermark">
+                        AMR29 • PREVIEW
+                    </div>
+
+
+
+                    <div
+                        class="particles"
+                        id="preview-particles"
+                    ></div>
+
+
+
+                    <!-- ALERT -->
+
+                    <div
+                        class="alert-card show"
+                        id="preview-alert"
+                    >
+
+
+                        <div
+                            class="avatar"
+                            id="preview-avatar"
+                        >
+                            A
+                        </div>
+
+
+
+                        <div class="copy">
+
+
+                            <div class="alert-label">
+
+
+                                <span
+                                    id="preview-label"
+                                >
+                                    NEW DONATION
+                                </span>
+
+
+                                <span
+                                    class="sound-badge"
+                                    id="preview-sound-badge"
+                                >
+                                    TIER SOUND
+                                </span>
+
+
+                            </div>
+
+
+
+                            <div
+                                class="p-name"
+                                id="preview-name"
+                            >
+                                AMR29 Test
+                            </div>
+
+
+
+                            <div
+                                class="p-message"
+                                id="preview-message"
+                            >
+                                ทดสอบ Donation ครับ
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div
+                            class="p-amount"
+                            id="preview-amount"
+                        >
+                            ฿100
+                        </div>
+
+
+
+                        <div class="progress">
+
+                            <span></span>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- META -->
+
+            <div class="preview-meta">
+
+
+                <span
+                    class="chip"
+                    id="preview-level-chip"
+                >
+                    LEVEL: NORMAL
+                </span>
+
+
+                <span
+                    class="chip"
+                    id="preview-sound-chip"
+                >
+                    SOUND: alert3.mp3
+                </span>
+
+
+                <span
+                    class="chip effect"
+                    id="preview-particle-chip"
+                >
+                    PARTICLE: 12
+                </span>
+
+
+                <span
+                    class="chip"
+                    id="preview-tts-chip"
+                >
+                    TTS: ON
+                </span>
+
+
+            </div>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="preview-actions">
+
+
+                <button
+                    class="btn btn-soft"
+                    onclick="playPreviewAnimation()"
+                >
+                    ✨ Preview
+                </button>
+
+
+                <button
+                    class="btn btn-soft"
+                    onclick="previewTestSound()"
+                >
+                    🔊 Sound
+                </button>
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="sendTestDonation()"
+                >
+                    🧪 OBS Test
+                </button>
+
+
+            </div>
+
+
+
+            <div class="preview-note">
+
+                Preview ไม่เพิ่มยอด •
+                OBS Test ไม่บันทึก Database / Goal / Ranking
+
+            </div>
+
+
+        </aside>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     AUDIO
+========================================================= -->
+
+<audio
+    id="test-audio-player"
+    preload="none"
+></audio>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+
+<script>
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let adminKey =
+
+    sessionStorage.getItem(
+        "amr29_admin_key"
+    )
+
+    ||
+
+    "";
+
+
+const socket =
+    io();
+
+
+let toastTimer =
+    null;
+
+
+let alertSettings = {
+
+    ttsEnabled:
+        true,
+
+    readMessage:
+        true,
+
+    ttsRate:
+        1,
+
+    bigAmount:
+        500,
+
+    megaAmount:
+        1000,
+
+    afterTtsDelay:
+        1000,
+
+    noTtsDisplayTime:
+        4500
+};
+
+
+let savedAlertSettings = {
+
+    ...alertSettings
+};
+
+
+let isDirty =
+    false;
+
+
+const testAmountInput =
+    document.getElementById(
+        "test-amount"
+    );
+
+
+const testAudioPlayer =
+    document.getElementById(
+        "test-audio-player"
+    );
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function api(
+    url,
+    options = {}
+) {
+
+    const headers = {
+
+        ...(options.headers || {}),
+
+        "x-admin-key":
+            adminKey
+    };
+
+
+    const response =
+        await fetch(
+            url,
+            {
+
+                ...options,
+
+                headers,
+
+                cache:
+
+                    options.cache
+
+                    ||
+
+                    "no-store"
+            }
+        );
+
+
+    const raw =
+        await response.text();
+
+
+    let data = {};
+
+
+    try {
+
+        data =
+
+            raw
+
+                ?
+
+                JSON.parse(
+                    raw
+                )
+
+                :
+
+                {};
+
+
+    } catch {
+
+        throw new Error(
+
+            `API ${response.status}: Server ไม่ได้ตอบ JSON`
+        );
+    }
+
+
+    if (
+        response.status === 401
+
+        ||
+
+        response.status === 403
+    ) {
+
+        throw new Error(
+            "UNAUTHORIZED"
+        );
+    }
+
+
+    if (
+        !response.ok
+
+        ||
+
+        data.success === false
+    ) {
+
+        throw new Error(
+
+            data.message
+
+            ||
+
+            `Server Error ${response.status}`
+        );
+    }
+
+
+    return data;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login() {
+
+    const input =
+        document.getElementById(
+            "admin-key-input"
+        );
+
+
+    const key =
+        input
+            .value
+            .trim();
+
+
+    if (
+        !key
+    ) {
+
+        showLoginError(
+            "กรุณาใส่ Admin Key"
+        );
+
+        return;
+    }
+
+
+    adminKey =
+        key;
+
+
+    try {
+
+        await loadDashboard();
+
+
+        sessionStorage.setItem(
+            "amr29_admin_key",
+            adminKey
+        );
+
+
+        document
+            .getElementById(
+                "login-screen"
+            )
+            .style
+            .display =
+            "none";
+
+
+        document
+            .getElementById(
+                "dashboard"
+            )
+            .style
+            .display =
+            "block";
+
+
+        refreshAlertPreview();
+
+
+    } catch (error) {
+
+        adminKey =
+            "";
+
+
+        showLoginError(
+
+            error.message ===
+            "UNAUTHORIZED"
+
+                ?
+
+                "Admin Key ไม่ถูกต้อง"
+
+                :
+
+                error.message
+        );
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout() {
+
+    sessionStorage.removeItem(
+        "amr29_admin_key"
+    );
+
+
+    location.reload();
+}
+
+
+/* =========================================================
+   LOGIN ERROR
+========================================================= */
+
+function showLoginError(
+    text
+) {
+
+    const box =
+        document.getElementById(
+            "login-error"
+        );
+
+
+    box.style.display =
+        "block";
+
+
+    box.innerText =
+        text;
+}
+
+
+/* =========================================================
+   LOAD DASHBOARD
+========================================================= */
+
+async function loadDashboard() {
+
+    const data =
+        await api(
+            "/api/dashboard"
+        );
+
+
+    renderStats(
+        data.stats
+    );
+
+
+    renderRecent(
+        data.recent
+        ||
+        []
+    );
+
+
+    renderTopDonors(
+        data.topDonors
+        ||
+        []
+    );
+
+
+    renderGoal(
+        data.goal
+    );
+
+
+    if (
+        data.alertSettings
+    ) {
+
+        alertSettings = {
+
+            ...alertSettings,
+
+            ...data.alertSettings
+        };
+
+
+        savedAlertSettings = {
+
+            ...alertSettings
+        };
+
+
+        renderAlertSettings(
+            alertSettings
+        );
+
+
+        setDirty(
+            false
+        );
+    }
+
+
+    refreshAlertPreview();
+
+
+    return data;
+}
+
+
+/* =========================================================
+   REFRESH DASHBOARD
+========================================================= */
+
+async function refreshDashboard() {
+
+    try {
+
+        await loadDashboard();
+
+
+        showToast(
+            "อัปเดตข้อมูลล่าสุดแล้ว",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   RELOAD SAVED SETTINGS
+========================================================= */
+
+async function reloadSavedSettings() {
+
+    alertSettings = {
+
+        ...savedAlertSettings
+    };
+
+
+    renderAlertSettings(
+        alertSettings
+    );
+
+
+    setDirty(
+        false
+    );
+
+
+    refreshAlertPreview();
+
+
+    showToast(
+        "คืนค่า Alert ที่บันทึกไว้แล้ว",
+        "success"
+    );
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function renderStats(
+    stats
+) {
+
+    setText(
+        "today-total",
+        money(
+            stats?.today?.total
+        )
+    );
+
+
+    setText(
+
+        "today-count",
+
+        `${stats?.today?.count || 0} Donations`
+    );
+
+
+    setText(
+        "month-total",
+        money(
+            stats?.month?.total
+        )
+    );
+
+
+    setText(
+
+        "month-count",
+
+        `${stats?.month?.count || 0} Donations`
+    );
+
+
+    setText(
+        "all-total",
+        money(
+            stats?.all?.total
+        )
+    );
+
+
+    setText(
+
+        "all-count",
+
+        `${stats?.all?.count || 0} Donations`
+    );
+}
+
+
+/* =========================================================
+   SWITCH TAB
+========================================================= */
+
+function switchTab(
+    name
+) {
+
+    document
+        .querySelectorAll(
+            ".tab"
+        )
+        .forEach(
+            button => {
+
+                button
+                    .classList
+                    .toggle(
+
+                        "active",
+
+                        button.dataset.tab ===
+                        name
+                    );
+            }
+        );
+
+
+    document
+        .querySelectorAll(
+            ".tab-panel"
+        )
+        .forEach(
+            panel => {
+
+                panel
+                    .classList
+                    .toggle(
+
+                        "active",
+
+                        panel.id ===
+                        `tab-${name}`
+                    );
+            }
+        );
+}
+
+
+/* =========================================================
+   RENDER ALERT SETTINGS
+========================================================= */
+
+function renderAlertSettings(
+    settings
+) {
+
+    document
+        .getElementById(
+            "alert-tts-enabled"
+        )
+        .checked =
+
+        Boolean(
+            settings.ttsEnabled
+        );
+
+
+    document
+        .getElementById(
+            "alert-read-message"
+        )
+        .checked =
+
+        Boolean(
+            settings.readMessage
+        );
+
+
+    document
+        .getElementById(
+            "alert-tts-rate"
+        )
+        .value =
+
+        Number(
+            settings.ttsRate
+            ||
+            1
+        );
+
+
+    document
+        .getElementById(
+            "alert-big-amount"
+        )
+        .value =
+
+        Number(
+            settings.bigAmount
+            ||
+            500
+        );
+
+
+    document
+        .getElementById(
+            "alert-mega-amount"
+        )
+        .value =
+
+        Number(
+            settings.megaAmount
+            ||
+            1000
+        );
+
+
+    document
+        .getElementById(
+            "alert-after-tts"
+        )
+        .value =
+
+        (
+            Number(
+                settings.afterTtsDelay
+                ||
+                0
+            )
+
+            /
+
+            1000
+        )
+        .toFixed(
+            1
+        );
+
+
+    document
+        .getElementById(
+            "alert-duration"
+        )
+        .value =
+
+        (
+            Number(
+                settings.noTtsDisplayTime
+                ||
+                4500
+            )
+
+            /
+
+            1000
+        )
+        .toFixed(
+            1
+        );
+}
+
+
+/* =========================================================
+   GET EDITOR SETTINGS
+========================================================= */
+
+function getEditorSettings() {
+
+    const big =
+        Number(
+            document
+                .getElementById(
+                    "alert-big-amount"
+                )
+                .value
+        );
+
+
+    const mega =
+        Number(
+            document
+                .getElementById(
+                    "alert-mega-amount"
+                )
+                .value
+        );
+
+
+    return {
+
+
+        ttsEnabled:
+
+            document
+                .getElementById(
+                    "alert-tts-enabled"
+                )
+                .checked,
+
+
+        readMessage:
+
+            document
+                .getElementById(
+                    "alert-read-message"
+                )
+                .checked,
+
+
+        ttsRate:
+
+            Number(
+                document
+                    .getElementById(
+                        "alert-tts-rate"
+                    )
+                    .value
+            )
+
+            ||
+
+            1,
+
+
+        bigAmount:
+
+            Number.isFinite(
+                big
+            )
+
+            &&
+
+            big > 0
+
+                ?
+
+                big
+
+                :
+
+                alertSettings.bigAmount,
+
+
+        megaAmount:
+
+            Number.isFinite(
+                mega
+            )
+
+            &&
+
+            mega > 0
+
+                ?
+
+                mega
+
+                :
+
+                alertSettings.megaAmount,
+
+
+        afterTtsDelay:
+
+            Math.round(
+
+                (
+                    Number(
+
+                        document
+                            .getElementById(
+                                "alert-after-tts"
+                            )
+                            .value
+                    )
+
+                    ||
+
+                    0
+                )
+
+                *
+
+                1000
+            ),
+
+
+        noTtsDisplayTime:
+
+            Math.round(
+
+                (
+                    Number(
+
+                        document
+                            .getElementById(
+                                "alert-duration"
+                            )
+                            .value
+                    )
+
+                    ||
+
+                    4.5
+                )
+
+                *
+
+                1000
+            )
+    };
+}
+
+
+/* =========================================================
+   SAVE ALERT SETTINGS
+========================================================= */
+
+async function saveAlertSettings() {
+
+    const button =
+        document.getElementById(
+            "save-alert-button"
+        );
+
+
+    const payload =
+        getEditorSettings();
+
+
+    if (
+        payload.ttsRate < .5
+
+        ||
+
+        payload.ttsRate > 2
+    ) {
+
+        showToast(
+            "TTS Speed ต้องอยู่ระหว่าง 0.5 - 2.0",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        payload.bigAmount <= 0
+    ) {
+
+        showToast(
+            "BIG Donation ไม่ถูกต้อง",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        payload.megaAmount <=
+        payload.bigAmount
+    ) {
+
+        showToast(
+            "MEGA ต้องมากกว่า BIG",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        payload.afterTtsDelay < 0
+
+        ||
+
+        payload.afterTtsDelay > 10000
+    ) {
+
+        showToast(
+            "ค้างหลัง TTS ต้องอยู่ระหว่าง 0 - 10 วินาที",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        payload.noTtsDisplayTime < 1000
+
+        ||
+
+        payload.noTtsDisplayTime > 30000
+    ) {
+
+        showToast(
+            "Alert Duration ต้องอยู่ระหว่าง 1 - 30 วินาที",
+            "error"
+        );
+
+        return;
+    }
+
+
+    button.disabled =
+        true;
+
+
+    button.innerText =
+        "กำลังบันทึก...";
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/admin/alert-settings",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+                }
+            );
+
+
+        alertSettings = {
+
+            ...alertSettings,
+
+            ...data.settings
+        };
+
+
+        savedAlertSettings = {
+
+            ...alertSettings
+        };
+
+
+        renderAlertSettings(
+            alertSettings
+        );
+
+
+        setDirty(
+            false
+        );
+
+
+        refreshAlertPreview();
+
+
+        showToast(
+            "🔔 บันทึก Alert Settings และส่งไป OBS แล้ว",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+
+    } finally {
+
+        button.disabled =
+            false;
+
+
+        button.innerText =
+            "💾 Save Alert";
+    }
+}
+
+
+/* =========================================================
+   DIRTY STATE
+========================================================= */
+
+function setDirty(
+    value = true
+) {
+
+    isDirty =
+        value;
+
+
+    const box =
+        document.getElementById(
+            "dirty-indicator"
+        );
+
+
+    box
+        .classList
+        .toggle(
+            "on",
+            value
+        );
+
+
+    setText(
+
+        "dirty-text",
+
+        value
+
+            ?
+
+            "Unsaved"
+
+            :
+
+            "Saved"
+    );
+}
+
+
+/* =========================================================
+   SOUND TIERS
+========================================================= */
+
+function getTier(
+    amount
+) {
+
+    const value =
+        Number(
+            amount
+        )
+        ||
+        0;
+
+
+    if (
+        value >=
+        1000
+    ) {
+
+        return {
+
+            key:
+                "1000+",
+
+            tier:
+                "MEGA",
+
+            file:
+                "alert5.mp3",
+
+            url:
+                "/sounds/alert5.mp3",
+
+            range:
+                "1,000+ บาท",
+
+            particle:
+                "mega",
+
+            particleCount:
+                48
+        };
+    }
+
+
+    if (
+        value >=
+        500
+    ) {
+
+        return {
+
+            key:
+                "500-999",
+
+            tier:
+                "BIG",
+
+            file:
+                "alert5.mp3",
+
+            url:
+                "/sounds/alert5.mp3",
+
+            range:
+                "500–999 บาท",
+
+            particle:
+                "gold",
+
+            particleCount:
+                30
+        };
+    }
+
+
+    if (
+        value >=
+        300
+    ) {
+
+        return {
+
+            key:
+                "300-499",
+
+            tier:
+                "TIER 4",
+
+            file:
+                "alert4.mp3",
+
+            url:
+                "/sounds/alert4.mp3",
+
+            range:
+                "300–499 บาท",
+
+            particle:
+                "pink",
+
+            particleCount:
+                20
+        };
+    }
+
+
+    if (
+        value >=
+        100
+    ) {
+
+        return {
+
+            key:
+                "100-299",
+
+            tier:
+                "TIER 3",
+
+            file:
+                "alert3.mp3",
+
+            url:
+                "/sounds/alert3.mp3",
+
+            range:
+                "100–299 บาท",
+
+            particle:
+                "pink",
+
+            particleCount:
+                12
+        };
+    }
+
+
+    if (
+        value >=
+        50
+    ) {
+
+        return {
+
+            key:
+                "50-99",
+
+            tier:
+                "TIER 2",
+
+            file:
+                "alert2.mp3",
+
+            url:
+                "/sounds/alert2.mp3",
+
+            range:
+                "50–99 บาท",
+
+            particle:
+                null,
+
+            particleCount:
+                0
+        };
+    }
+
+
+    return {
+
+        key:
+            "1-49",
+
+        tier:
+            "TIER 1",
+
+        file:
+            "alert.mp3",
+
+        url:
+            "/sounds/alert.mp3",
+
+        range:
+            "1–49 บาท",
+
+        particle:
+            null,
+
+        particleCount:
+            0
+    };
+}
+
+
+/* =========================================================
+   RENDER TIER MATRIX
+========================================================= */
+
+function renderTierMatrix() {
+
+    const box =
+        document.getElementById(
+            "tier-matrix"
+        );
+
+
+    const items = [
+
+        20,
+
+        50,
+
+        100,
+
+        300,
+
+        500,
+
+        1000
+    ];
+
+
+    box.innerHTML =
+
+        items
+            .map(
+                amount => {
+
+                    const tier =
+                        getTier(
+                            amount
+                        );
+
+
+                    return `
+
+                        <button
+                            class="tier"
+                            data-tier-amount="${amount}"
+                            onclick="setTestAmount(${amount})"
+                        >
+
+                            <div class="tier-top">
+
+                                <span class="tier-money">
+                                    ${money(amount)}
+                                </span>
+
+                                <span class="badge">
+                                    ${tier.tier}
+                                </span>
+
+                            </div>
+
+
+                            <div class="tier-file">
+
+                                🎵 ${tier.file}
+
+                            </div>
+
+
+                            <div class="tier-effect">
+
+                                ${
+                                    tier.particleCount
+
+                                        ?
+
+                                        `✨ Particle ${tier.particleCount}`
+
+                                        :
+
+                                        "Particle OFF"
+                                }
+
+                            </div>
+
+                        </button>
+                    `;
+                }
+            )
+            .join("");
+
+
+    updateTierActive();
+}
+
+
+/* =========================================================
+   ACTIVE TIER
+========================================================= */
+
+function updateTierActive() {
+
+    const amount =
+        Number(
+            testAmountInput.value
+        )
+        ||
+        0;
+
+
+    document
+        .querySelectorAll(
+            "[data-tier-amount]"
+        )
+        .forEach(
+            element => {
+
+                element
+                    .classList
+                    .toggle(
+
+                        "active",
+
+                        Number(
+                            element.dataset
+                                .tierAmount
+                        )
+
+                        ===
+
+                        amount
+                    );
+            }
+        );
+}
+
+
+/* =========================================================
+   UPDATE TEST UI
+========================================================= */
+
+function updateTestUI() {
+
+    const amount =
+        Number(
+            testAmountInput.value
+        )
+        ||
+        0;
+
+
+    const tier =
+        getTier(
+            amount
+        );
+
+
+    setText(
+        "test-sound-name",
+        tier.file
+    );
+
+
+    setText(
+        "test-sound-range",
+        tier.range
+    );
+
+
+    setText(
+        "test-tier-badge",
+        tier.tier
+    );
+
+
+    document
+        .querySelectorAll(
+            ".quick button"
+        )
+        .forEach(
+            button => {
+
+                button
+                    .classList
+                    .toggle(
+
+                        "active",
+
+                        Number(
+                            button.dataset
+                                .testAmount
+                        )
+
+                        ===
+
+                        amount
+                    );
+            }
+        );
+
+
+    updateTierActive();
+
+
+    refreshAlertPreview();
+}
+
+
+/* =========================================================
+   SET TEST AMOUNT
+========================================================= */
+
+function setTestAmount(
+    amount
+) {
+
+    testAmountInput.value =
+        amount;
+
+
+    updateTestUI();
+}
+
+
+/* =========================================================
+   PREVIEW SOUND
+========================================================= */
+
+async function previewTestSound() {
+
+    const tier =
+        getTier(
+
+            Number(
+                testAmountInput.value
+            )
+        );
+
+
+    try {
+
+        testAudioPlayer.pause();
+
+
+        testAudioPlayer.currentTime =
+            0;
+
+
+        testAudioPlayer.src =
+            tier.url;
+
+
+        testAudioPlayer.load();
+
+
+        await testAudioPlayer.play();
+
+
+        showToast(
+
+            `🔊 กำลังเล่น ${tier.file}`,
+
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showToast(
+
+            `เปิด ${tier.file} ไม่ได้ ตรวจสอบโฟลเดอร์ sounds`,
+
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   TEST DONATION
+========================================================= */
+
+async function sendTestDonation() {
+
+    const button =
+        document.getElementById(
+            "test-button"
+        );
+
+
+    const name =
+
+        document
+            .getElementById(
+                "test-name"
+            )
+            .value
+            .trim()
+
+        ||
+
+        "AMR29 Test";
+
+
+    const amount =
+        Number(
+            testAmountInput.value
+        );
+
+
+    const message =
+        document
+            .getElementById(
+                "test-message"
+            )
+            .value
+            .trim();
+
+
+    if (
+        !Number.isFinite(
+            amount
+        )
+
+        ||
+
+        amount <= 0
+    ) {
+
+        showToast(
+            "จำนวนเงิน Test ไม่ถูกต้อง",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        button
+    ) {
+
+        button.disabled =
+            true;
+
+
+        button.innerText =
+            "กำลังส่ง Test...";
+    }
+
+
+    try {
+
+        const data =
+            await api(
+                "/test-donation",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            name,
+
+                            message,
+
+                            amount
+                        })
+                }
+            );
+
+
+        showToast(
+
+            `🧪 ${money(amount)} → ${
+                data.donation?.soundUrl
+                ||
+                getTier(
+                    amount
+                ).file
+            } ส่งไป OBS แล้ว`,
+
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+
+    } finally {
+
+        if (
+            button
+        ) {
+
+            button.disabled =
+                false;
+
+
+            button.innerText =
+                "🧪 ส่ง Test Donation เข้า OBS";
+        }
+    }
+}
+
+
+/* =========================================================
+   GOAL
+========================================================= */
+
+function renderGoal(
+    goal
+) {
+
+    if (
+        !goal
+    ) {
+
+        return;
+    }
+
+
+    const total =
+        Number(
+            goal.total
+            ||
+            0
+        );
+
+
+    const target =
+        Number(
+            goal.target
+            ||
+            0
+        );
+
+
+    const percent =
+
+        target > 0
+
+            ?
+
+            Math.min(
+
+                100,
+
+                Math.max(
+
+                    0,
+
+                    total /
+                    target *
+                    100
+                )
+            )
+
+            :
+
+            0;
+
+
+    setText(
+
+        "goal-name",
+
+        goal.title
+
+        ||
+
+        "Donation Goal"
+    );
+
+
+    setText(
+
+        "goal-percent",
+
+        `${Math.round(
+            percent
+        )}%`
+    );
+
+
+    setText(
+        "goal-current",
+        money(
+            total
+        )
+    );
+
+
+    setText(
+
+        "goal-target-text",
+
+        `/ ${money(
+            target
+        )}`
+    );
+
+
+    document
+        .getElementById(
+            "goal-fill"
+        )
+        .style
+        .width =
+
+        `${percent}%`;
+
+
+    document
+        .getElementById(
+            "goal-title-input"
+        )
+        .value =
+
+        goal.title
+
+        ||
+
+        "";
+
+
+    document
+        .getElementById(
+            "goal-target-input"
+        )
+        .value =
+        target;
+
+
+    document
+        .getElementById(
+            "goal-enabled-input"
+        )
+        .checked =
+
+        goal.enabled === true
+
+        ||
+
+        goal.enabled === 1
+
+        ||
+
+        goal.enabled === "1";
+}
+
+
+/* =========================================================
+   SAVE GOAL
+========================================================= */
+
+async function saveGoal() {
+
+    const title =
+        document
+            .getElementById(
+                "goal-title-input"
+            )
+            .value
+            .trim();
+
+
+    const target =
+        Number(
+
+            document
+                .getElementById(
+                    "goal-target-input"
+                )
+                .value
+        );
+
+
+    const enabled =
+        document
+            .getElementById(
+                "goal-enabled-input"
+            )
+            .checked;
+
+
+    if (
+        !Number.isFinite(
+            target
+        )
+
+        ||
+
+        target <= 0
+    ) {
+
+        showToast(
+            "เป้าหมายต้องมากกว่า 0 บาท",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "/api/admin/goal",
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        title,
+
+                        target,
+
+                        enabled
+                    })
+            }
+        );
+
+
+        await loadDashboard();
+
+
+        showToast(
+            "บันทึก Goal แล้ว",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   RESET GOAL
+========================================================= */
+
+async function resetGoal() {
+
+    const ok =
+        confirm(
+
+            "ต้องการเริ่ม Goal ใหม่จาก 0 ใช่ไหม?\n\nประวัติ Donation จะไม่ถูกลบ"
+        );
+
+
+    if (
+        !ok
+    ) {
+
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "/api/admin/goal/reset",
+            {
+
+                method:
+                    "POST"
+            }
+        );
+
+
+        await loadDashboard();
+
+
+        showToast(
+            "Reset Goal แล้ว",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   TOP DONORS
+========================================================= */
+
+function renderTopDonors(
+    donors
+) {
+
+    const box =
+        document.getElementById(
+            "top-donors"
+        );
+
+
+    if (
+        !donors.length
+    ) {
+
+        box.innerHTML = `
+
+            <div
+                class="empty"
+                style="grid-column:1/-1"
+            >
+                ยังไม่มีผู้สนับสนุน
+            </div>
+        `;
+
+
+        return;
+    }
+
+
+    const medals = [
+
+        "🥇",
+
+        "🥈",
+
+        "🥉"
+    ];
+
+
+    box.innerHTML =
+
+        donors
+            .slice(
+                0,
+                3
+            )
+            .map(
+                (
+                    donor,
+                    index
+                ) => `
+
+                    <div class="donor">
+
+                        <div class="donor-rank">
+
+                            ${medals[index]}
+
+                        </div>
+
+
+                        <div class="donor-name">
+
+                            ${escapeHTML(
+                                donor.name
+                            )}
+
+                        </div>
+
+
+                        <div class="donor-amount">
+
+                            ${money(
+                                donor.amount
+                            )}
+
+                        </div>
+
+                    </div>
+                `
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   RECENT DONATIONS
+========================================================= */
+
+function renderRecent(
+    donations
+) {
+
+    const body =
+        document.getElementById(
+            "recent-body"
+        );
+
+
+    if (
+        !donations.length
+    ) {
+
+        body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="empty"
+                >
+                    ยังไม่มี Donation
+                </td>
+
+            </tr>
+        `;
+
+
+        return;
+    }
+
+
+    body.innerHTML =
+
+        donations
+            .map(
+                donation => `
+
+                    <tr>
+
+                        <td class="time">
+
+                            ${formatDate(
+                                donation.created_at
+                            )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${escapeHTML(
+                                donation.name
+                                ||
+                                "Anonymous"
+                            )}
+
+                        </td>
+
+
+                        <td class="money">
+
+                            ${money(
+                                donation.amount
+                            )}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="msg">
+
+                                ${
+                                    donation.message
+
+                                        ?
+
+                                        escapeHTML(
+                                            donation.message
+                                        )
+
+                                        :
+
+                                        "-"
+                                }
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                class="btn btn-soft btn-small"
+                                onclick="replayDonation(
+                                    ${Number(
+                                        donation.id
+                                    )}
+                                )"
+                            >
+                                ▶ Replay
+                            </button>
+
+                        </td>
+
+
+                    </tr>
+                `
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   REPLAY
+========================================================= */
+
+async function replayDonation(
+    id
+) {
+
+    try {
+
+        await api(
+
+            `/api/admin/donation/${id}/replay`,
+
+            {
+                method:
+                    "POST"
+            }
+        );
+
+
+        showToast(
+            "▶ เล่น Donation Alert ซ้ำแล้ว",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showToast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   PREVIEW DATA
+========================================================= */
+
+function getPreviewData() {
+
+    const amount =
+        Number(
+            testAmountInput.value
+        )
+        ||
+        0;
+
+
+    const settings =
+        getEditorSettings();
+
+
+    const tier =
+        getTier(
+            amount
+        );
+
+
+    const name =
+
+        document
+            .getElementById(
+                "test-name"
+            )
+            .value
+            .trim()
+
+        ||
+
+        "Anonymous";
+
+
+    const message =
+
+        document
+            .getElementById(
+                "test-message"
+            )
+            .value
+            .trim()
+
+        ||
+
+        "ข้อความตัวอย่าง";
+
+
+    return {
+
+        amount,
+
+        settings,
+
+        tier,
+
+        name,
+
+        message
+    };
+}
+
+
+/* =========================================================
+   REFRESH PREVIEW
+========================================================= */
+
+function refreshAlertPreview() {
+
+    const alert =
+        document.getElementById(
+            "preview-alert"
+        );
+
+
+    if (
+        !alert
+    ) {
+
+        return;
+    }
+
+
+    const {
+
+        amount,
+
+        settings,
+
+        tier,
+
+        name,
+
+        message
+
+    } =
+        getPreviewData();
+
+
+    const isMega =
+
+        amount >=
+        settings.megaAmount;
+
+
+    const isBig =
+
+        amount >=
+        settings.bigAmount;
+
+
+    alert
+        .classList
+        .toggle(
+            "big",
+            isBig
+        );
+
+
+    alert
+        .classList
+        .toggle(
+            "mega",
+            isMega
+        );
+
+
+    setText(
+
+        "preview-label",
+
+        isMega
+
+            ?
+
+            "MEGA DONATION"
+
+            :
+
+            isBig
+
+                ?
+
+                "BIG DONATION"
+
+                :
+
+                "NEW DONATION"
+    );
+
+
+    setText(
+        "preview-name",
+        name
+    );
+
+
+    setText(
+        "preview-message",
+        message
+    );
+
+
+    setText(
+        "preview-amount",
+        money(
+            amount
+        )
+    );
+
+
+    setText(
+
+        "preview-avatar",
+
+        firstChar(
+            name
+        )
+    );
+
+
+    setText(
+
+        "preview-level-chip",
+
+        `LEVEL: ${
+            isMega
+
+                ?
+
+                "MEGA"
+
+                :
+
+                isBig
+
+                    ?
+
+                    "BIG"
+
+                    :
+
+                    "NORMAL"
+        }`
+    );
+
+
+    setText(
+
+        "preview-sound-chip",
+
+        `SOUND: ${tier.file}`
+    );
+
+
+    setText(
+
+        "preview-particle-chip",
+
+        tier.particleCount
+
+            ?
+
+            `PARTICLE: ${tier.particleCount}`
+
+            :
+
+            "PARTICLE: OFF"
+    );
+
+
+    setText(
+
+        "preview-tts-chip",
+
+        `TTS: ${
+            settings.ttsEnabled
+
+                ?
+
+                "ON"
+
+                :
+
+                "OFF"
+        }`
+    );
+
+
+    setText(
+        "preview-sound-badge",
+        tier.tier
+    );
+}
+
+
+/* =========================================================
+   PLAY PREVIEW
+========================================================= */
+
+function playPreviewAnimation() {
+
+    refreshAlertPreview();
+
+
+    const alert =
+        document.getElementById(
+            "preview-alert"
+        );
+
+
+    const tier =
+        getTier(
+
+            Number(
+                testAmountInput.value
+            )
+        );
+
+
+    alert
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "preview-particles"
+        )
+        .innerHTML =
+        "";
+
+
+    void alert.offsetWidth;
+
+
+    requestAnimationFrame(
+        () => {
+
+            alert
+                .classList
+                .add(
+                    "show"
+                );
+        }
+    );
+
+
+    if (
+        tier.particleCount
+    ) {
+
+        createPreviewParticles(
+
+            tier.particleCount,
+
+            tier.particle
+        );
+    }
+}
+
+
+/* =========================================================
+   CREATE PREVIEW PARTICLES
+========================================================= */
+
+function createPreviewParticles(
+    count,
+    theme = "pink"
+) {
+
+    const box =
+        document.getElementById(
+            "preview-particles"
+        );
+
+
+    box.innerHTML =
+        "";
+
+
+    for (
+        let index = 0;
+        index < count;
+        index++
+    ) {
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+
+        particle.className =
+            `particle ${theme}`;
+
+
+        particle.style.left =
+
+            `${10 + Math.random() * 80}%`;
+
+
+        particle.style.bottom =
+
+            `${22 + Math.random() * 95}px`;
+
+
+        particle.style.animationDelay =
+
+            `${Math.random() * .45}s`;
+
+
+        particle.style.animationDuration =
+
+            `${1.05 + Math.random() * .8}s`;
+
+
+        let size =
+
+            4
+
+            +
+
+            Math.random() *
+            5;
+
+
+        if (
+            theme ===
+            "gold"
+        ) {
+
+            size =
+
+                5
+
+                +
+
+                Math.random() *
+                6;
+        }
+
+
+        if (
+            theme ===
+            "mega"
+        ) {
+
+            size =
+
+                6
+
+                +
+
+                Math.random() *
+                8;
+        }
+
+
+        particle.style.width =
+            `${size}px`;
+
+
+        particle.style.height =
+            `${size}px`;
+
+
+        if (
+            Math.random() >
+            .6
+        ) {
+
+            particle.style
+                .borderRadius =
+                "2px";
+        }
+
+
+        box.appendChild(
+            particle
+        );
+    }
+}
+
+
+/* =========================================================
+   PREVIEW MODE
+========================================================= */
+
+function setPreviewMode(
+    mode
+) {
+
+    const stage =
+        document.getElementById(
+            "preview-stage"
+        );
+
+
+    const scene =
+        document.getElementById(
+            "scene-mode"
+        );
+
+
+    const alpha =
+        document.getElementById(
+            "transparent-mode"
+        );
+
+
+    stage
+        .classList
+        .toggle(
+            "transparent",
+            mode === "transparent"
+        );
+
+
+    stage
+        .classList
+        .toggle(
+            "grid",
+            mode === "scene"
+        );
+
+
+    scene
+        .classList
+        .toggle(
+            "active",
+            mode === "scene"
+        );
+
+
+    alpha
+        .classList
+        .toggle(
+            "active",
+            mode === "transparent"
+        );
+}
+
+
+/* =========================================================
+   BIND INPUTS
+========================================================= */
+
+function bindInputs() {
+
+    const alertInputIds = [
+
+        "alert-tts-enabled",
+
+        "alert-read-message",
+
+        "alert-tts-rate",
+
+        "alert-big-amount",
+
+        "alert-mega-amount",
+
+        "alert-after-tts",
+
+        "alert-duration"
+    ];
+
+
+    alertInputIds
+        .forEach(
+            id => {
+
+                const element =
+                    document.getElementById(
+                        id
+                    );
+
+
+                [
+                    "input",
+                    "change"
+                ]
+                .forEach(
+                    eventName => {
+
+                        element.addEventListener(
+
+                            eventName,
+
+                            () => {
+
+                                setDirty(
+                                    true
+                                );
+
+
+                                refreshAlertPreview();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+
+
+    [
+        "test-name",
+        "test-message"
+    ]
+    .forEach(
+        id => {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+
+            element.addEventListener(
+                "input",
+                refreshAlertPreview
+            );
+        }
+    );
+
+
+    testAmountInput
+        .addEventListener(
+            "input",
+            updateTestUI
+        );
+}
+
+
+/* =========================================================
+   SOCKET STATUS
+========================================================= */
+
+socket.on(
+    "connect",
+    () => {
+
+        document
+            .getElementById(
+                "connection"
+            )
+            .classList
+            .add(
+                "online"
+            );
+
+
+        setText(
+            "connection-text",
+            "Server Online"
+        );
+    }
+);
+
+
+socket.on(
+    "disconnect",
+    () => {
+
+        document
+            .getElementById(
+                "connection"
+            )
+            .classList
+            .remove(
+                "online"
+            );
+
+
+        setText(
+            "connection-text",
+            "Disconnected"
+        );
+    }
+);
+
+
+/* =========================================================
+   REAL DONATION
+========================================================= */
+
+socket.on(
+    "donation",
+
+    donation => {
+
+        if (
+            donation?.isTest
+
+            ||
+
+            donation?.test
+
+            ||
+
+            donation?.isReplay
+
+            ||
+
+            donation?.replay
+        ) {
+
+            return;
+        }
+
+
+        if (
+            adminKey
+        ) {
+
+            loadDashboard()
+                .catch(
+                    () => {}
+                );
+        }
+    }
+);
+
+
+/* =========================================================
+   RANKING REALTIME
+========================================================= */
+
+socket.on(
+    "ranking-update",
+
+    donors => {
+
+        renderTopDonors(
+            donors
+            ||
+            []
+        );
+    }
+);
+
+
+/* =========================================================
+   GOAL REALTIME
+========================================================= */
+
+socket.on(
+    "goal-update",
+
+    goal => {
+
+        renderGoal(
+            goal
+        );
+    }
+);
+
+
+/* =========================================================
+   ALERT SETTINGS REALTIME
+========================================================= */
+
+socket.on(
+    "alert-settings-update",
+
+    settings => {
+
+        if (
+            !settings
+        ) {
+
+            return;
+        }
+
+
+        alertSettings = {
+
+            ...alertSettings,
+
+            ...settings
+        };
+
+
+        savedAlertSettings = {
+
+            ...alertSettings
+        };
+
+
+        renderAlertSettings(
+            alertSettings
+        );
+
+
+        setDirty(
+            false
+        );
+
+
+        refreshAlertPreview();
+    }
+);
+
+
+/* =========================================================
+   MONEY
+========================================================= */
+
+function money(
+    value
+) {
+
+    return (
+
+        "฿"
+
+        +
+
+        Number(
+            value
+            ||
+            0
+        )
+        .toLocaleString(
+            "th-TH"
+        )
+    );
+}
+
+
+/* =========================================================
+   SET TEXT
+========================================================= */
+
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (
+        element
+    ) {
+
+        element.innerText =
+            value;
+    }
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    value
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(
+            value
+            ||
+            ""
+        );
+
+
+    return div.innerHTML;
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+function firstChar(
+    value
+) {
+
+    return (
+
+        Array.from(
+
+            String(
+                value
+                ||
+                "A"
+            )
+            .trim()
+
+            ||
+
+            "A"
+        )[0]
+
+        ||
+
+        "A"
+    )
+    .toUpperCase();
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (
+        !value
+    ) {
+
+        return "-";
+    }
+
+
+    let text =
+        String(
+            value
+        );
+
+
+    if (
+        !/[zZ]|[+-]\d\d:?\d\d$/
+        .test(
+            text
+        )
+    ) {
+
+        text =
+
+            text.replace(
+                " ",
+                "T"
+            )
+
+            +
+
+            "Z";
+    }
+
+
+    const date =
+        new Date(
+            text
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return value;
+    }
+
+
+    return date
+        .toLocaleString(
+            "th-TH",
+            {
+
+                day:
+                    "2-digit",
+
+                month:
+                    "2-digit",
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit"
+            }
+        );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    text,
+    type = "success"
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    toast.innerText =
+        text;
+
+
+    requestAnimationFrame(
+        () => {
+
+            toast
+                .classList
+                .add(
+                    "show"
+                );
+        }
+    );
+
+
+    if (
+        toastTimer
+    ) {
+
+        clearTimeout(
+            toastTimer
+        );
+    }
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast
+                    .classList
+                    .remove(
+                        "show"
+                    );
+            },
+
+            3000
+        );
+}
+
+
+/* =========================================================
+   LOGIN ENTER
+========================================================= */
+
+document
+    .getElementById(
+        "admin-key-input"
+    )
+    .addEventListener(
+        "keydown",
+
+        event => {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                login();
+            }
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start() {
+
+    renderTierMatrix();
+
+
+    bindInputs();
+
+
+    updateTestUI();
+
+
+    refreshAlertPreview();
+
+
+    if (
+        !adminKey
+    ) {
+
+        return;
+    }
+
+
+    try {
+
+        await loadDashboard();
+
+
+        document
+            .getElementById(
+                "login-screen"
+            )
+            .style
+            .display =
+            "none";
+
+
+        document
+            .getElementById(
+                "dashboard"
+            )
+            .style
+            .display =
+            "block";
+
+
+        refreshAlertPreview();
+
+
+    } catch {
+
+        sessionStorage.removeItem(
+            "amr29_admin_key"
+        );
+
+
+        adminKey =
+            "";
+    }
+}
+
+
+start();
+
+</script>
+
+
+</body>
+</html>
