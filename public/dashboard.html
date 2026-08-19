@@ -2,8207 +2,4261 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AMR29 Donation Studio</title>
-
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+<title>AMR29 Donation Dashboard</title>
 <style>
-
-* {
-    box-sizing: border-box;
+*{
+box-sizing:border-box
 }
-
-:root {
-
-    --bg:
-        #08090d;
-
-    --panel:
-        #13151c;
-
-    --panel2:
-        #191c25;
-
-    --panel3:
-        #20232d;
-
-    --input:
-        #232731;
-
-    --text:
-        #ffffff;
-
-    --muted:
-        #a7aab4;
-
-    --muted2:
-        #717682;
-
-    --accent:
-        #ff5b7f;
-
-    --accent2:
-        #ff8ca5;
-
-    --success:
-        #63df9b;
-
-    --danger:
-        #ff6b6b;
-
-    --warn:
-        #ffcc67;
-
-    --gold:
-        #ffd36e;
-
-    --border:
-        rgba(255,255,255,.075);
-
-    --shadow:
-        0 24px 70px rgba(0,0,0,.35);
+:root{
+--bg:#09090d;
+--sidebar:
+rgba(15,15,21,.98);
+--surface:
+rgba(20,20,27,.97);
+--surface2:#202028;
+--input:#24242c;
+--text:#fff;
+--soft:#b8b8c1;
+--muted:#74747f;
+--accent:#ff5b7f;
+--accent2:#ff809b;
+--success:#63df9b;
+--danger:#ff6b6b;
+--warning:#ffc965;
+--blue:#78caff;
+--border:
+rgba(255,255,255,.075);
 }
-
-
-/* =========================================================
-   BASE
-========================================================= */
-
-html,
-body {
-
-    margin:
-        0;
-
-    min-height:
-        100%;
-
-    background:
-        var(--bg);
-
-    color:
-        var(--text);
-
-    font-family:
-        Inter,
-        "Noto Sans Thai",
-        "Segoe UI",
-        Arial,
-        sans-serif;
+html{
+scroll-behavior:smooth
 }
-
-
-body {
-
-    padding:
-        18px;
-
-    background:
-
-        radial-gradient(
-            circle at 10% -10%,
-            rgba(255,91,127,.14),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at 95% 0%,
-            rgba(92,93,255,.08),
-            transparent 27%
-        ),
-
-        var(--bg);
+body{
+margin:0;
+min-height:100vh;
+color:
+var(--text);
+background:
+radial-gradient(
+circle at 20% -15%,
+rgba(255,91,127,.13),
+transparent 30%
+),
+radial-gradient(
+circle at 100% 0%,
+rgba(120,80,255,.055),
+transparent 23%
+),
+var(--bg);
+font-family:
+Inter,
+"Noto Sans Thai",
+"Segoe UI",
+Arial,
+sans-serif
 }
-
-
 button,
 input,
-textarea {
-
-    font:
-        inherit;
+textarea,
+select{
+font:inherit
 }
-
-
-button {
-
-    border:
-        0;
+button{
+border:0
 }
-
-
+.hidden{
+display:none !important
+}
+/* =========================================================
+LOGIN
+========================================================= */
+.login-screen{
+position:fixed;
+inset:0;
+z-index:99999;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:
+radial-gradient(
+circle at 50% 0%,
+rgba(255,91,127,.14),
+transparent 35%
+),
+#09090d
+}
+.login-card{
+width:100%;
+max-width:410px;
+padding:32px;
+border:
+1px solid
+var(--border);
+border-radius:25px;
+background:
+var(--surface);
+box-shadow:
+0 30px 100px
+rgba(0,0,0,.52)
+}
+.login-logo{
+width:66px;
+height:66px;
+margin:
+0 auto 17px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:20px;
+background:
+linear-gradient(
+135deg,
+var(--accent),
+#ff365f
+);
+box-shadow:
+0 12px 35px
+rgba(255,91,127,.24);
+font-size:29px
+}
+.login-card h1{
+margin:0;
+text-align:center;
+font-size:24px
+}
+.login-card p{
+margin:
+7px 0 22px;
+text-align:center;
+color:
+var(--muted);
+font-size:11px;
+line-height:1.6
+}
+.login-error{
+display:none;
+margin-top:11px;
+padding:
+10px 12px;
+border:
+1px solid
+rgba(255,107,107,.15);
+border-radius:10px;
+color:
+var(--danger);
+background:
+rgba(255,107,107,.07);
+font-size:10px;
+line-height:1.5
+}
+/* =========================================================
+FORM
+========================================================= */
 input,
-textarea {
-
-    width:
-        100%;
-
-    padding:
-        10px 12px;
-
-    border:
-        1px solid transparent;
-
-    border-radius:
-        10px;
-
-    outline:
-        none;
-
-    color:
-        #ffffff;
-
-    background:
-        var(--input);
-
-    transition:
-        .18s;
+textarea,
+select{
+width:100%;
+padding:
+12px 13px;
+border:
+1px solid
+transparent;
+border-radius:11px;
+outline:none;
+color:#fff;
+background:
+var(--input);
+transition:.2s
 }
-
-
+input:hover,
+textarea:hover,
+select:hover{
+background:#292932
+}
 input:focus,
-textarea:focus {
-
-    border-color:
-        rgba(255,91,127,.65);
-
-    box-shadow:
-
-        0 0 0 3px
-        rgba(255,91,127,.08);
+textarea:focus,
+select:focus{
+border-color:
+rgba(255,91,127,.6);
+box-shadow:
+0 0 0 3px
+rgba(255,91,127,.08)
 }
-
-
-textarea {
-
-    min-height:
-        96px;
-
-    resize:
-        vertical;
+input:disabled,
+textarea:disabled,
+select:disabled{
+opacity:.5;
+cursor:not-allowed
 }
-
-
-.hidden {
-
-    display:
-        none !important;
+textarea{
+min-height:82px;
+resize:vertical
 }
-
-
-.muted {
-
-    color:
-        var(--muted2);
+.field{
+margin-bottom:14px
 }
-
-
+.field label{
+display:block;
+margin-bottom:6px;
+color:
+var(--soft);
+font-size:10px;
+font-weight:800
+}
+.hint{
+margin-top:5px;
+color:
+var(--muted);
+font-size:8px;
+line-height:1.5
+}
 /* =========================================================
-   BUTTONS
+BUTTON
 ========================================================= */
-
-.btn {
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        7px;
-
-    padding:
-        10px 12px;
-
-    border-radius:
-        10px;
-
-    cursor:
-        pointer;
-
-    font-weight:
-        800;
-
-    transition:
-        .18s;
-
-    white-space:
-        nowrap;
+.primary{
+padding:
+11px 14px;
+border-radius:10px;
+color:#fff;
+background:
+linear-gradient(
+135deg,
+var(--accent),
+#ff3d68
+);
+cursor:pointer;
+font-size:11px;
+font-weight:900;
+box-shadow:
+0 7px 20px
+rgba(255,91,127,.16);
+transition:.18s
 }
-
-
-.btn:hover:not(:disabled) {
-
-    transform:
-        translateY(-1px);
+.primary:hover:not(:disabled){
+transform:
+translateY(-1px)
 }
-
-
-.btn:disabled {
-
-    opacity:
-        .5;
-
-    cursor:
-        wait;
-
-    transform:
-        none;
+.primary:active:not(:disabled){
+transform:
+scale(.98)
 }
-
-
-.btn-primary {
-
-    color:
-        #ffffff;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--accent),
-            #ff3d68
-        );
-
-    box-shadow:
-
-        0 8px 24px
-        rgba(255,91,127,.14);
+.primary:disabled{
+opacity:.5;
+cursor:wait
 }
-
-
-.btn-soft {
-
-    color:
-        #e8e8eb;
-
-    border:
-        1px solid
-        var(--border);
-
-    background:
-        rgba(255,255,255,.04);
+.secondary{
+padding:
+9px 11px;
+border:
+1px solid
+var(--border);
+border-radius:9px;
+color:#cfcfd6;
+background:
+rgba(255,255,255,.035);
+cursor:pointer;
+font-size:10px;
+font-weight:800
 }
-
-
-.btn-soft:hover:not(:disabled) {
-
-    background:
-        rgba(255,255,255,.075);
+.secondary:hover{
+background:
+rgba(255,255,255,.07)
 }
-
-
-.btn-danger {
-
-    color:
-        #ff9b9b;
-
-    border:
-        1px solid
-        rgba(255,107,107,.18);
-
-    background:
-        rgba(255,107,107,.06);
+.danger{
+padding:
+9px 11px;
+border:
+1px solid
+rgba(255,107,107,.15);
+border-radius:9px;
+color:#ff9898;
+background:
+rgba(255,107,107,.055);
+cursor:pointer;
+font-size:10px;
+font-weight:800
 }
-
-
-.btn-small {
-
-    padding:
-        7px 9px;
-
-    font-size:
-        9px;
-
-    border-radius:
-        8px;
+.icon-btn{
+width:36px;
+height:36px;
+display:inline-flex;
+justify-content:center;
+align-items:center;
+border:
+1px solid
+var(--border);
+border-radius:10px;
+color:
+var(--soft);
+background:
+rgba(255,255,255,.025);
+cursor:pointer
 }
-
-
-.btn-wide {
-
-    width:
-        100%;
-}
-
-
 /* =========================================================
-   FIELD
+APP
 ========================================================= */
-
-.field {
-
-    margin-bottom:
-        12px;
+.app{
+display:none;
+min-height:100vh
 }
-
-
-.field label {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    margin-bottom:
-        6px;
-
-    color:
-        var(--muted);
-
-    font-size:
-        10px;
-
-    font-weight:
-        800;
-}
-
-
-.field label small {
-
-    color:
-        var(--muted2);
-
-    font-weight:
-        600;
-}
-
-
 /* =========================================================
-   LOGIN
+SIDEBAR
 ========================================================= */
-
-.login {
-
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    z-index:
-        9999;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding:
-        20px;
-
-    background:
-        #08090d;
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+bottom:0;
+width:230px;
+z-index:100;
+padding:
+22px 14px;
+border-right:
+1px solid
+var(--border);
+background:
+var(--sidebar);
+display:flex;
+flex-direction:column
 }
-
-
-.login-card {
-
-    width:
-        100%;
-
-    max-width:
-        410px;
-
-    padding:
-        30px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        24px;
-
-    background:
-        var(--panel);
-
-    box-shadow:
-        var(--shadow);
+.sidebar-brand{
+display:flex;
+align-items:center;
+gap:11px;
+padding:
+5px 7px 22px
 }
-
-
-.login-logo {
-
-    width:
-        62px;
-
-    height:
-        62px;
-
-    margin:
-        0 auto 16px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    border-radius:
-        19px;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--accent),
-            #ff365f
-        );
-
-    font-size:
-        28px;
+.sidebar-logo{
+width:43px;
+height:43px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:13px;
+background:
+linear-gradient(
+135deg,
+var(--accent),
+#ff365f
+);
+box-shadow:
+0 8px 25px
+rgba(255,91,127,.22);
+font-size:19px
 }
-
-
-.login-card h1 {
-
-    margin:
-        0;
-
-    text-align:
-        center;
-
-    font-size:
-        24px;
+.sidebar-name{
+font-size:14px;
+font-weight:900
 }
-
-
-.login-card p {
-
-    margin:
-        7px 0 22px;
-
-    text-align:
-        center;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
+.sidebar-sub{
+margin-top:2px;
+color:
+var(--muted);
+font-size:7px;
+font-weight:900;
+letter-spacing:1.3px
 }
-
-
-.login-error {
-
-    display:
-        none;
-
-    margin-top:
-        10px;
-
-    padding:
-        10px;
-
-    border-radius:
-        9px;
-
-    color:
-        var(--danger);
-
-    background:
-        rgba(255,107,107,.08);
-
-    font-size:
-        11px;
+.nav-label{
+margin:
+9px 9px 7px;
+color:#555560;
+font-size:7px;
+font-weight:900;
+letter-spacing:1.3px
 }
-
-
+.nav-btn{
+width:100%;
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:4px;
+padding:
+10px 11px;
+border:
+1px solid
+transparent;
+border-radius:10px;
+color:#8f8f9a;
+background:
+transparent;
+cursor:pointer;
+text-align:left;
+font-size:10px;
+font-weight:700;
+transition:.18s
+}
+.nav-btn:hover{
+color:#fff;
+background:
+rgba(255,255,255,.04)
+}
+.nav-icon{
+width:20px;
+text-align:center;
+font-size:13px
+}
+.sidebar-bottom{
+margin-top:auto
+}
+.server-box{
+margin-bottom:10px;
+padding:11px;
+border:
+1px solid
+var(--border);
+border-radius:11px;
+background:
+rgba(255,255,255,.025)
+}
+.server-row{
+display:flex;
+justify-content:
+space-between;
+align-items:center
+}
+.server-label{
+color:
+var(--muted);
+font-size:8px;
+font-weight:800
+}
+.server-value{
+display:flex;
+align-items:center;
+gap:5px;
+color:
+var(--danger);
+font-size:8px;
+font-weight:900
+}
+.server-value.online{
+color:
+var(--success)
+}
+.server-dot{
+width:6px;
+height:6px;
+border-radius:50%;
+background:
+currentColor
+}
 /* =========================================================
-   APP
+MAIN
 ========================================================= */
-
-.app {
-
-    display:
-        none;
-
-    width:
-        100%;
-
-    max-width:
-        1540px;
-
-    margin:
-        auto;
+.main{
+margin-left:230px;
+min-height:100vh;
+padding:27px
 }
-
-
+.topbar{
+display:flex;
+justify-content:
+space-between;
+align-items:center;
+gap:18px;
+margin-bottom:22px
+}
+.page-title h1{
+margin:0;
+font-size:23px;
+letter-spacing:-.4px
+}
+.page-title p{
+margin:
+4px 0 0;
+color:
+var(--muted);
+font-size:9px
+}
+.top-actions{
+display:flex;
+align-items:center;
+gap:8px
+}
+.mobile-nav{
+display:none
+}
 /* =========================================================
-   TOPBAR
+STATS
 ========================================================= */
-
-.topbar {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        14px;
-
-    margin-bottom:
-        12px;
+.stats{
+display:grid;
+grid-template-columns:
+repeat(3,1fr);
+gap:13px;
+margin-bottom:14px
 }
-
-
-.brand {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        11px;
+.stat{
+position:relative;
+overflow:hidden;
+min-height:130px;
+padding:18px;
+border:
+1px solid
+var(--border);
+border-radius:17px;
+background:
+var(--surface);
+box-shadow:
+0 12px 35px
+rgba(0,0,0,.16)
 }
-
-
-.brand-logo {
-
-    width:
-        44px;
-
-    height:
-        44px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    border-radius:
-        13px;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--accent),
-            #ff365f
-        );
-
-    font-size:
-        20px;
+.stat:after{
+content:"";
+position:absolute;
+width:100px;
+height:100px;
+right:-35px;
+top:-35px;
+border-radius:50%;
+background:
+rgba(255,91,127,.045)
 }
-
-
-.brand h1 {
-
-    margin:
-        0;
-
-    font-size:
-        19px;
+.stat-top{
+display:flex;
+justify-content:
+space-between;
+align-items:center
 }
-
-
-.brand p {
-
-    margin:
-        3px 0 0;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        8px;
-
-    letter-spacing:
-        1.3px;
-
-    font-weight:
-        800;
+.stat-label{
+color:
+var(--muted);
+font-size:8px;
+font-weight:900;
+letter-spacing:1.2px
 }
-
-
-.top-actions {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        flex-end;
-
-    gap:
-        7px;
-
-    flex-wrap:
-        wrap;
+.stat-icon{
+width:31px;
+height:31px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:9px;
+color:
+var(--accent2);
+background:
+rgba(255,91,127,.075);
+font-size:14px
 }
-
-
-.status-pill {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        7px;
-
-    padding:
-        8px 10px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        999px;
-
-    color:
-        var(--muted);
-
-    background:
-        rgba(255,255,255,.025);
-
-    font-size:
-        9px;
-
-    font-weight:
-        850;
+.stat-value{
+margin-top:15px;
+font-size:27px;
+font-weight:900
 }
-
-
-.status-dot {
-
-    width:
-        7px;
-
-    height:
-        7px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--danger);
-
-    box-shadow:
-
-        0 0 10px
-        rgba(255,107,107,.65);
+.stat-count{
+margin-top:3px;
+color:
+var(--muted);
+font-size:9px
 }
-
-
-.status-pill.online
-.status-dot {
-
-    background:
-        var(--success);
-
-    box-shadow:
-
-        0 0 10px
-        rgba(99,223,155,.8);
-}
-
-
 /* =========================================================
-   STATS
+GRID / PANEL
 ========================================================= */
-
-.stats {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:
-        9px;
-
-    margin-bottom:
-        11px;
+.grid{
+display:grid;
+grid-template-columns:
+minmax(0,2fr)
+minmax(300px,.88fr);
+gap:14px
 }
-
-
-.stat {
-
-    padding:
-        13px 15px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        13px;
-
-    background:
-        rgba(19,21,28,.94);
+.col{
+display:flex;
+flex-direction:column;
+gap:14px
 }
-
-
-.stat-label {
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        1.3px;
+.panel{
+border:
+1px solid
+var(--border);
+border-radius:17px;
+background:
+var(--surface);
+overflow:hidden
 }
-
-
-.stat-row {
-
-    display:
-        flex;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    margin-top:
-        5px;
+.panel-header{
+display:flex;
+justify-content:
+space-between;
+align-items:center;
+gap:13px;
+padding:
+15px 17px;
+border-bottom:
+1px solid
+var(--border)
 }
-
-
-.stat-value {
-
-    font-size:
-        22px;
-
-    font-weight:
-        950;
+.panel-title{
+font-size:12px;
+font-weight:900
 }
-
-
-.stat-count {
-
-    color:
-        var(--muted);
-
-    font-size:
-        8px;
+.panel-sub{
+margin-top:3px;
+color:
+var(--muted);
+font-size:8px
 }
-
-
+.panel-body{
+padding:17px
+}
+.search{
+position:relative;
+width:200px
+}
+.search input{
+padding:
+9px 12px 9px 31px;
+font-size:9px
+}
+.search span{
+position:absolute;
+left:11px;
+top:50%;
+transform:
+translateY(-50%);
+color:
+var(--muted);
+font-size:10px
+}
 /* =========================================================
-   STUDIO LAYOUT
-
-   ซ้าย = Editor
-   ขวา = Preview
+TABLE
 ========================================================= */
-
-.studio {
-
-    height:
-        calc(100vh - 159px);
-
-    min-height:
-        590px;
-
-    display:
-        grid;
-
-    grid-template-columns:
-
-        minmax(560px,1fr)
-
-        minmax(430px,520px);
-
-    gap:
-        11px;
-
-    overflow:
-        hidden;
+.table-wrap{
+overflow-x:auto
 }
-
-
-.editor,
-.preview-shell {
-
-    height:
-        100%;
-
-    min-width:
-        0;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        17px;
-
-    background:
-        rgba(18,20,27,.98);
-
-    box-shadow:
-
-        0 16px 55px
-        rgba(0,0,0,.2);
-
-    overflow:
-        hidden;
+table{
+width:100%;
+border-collapse:
+collapse
 }
-
-
+th{
+padding:
+11px 14px;
+border-bottom:
+1px solid
+var(--border);
+color:#61616c;
+text-align:left;
+font-size:7px;
+font-weight:900;
+letter-spacing:1px
+}
+td{
+padding:
+12px 14px;
+border-bottom:
+1px solid
+rgba(255,255,255,.04);
+color:#d5d5db;
+font-size:9px;
+vertical-align:middle
+}
+tbody tr:hover{
+background:
+rgba(255,255,255,.018)
+}
+.donor-user{
+display:flex;
+align-items:center;
+gap:8px
+}
+.avatar{
+width:30px;
+height:30px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:9px;
+color:
+var(--accent2);
+background:
+rgba(255,91,127,.075);
+font-size:10px;
+font-weight:900
+}
+.donor-name{
+max-width:130px;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:
+ellipsis;
+font-weight:800
+}
+.amount{
+color:
+var(--accent2);
+font-size:10px;
+font-weight:900;
+white-space:nowrap
+}
+.message{
+max-width:230px;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:
+ellipsis;
+color:
+var(--soft)
+}
+.time{
+color:
+var(--muted);
+white-space:nowrap
+}
+.replay{
+padding:
+6px 8px;
+border:
+1px solid
+rgba(255,91,127,.13);
+border-radius:7px;
+color:
+var(--accent2);
+background:
+rgba(255,91,127,.055);
+cursor:pointer;
+font-size:8px;
+font-weight:800
+}
+.empty{
+padding:35px;
+text-align:center;
+color:
+var(--muted);
+font-size:9px
+}
+.video-mini{
+display:inline-flex;
+margin-top:4px;
+padding:
+3px 6px;
+border:
+1px solid
+rgba(120,202,255,.17);
+border-radius:
+999px;
+color:
+var(--blue);
+background:
+rgba(120,202,255,.05);
+font-size:6px;
+font-weight:900
+}
 /* =========================================================
-   EDITOR
+GOAL
 ========================================================= */
-
-.editor {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
+.goal-head{
+display:flex;
+justify-content:
+space-between;
+align-items:flex-end;
+gap:15px
 }
-
-
-.editor-head {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        10px;
-
-    padding:
-        12px 13px;
-
-    border-bottom:
-        1px solid
-        var(--border);
-
-    background:
-        rgba(255,255,255,.01);
+.goal-name{
+font-size:12px;
+font-weight:900
 }
-
-
-.editor-title {
-
-    font-size:
-        12px;
-
-    font-weight:
-        900;
+.goal-pct{
+color:
+var(--accent2);
+font-size:20px;
+font-weight:900
 }
-
-
-.editor-sub {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        8px;
+.goal-bar{
+height:10px;
+margin-top:14px;
+overflow:hidden;
+border-radius:999px;
+background:
+rgba(255,255,255,.055)
 }
-
-
+.goal-fill{
+width:0;
+height:100%;
+border-radius:
+inherit;
+background:
+linear-gradient(
+90deg,
+var(--accent),
+#ff8da5
+);
+transition:
+width .7s
+cubic-bezier(.16,1,.3,1)
+}
+.goal-money{
+display:flex;
+justify-content:
+space-between;
+margin-top:8px;
+color:
+var(--muted);
+font-size:8px
+}
+.goal-form{
+margin-top:16px;
+padding-top:15px;
+border-top:
+1px solid
+var(--border)
+}
+.row-actions{
+display:flex;
+gap:7px;
+margin-top:9px
+}
+.check{
+display:flex;
+align-items:center;
+gap:7px;
+color:
+var(--soft);
+font-size:9px
+}
+.check input{
+width:auto
+}
 /* =========================================================
-   UNSAVED STATUS
+TOP SUPPORTERS
 ========================================================= */
-
-.dirty {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        5px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        8px;
-
-    font-weight:
-        800;
+.supporter{
+display:flex;
+align-items:center;
+gap:10px;
+padding:
+10px 0;
+border-bottom:
+1px solid
+rgba(255,255,255,.04)
 }
-
-
-.dirty.on {
-
-    color:
-        var(--warn);
+.supporter:last-child{
+border-bottom:0
 }
-
-
-.dirty-dot {
-
-    width:
-        6px;
-
-    height:
-        6px;
-
-    border-radius:
-        50%;
-
-    background:
-        currentColor;
+.rank{
+width:32px;
+height:32px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:9px;
+background:
+rgba(255,255,255,.04);
+font-size:14px
 }
-
-
+.supporter-info{
+flex:1;
+min-width:0
+}
+.supporter-name{
+overflow:hidden;
+white-space:nowrap;
+text-overflow:
+ellipsis;
+font-size:9px;
+font-weight:800
+}
+.supporter-money{
+margin-top:2px;
+color:
+var(--accent2);
+font-size:8px;
+font-weight:900
+}
 /* =========================================================
-   TABS
+ALERT SETTINGS
 ========================================================= */
-
-.tabs {
-
-    display:
-        flex;
-
-    gap:
-        4px;
-
-    padding:
-        8px;
-
-    border-bottom:
-        1px solid
-        var(--border);
-
-    overflow-x:
-        auto;
-
-    background:
-        rgba(0,0,0,.08);
+.alert-grid{
+display:grid;
+grid-template-columns:
+repeat(2,1fr);
+gap:11px
 }
-
-
-.tab {
-
-    flex:
-        1;
-
-    min-width:
-        90px;
-
-    padding:
-        9px 8px;
-
-    border-radius:
-        9px;
-
-    color:
-        var(--muted);
-
-    background:
-        transparent;
-
-    cursor:
-        pointer;
-
-    font-size:
-        9px;
-
-    font-weight:
-        850;
-
-    transition:
-        .18s;
+.setting-card{
+padding:13px;
+border:
+1px solid
+var(--border);
+border-radius:12px;
+background:
+rgba(255,255,255,.02)
 }
-
-
-.tab:hover {
-
-    background:
-        rgba(255,255,255,.04);
+.setting-top{
+display:flex;
+justify-content:
+space-between;
+align-items:center;
+gap:10px
 }
-
-
-.tab.active {
-
-    color:
-        #ffffff;
-
-    background:
-        rgba(255,91,127,.11);
-
-    box-shadow:
-
-        inset 0 0 0 1px
-        rgba(255,91,127,.2);
+.setting-title{
+font-size:10px;
+font-weight:900
 }
-
-
+.setting-desc{
+margin-top:3px;
+color:
+var(--muted);
+font-size:7px;
+line-height:1.5
+}
+.toggle{
+position:relative;
+width:38px;
+height:22px;
+flex-shrink:0
+}
+.toggle input{
+display:none
+}
+.toggle span{
+position:absolute;
+inset:0;
+border-radius:999px;
+background:#34343e;
+cursor:pointer;
+transition:.2s
+}
+.toggle span:after{
+content:"";
+position:absolute;
+width:16px;
+height:16px;
+left:3px;
+top:3px;
+border-radius:50%;
+background:#fff;
+transition:.2s
+}
+.toggle input:checked + span{
+background:
+var(--accent)
+}
+.toggle input:checked + span:after{
+transform:
+translateX(16px)
+}
+.settings-actions{
+display:flex;
+align-items:center;
+gap:8px;
+margin-top:14px
+}
+.settings-note{
+flex:1;
+color:
+var(--muted);
+font-size:8px;
+line-height:1.5
+}
 /* =========================================================
-   EDITOR BODY
+MODAL
 ========================================================= */
-
-.editor-body {
-
-    flex:
-        1;
-
-    min-height:
-        0;
-
-    overflow-y:
-        auto;
-
-    padding:
-        12px;
-
-    scrollbar-width:
-        thin;
-
-    scrollbar-color:
-        #353945 transparent;
+.modal-bg{
+position:fixed;
+inset:0;
+z-index:9999;
+display:none;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:
+rgba(0,0,0,.66);
+backdrop-filter:
+blur(8px)
 }
-
-
-.editor-body::-webkit-scrollbar {
-
-    width:
-        7px;
+.modal-bg.show{
+display:flex
 }
-
-
-.editor-body::-webkit-scrollbar-thumb {
-
-    background:
-        #353945;
-
-    border-radius:
-        999px;
+.modal{
+width:100%;
+max-width:580px;
+max-height:
+calc(100vh - 40px);
+overflow:auto;
+border:
+1px solid
+var(--border);
+border-radius:19px;
+background:#15151c;
+box-shadow:
+0 30px 100px
+rgba(0,0,0,.55)
 }
-
-
-.tab-panel {
-
-    display:
-        none;
+.modal-head{
+position:sticky;
+top:0;
+z-index:5;
+display:flex;
+justify-content:
+space-between;
+align-items:center;
+padding:
+16px 17px;
+border-bottom:
+1px solid
+var(--border);
+background:
+rgba(21,21,28,.97);
+backdrop-filter:
+blur(10px)
 }
-
-
-.tab-panel.active {
-
-    display:
-        block;
+.modal-body{
+padding:17px
 }
-
-
+.close{
+width:31px;
+height:31px;
+border:
+1px solid
+var(--border);
+border-radius:9px;
+color:
+var(--soft);
+background:
+rgba(255,255,255,.03);
+cursor:pointer
+}
+.test-quick{
+display:grid;
+grid-template-columns:
+repeat(5,1fr);
+gap:6px;
+margin-top:7px
+}
+.test-quick button{
+padding:7px;
+border:
+1px solid
+var(--border);
+border-radius:8px;
+color:#aaaab4;
+background:
+rgba(255,255,255,.025);
+cursor:pointer;
+font-size:8px
+}
+.test-note{
+margin-top:10px;
+color:
+var(--muted);
+font-size:8px;
+line-height:1.55
+}
 /* =========================================================
-   SECTION
+TEST VIDEO
 ========================================================= */
-
-.section {
-
-    margin-bottom:
-        10px;
-
-    padding:
-        12px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        12px;
-
-    background:
-        rgba(255,255,255,.018);
+.test-video{
+margin:
+4px 0 15px;
+padding:13px;
+border:
+1px solid
+rgba(120,202,255,.13);
+border-radius:13px;
+background:
+linear-gradient(
+145deg,
+rgba(120,202,255,.04),
+rgba(255,255,255,.015)
+)
 }
-
-
-.section:last-child {
-
-    margin-bottom:
-        0;
+.test-video-head{
+display:flex;
+justify-content:
+space-between;
+align-items:flex-start;
+gap:10px;
+margin-bottom:11px
 }
-
-
-.section-head {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    margin-bottom:
-        10px;
+.test-video-title{
+color:#fff;
+font-size:10px;
+font-weight:900
 }
-
-
-.section-title {
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
+.test-video-desc{
+margin-top:3px;
+color:
+var(--muted);
+font-size:7px
 }
-
-
-.section-sub {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    line-height:
-        1.45;
+.video-badge{
+padding:
+4px 7px;
+border:
+1px solid
+rgba(120,202,255,.17);
+border-radius:
+999px;
+color:
+var(--blue);
+background:
+rgba(120,202,255,.05);
+font-size:6px;
+font-weight:900;
+white-space:nowrap
 }
-
-
-.badge {
-
-    padding:
-        4px 7px;
-
-    border-radius:
-        999px;
-
-    color:
-        var(--accent2);
-
-    background:
-        rgba(255,91,127,.08);
-
-    font-size:
-        7px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        .7px;
-
-    white-space:
-        nowrap;
+.video-badge.locked{
+color:
+var(--muted);
+border-color:
+var(--border);
+background:
+rgba(255,255,255,.02)
 }
-
-
+.test-video-row{
+display:grid;
+grid-template-columns:
+1fr 120px;
+gap:8px
+}
+.test-video-status{
+min-height:16px;
+margin-top:6px;
+color:
+var(--muted);
+font-size:7px;
+line-height:1.5
+}
+.test-video-status.ok{
+color:
+var(--success)
+}
+.test-video-status.error{
+color:
+var(--danger)
+}
+.test-video-preview{
+display:none;
+margin-top:9px;
+overflow:hidden;
+border:
+1px solid
+rgba(120,202,255,.13);
+border-radius:11px;
+background:#07080b
+}
+.test-video-preview.show{
+display:block
+}
+.test-video-player{
+width:100%;
+aspect-ratio:
+16 / 9;
+background:#000
+}
+.test-video-player iframe{
+display:block;
+width:100%;
+height:100%;
+border:0
+}
+.test-video-preview-info{
+display:flex;
+align-items:center;
+justify-content:
+space-between;
+gap:8px;
+padding:
+8px 10px;
+color:
+var(--muted);
+font-size:7px
+}
+.test-video-preview-info strong{
+color:
+var(--blue)
+}
 /* =========================================================
-   GRID
+TOAST
 ========================================================= */
-
-.grid2 {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap:
-        8px;
+.toast{
+position:fixed;
+right:22px;
+bottom:22px;
+z-index:99999;
+max-width:340px;
+padding:
+11px 14px;
+border:
+1px solid
+var(--border);
+border-radius:11px;
+color:#fff;
+background:#202028;
+box-shadow:
+0 15px 45px
+rgba(0,0,0,.4);
+opacity:0;
+transform:
+translateY(12px);
+pointer-events:none;
+transition:.22s;
+font-size:9px
 }
-
-
+.toast.show{
+opacity:1;
+transform:
+translateY(0)
+}
+.toast.success{
+border-color:
+rgba(99,223,155,.22)
+}
+.toast.error{
+border-color:
+rgba(255,107,107,.22)
+}
+.mobile-overlay{
+display:none
+}
 /* =========================================================
-   SETTING CARD
+RESPONSIVE
 ========================================================= */
-
-.setting {
-
-    padding:
-        10px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(255,255,255,.02);
+@media(max-width:1050px){
+.grid{
+grid-template-columns:1fr
 }
-
-
-.setting-row {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
+.alert-grid{
+grid-template-columns:
+repeat(2,1fr)
 }
-
-
-.setting-title {
-
-    font-size:
-        9px;
-
-    font-weight:
-        850;
 }
-
-
-.setting-desc {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    line-height:
-        1.4;
+@media(max-width:760px){
+.sidebar{
+transform:
+translateX(-100%);
+transition:.25s
 }
-
-
-.setting-input {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        5px;
-
-    margin-top:
-        7px;
+.sidebar.open{
+transform:
+translateX(0)
 }
-
-
-.setting-input input {
-
-    padding:
-        8px 9px;
-
-    font-size:
-        9px;
+.mobile-overlay.show{
+display:block;
+position:fixed;
+inset:0;
+z-index:90;
+background:
+rgba(0,0,0,.58)
 }
-
-
-.unit {
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
+.main{
+margin-left:0;
+padding:
+18px 14px 30px
 }
-
-
-/* =========================================================
-   SWITCH
-========================================================= */
-
-.switch {
-
-    position:
-        relative;
-
-    width:
-        36px;
-
-    height:
-        21px;
-
-    flex:
-        0 0 auto;
+.mobile-nav{
+display:inline-flex
 }
-
-
-.switch input {
-
-    display:
-        none;
+.stats{
+grid-template-columns:1fr
 }
-
-
-.switch span {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    border-radius:
-        999px;
-
-    background:
-        #3a3d47;
-
-    cursor:
-        pointer;
-
-    transition:
-        .2s;
+.stat{
+min-height:110px
 }
-
-
-.switch span::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    width:
-        15px;
-
-    height:
-        15px;
-
-    left:
-        3px;
-
-    top:
-        3px;
-
-    border-radius:
-        50%;
-
-    background:
-        #ffffff;
-
-    transition:
-        .2s;
+.topbar{
+align-items:flex-start
 }
-
-
-.switch input:checked + span {
-
-    background:
-        var(--accent);
+.page-title h1{
+font-size:20px
 }
-
-
-.switch input:checked + span::after {
-
-    transform:
-        translateX(15px);
+.search{
+width:150px
 }
-
-
-/* =========================================================
-   EDITOR FOOTER
-========================================================= */
-
-.editor-footer {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    padding:
-        10px 12px;
-
-    border-top:
-        1px solid
-        var(--border);
-
-    background:
-        #13151c;
+.alert-grid{
+grid-template-columns:1fr
 }
-
-
-.editor-footer-note {
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    line-height:
-        1.4;
 }
-
-
-.editor-footer-actions {
-
-    display:
-        flex;
-
-    gap:
-        7px;
+@media(max-width:520px){
+.top-actions
+.secondary{
+display:none
 }
-
-
-/* =========================================================
-   SOUND TIERS
-========================================================= */
-
-.tiers {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:
-        7px;
+.panel-header{
+align-items:flex-start;
+flex-direction:column
 }
-
-
-.tier {
-
-    padding:
-        10px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(255,255,255,.018);
-
-    cursor:
-        pointer;
-
-    text-align:
-        left;
-
-    color:
-        #ffffff;
-
-    transition:
-        .18s;
+.search{
+width:100%
 }
-
-
-.tier:hover {
-
-    border-color:
-        rgba(255,91,127,.25);
-
-    background:
-        rgba(255,91,127,.035);
+.test-video-row{
+grid-template-columns:1fr
 }
-
-
-.tier.active {
-
-    border-color:
-        rgba(255,91,127,.55);
-
-    background:
-        rgba(255,91,127,.07);
 }
-
-
-.tier-top {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        5px;
-}
-
-
-.tier-money {
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-}
-
-
-.tier-file {
-
-    margin-top:
-        4px;
-
-    color:
-        var(--accent2);
-
-    font-size:
-        7px;
-
-    font-weight:
-        850;
-}
-
-
-.tier-effect {
-
-    margin-top:
-        4px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        6px;
-}
-
-
-/* =========================================================
-   QUICK TEST
-========================================================= */
-
-.quick {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(6,1fr);
-
-    gap:
-        5px;
-
-    margin-top:
-        7px;
-}
-
-
-.quick button {
-
-    padding:
-        8px 3px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        8px;
-
-    color:
-        #bbbbbb;
-
-    background:
-        rgba(255,255,255,.025);
-
-    cursor:
-        pointer;
-
-    font-size:
-        8px;
-
-    font-weight:
-        800;
-}
-
-
-.quick button.active {
-
-    color:
-        #ffffff;
-
-    border-color:
-        rgba(255,91,127,.6);
-
-    background:
-        rgba(255,91,127,.1);
-}
-
-
-.quick small {
-
-    display:
-        block;
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        6px;
-}
-
-
-/* =========================================================
-   TEST SUMMARY
-========================================================= */
-
-.test-summary {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        10px;
-
-    padding:
-        10px;
-
-    border:
-        1px solid
-        rgba(255,91,127,.13);
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(255,91,127,.035);
-}
-
-
-.test-sound {
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-}
-
-
-.test-range {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-}
-
-
-.actions2 {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:
-        7px;
-}
-
-
-/* =========================================================
-   GOAL
-========================================================= */
-
-.goal-preview {
-
-    padding:
-        12px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        11px;
-
-    background:
-        rgba(255,255,255,.02);
-}
-
-
-.goal-top {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-}
-
-
-.goal-name {
-
-    font-size:
-        11px;
-
-    font-weight:
-        900;
-}
-
-
-.goal-percent {
-
-    color:
-        var(--accent2);
-
-    font-size:
-        14px;
-
-    font-weight:
-        900;
-}
-
-
-.goal-bar {
-
-    height:
-        8px;
-
-    margin-top:
-        10px;
-
-    border-radius:
-        999px;
-
-    overflow:
-        hidden;
-
-    background:
-        rgba(255,255,255,.06);
-}
-
-
-.goal-fill {
-
-    height:
-        100%;
-
-    width:
-        0;
-
-    border-radius:
-        inherit;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            var(--accent),
-            #ff9eb4
-        );
-
-    transition:
-        .5s;
-}
-
-
-.goal-money {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    margin-top:
-        7px;
-
-    color:
-        var(--muted);
-
-    font-size:
-        8px;
-}
-
-
-.check {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        7px;
-
-    color:
-        var(--muted);
-
-    font-size:
-        9px;
-}
-
-
-.check input {
-
-    width:
-        auto;
-}
-
-
-/* =========================================================
-   TOP DONORS
-========================================================= */
-
-.top-donors {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:
-        7px;
-}
-
-
-.donor {
-
-    padding:
-        10px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(255,255,255,.02);
-}
-
-
-.donor-rank {
-
-    font-size:
-        15px;
-}
-
-
-.donor-name {
-
-    margin-top:
-        5px;
-
-    overflow:
-        hidden;
-
-    white-space:
-        nowrap;
-
-    text-overflow:
-        ellipsis;
-
-    font-size:
-        9px;
-
-    font-weight:
-        850;
-}
-
-
-.donor-amount {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--accent2);
-
-    font-size:
-        8px;
-
-    font-weight:
-        850;
-}
-
-
-.empty {
-
-    padding:
-        24px;
-
-    text-align:
-        center;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        9px;
-}
-
-
-/* =========================================================
-   HISTORY TABLE
-========================================================= */
-
-.table-wrap {
-
-    overflow:
-        auto;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        10px;
-}
-
-
-table {
-
-    width:
-        100%;
-
-    border-collapse:
-        collapse;
-
-    min-width:
-        650px;
-}
-
-
-th {
-
-    padding:
-        8px;
-
-    color:
-        var(--muted2);
-
-    text-align:
-        left;
-
-    font-size:
-        7px;
-
-    letter-spacing:
-        .7px;
-
-    border-bottom:
-        1px solid
-        var(--border);
-}
-
-
-td {
-
-    padding:
-        9px 8px;
-
-    color:
-        #dddddd;
-
-    font-size:
-        9px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.035);
-}
-
-
-td.money {
-
-    color:
-        var(--accent2);
-
-    font-weight:
-        850;
-
-    white-space:
-        nowrap;
-}
-
-
-td.time {
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    white-space:
-        nowrap;
-}
-
-
-.msg {
-
-    max-width:
-        220px;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
-    white-space:
-        nowrap;
-
-    color:
-        var(--muted);
-}
-
-
-/* =========================================================
-   PREVIEW SHELL
-========================================================= */
-
-.preview-shell {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-}
-
-
-.preview-head {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    padding:
-        12px 13px;
-
-    border-bottom:
-        1px solid
-        var(--border);
-}
-
-
-.preview-title-wrap {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-}
-
-
-.live-dot {
-
-    width:
-        8px;
-
-    height:
-        8px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--success);
-
-    box-shadow:
-
-        0 0 12px
-        rgba(99,223,155,.8);
-}
-
-
-.preview-title {
-
-    font-size:
-        11px;
-
-    font-weight:
-        900;
-}
-
-
-.preview-sub {
-
-    margin-top:
-        2px;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-}
-
-
-.preview-tools {
-
-    display:
-        flex;
-
-    gap:
-        5px;
-}
-
-
-.mode-btn {
-
-    padding:
-        6px 8px;
-
-    border-radius:
-        8px;
-
-    color:
-        var(--muted);
-
-    border:
-        1px solid
-        var(--border);
-
-    background:
-        rgba(255,255,255,.03);
-
-    cursor:
-        pointer;
-
-    font-size:
-        7px;
-
-    font-weight:
-        850;
-}
-
-
-.mode-btn.active {
-
-    color:
-        #ffffff;
-
-    border-color:
-        rgba(255,91,127,.3);
-
-    background:
-        rgba(255,91,127,.08);
-}
-
-
-/* =========================================================
-   PREVIEW STAGE
-========================================================= */
-
-.preview-stage-wrap {
-
-    flex:
-        1;
-
-    min-height:
-        0;
-
-    padding:
-        12px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-}
-
-
-.preview-stage {
-
-    position:
-        relative;
-
-    width:
-        100%;
-
-    aspect-ratio:
-        16 / 9;
-
-    max-height:
-        100%;
-
-    overflow:
-        hidden;
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    border-radius:
-        16px;
-
-    background:
-
-        radial-gradient(
-            circle at 50% 38%,
-            rgba(92,104,255,.2),
-            transparent 28%
-        ),
-
-        linear-gradient(
-            145deg,
-            #07172b,
-            #07141f 40%,
-            #021012 74%,
-            #020607
-        );
-
-    box-shadow:
-
-        inset 0 0 0 1px
-        rgba(255,255,255,.015),
-
-        0 18px 45px
-        rgba(0,0,0,.35);
-}
-
-
-.preview-stage.grid::before {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    opacity:
-        .15;
-
-    background-image:
-
-        linear-gradient(
-            rgba(110,115,255,.2) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(110,115,255,.2) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        27px 27px;
-}
-
-
-.preview-stage.transparent {
-
-    background:
-
-        repeating-conic-gradient(
-            #171a21 0 25%,
-            #11131a 0 50%
-        )
-
-        50% /
-        24px 24px;
-}
-
-
-.watermark {
-
-    position:
-        absolute;
-
-    top:
-        10px;
-
-    left:
-        50%;
-
-    transform:
-        translateX(-50%);
-
-    z-index:
-        3;
-
-    color:
-        rgba(255,255,255,.5);
-
-    font-size:
-        7px;
-
-    font-weight:
-        850;
-
-    letter-spacing:
-        .8px;
-}
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-
-.particles {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    z-index:
-        2;
-
-    overflow:
-        hidden;
-
-    pointer-events:
-        none;
-}
-
-
-.particle {
-
-    position:
-        absolute;
-
-    width:
-        7px;
-
-    height:
-        7px;
-
-    border-radius:
-        50%;
-
-    opacity:
-        0;
-
-    animation:
-
-        fly
-        1.45s
-        ease-out
-        forwards;
-}
-
-
-.particle.pink {
-
-    background:
-        #ff7da2;
-
-    box-shadow:
-
-        0 0 12px
-        rgba(255,125,162,.85);
-}
-
-
-.particle.gold {
-
-    background:
-        #ffd772;
-
-    box-shadow:
-
-        0 0 12px
-        rgba(255,215,114,.9);
-}
-
-
-.particle.mega {
-
-    background:
-        #fff0a5;
-
-    box-shadow:
-
-        0 0 12px
-        rgba(255,230,140,1),
-
-        0 0 24px
-        rgba(255,180,60,.7);
-}
-
-
-@keyframes fly {
-
-    0% {
-
-        opacity:
-            0;
-
-        transform:
-            translateY(20px)
-            scale(.4);
-    }
-
-    18% {
-
-        opacity:
-            1;
-    }
-
-    100% {
-
-        opacity:
-            0;
-
-        transform:
-            translateY(-135px)
-            scale(1.2);
-    }
-}
-
-
-/* =========================================================
-   PREVIEW ALERT
-========================================================= */
-
-.alert-card {
-
-    position:
-        absolute;
-
-    z-index:
-        4;
-
-    left:
-        5.5%;
-
-    right:
-        5.5%;
-
-    bottom:
-        8%;
-
-    display:
-        grid;
-
-    grid-template-columns:
-
-        48px
-
-        minmax(0,1fr)
-
-        auto;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-    min-height:
-        80px;
-
-    padding:
-        10px 12px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.18);
-
-    border-radius:
-        14px;
-
-    background:
-        rgba(7,7,11,.97);
-
-    box-shadow:
-
-        0 12px 36px
-        rgba(0,0,0,.65);
-
-    transform:
-        translateY(20px)
-        scale(.96);
-
-    opacity:
-        .35;
-
-    transition:
-
-        .38s
-        cubic-bezier(.16,1,.3,1);
-}
-
-
-.alert-card.show {
-
-    transform:
-        translateY(0)
-        scale(1);
-
-    opacity:
-        1;
-}
-
-
-.alert-card.big {
-
-    border-color:
-        rgba(255,211,110,.4);
-
-    box-shadow:
-
-        0 12px 36px
-        rgba(0,0,0,.65),
-
-        0 0 28px
-        rgba(255,190,70,.14);
-}
-
-
-.alert-card.mega {
-
-    box-shadow:
-
-        0 12px 36px
-        rgba(0,0,0,.65),
-
-        0 0 44px
-        rgba(255,190,70,.25);
-}
-
-
-/* =========================================================
-   PREVIEW AVATAR
-========================================================= */
-
-.avatar {
-
-    width:
-        42px;
-
-    height:
-        42px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    border-radius:
-        11px;
-
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,91,127,.34),
-            rgba(255,91,127,.12)
-        );
-
-    font-weight:
-        900;
-}
-
-
-.alert-card.big
-.avatar {
-
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,197,75,.34),
-            rgba(255,170,50,.12)
-        );
-}
-
-
-/* =========================================================
-   PREVIEW TEXT
-========================================================= */
-
-.copy {
-
-    min-width:
-        0;
-}
-
-
-.alert-label {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        5px;
-
-    color:
-        var(--accent2);
-
-    font-size:
-        6px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        .9px;
-}
-
-
-.alert-card.big
-.alert-label {
-
-    color:
-        var(--gold);
-}
-
-
-.sound-badge {
-
-    padding:
-        2px 5px;
-
-    border-radius:
-        999px;
-
-    color:
-        #a8e8ff;
-
-    background:
-        rgba(86,200,255,.1);
-
-    font-size:
-        5px;
-
-    letter-spacing:
-        .3px;
-}
-
-
-.p-name {
-
-    margin-top:
-        2px;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
-    white-space:
-        nowrap;
-
-    font-size:
-        15px;
-
-    font-weight:
-        900;
-}
-
-
-.p-message {
-
-    margin-top:
-        3px;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
-    white-space:
-        nowrap;
-
-    color:
-        #f2f2f4;
-
-    font-size:
-        7px;
-
-    font-weight:
-        650;
-}
-
-
-.p-amount {
-
-    padding-left:
-        7px;
-
-    color:
-        #ff9eb3;
-
-    font-size:
-        20px;
-
-    font-weight:
-        950;
-
-    white-space:
-        nowrap;
-}
-
-
-.alert-card.big
-.p-amount {
-
-    color:
-        var(--gold);
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-.progress {
-
-    position:
-        absolute;
-
-    left:
-        0;
-
-    right:
-        0;
-
-    bottom:
-        0;
-
-    height:
-        3px;
-
-    background:
-        rgba(255,255,255,.08);
-}
-
-
-.progress span {
-
-    display:
-        block;
-
-    width:
-        68%;
-
-    height:
-        100%;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            #ff3e69,
-            #ff95ae
-        );
-}
-
-
-.alert-card.big
-.progress span {
-
-    background:
-
-        linear-gradient(
-            90deg,
-            #ffa833,
-            #ffd36e,
-            #fff0bb
-        );
-}
-
-
-/* =========================================================
-   PREVIEW META
-========================================================= */
-
-.preview-meta {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        5px;
-
-    padding:
-        0 12px 9px;
-}
-
-
-.chip {
-
-    padding:
-        5px 7px;
-
-    border-radius:
-        999px;
-
-    color:
-        #dddddd;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    background:
-        rgba(255,255,255,.035);
-
-    font-size:
-        6px;
-
-    font-weight:
-        850;
-}
-
-
-.chip.effect {
-
-    color:
-        #ffb4c6;
-
-    border-color:
-        rgba(255,91,127,.18);
-
-    background:
-        rgba(255,91,127,.06);
-}
-
-
-/* =========================================================
-   PREVIEW ACTIONS
-========================================================= */
-
-.preview-actions {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:
-        6px;
-
-    padding:
-        0 12px 10px;
-}
-
-
-.preview-actions
-.btn {
-
-    padding:
-        9px 5px;
-
-    font-size:
-        8px;
-}
-
-
-.preview-note {
-
-    padding:
-        0 12px 12px;
-
-    text-align:
-        center;
-
-    color:
-        var(--muted2);
-
-    font-size:
-        7px;
-
-    line-height:
-        1.4;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-
-    position:
-        fixed;
-
-    right:
-        20px;
-
-    bottom:
-        20px;
-
-    z-index:
-        10000;
-
-    max-width:
-        340px;
-
-    padding:
-        11px 13px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        10px;
-
-    color:
-        #ffffff;
-
-    background:
-        #20232d;
-
-    box-shadow:
-
-        0 14px 42px
-        rgba(0,0,0,.42);
-
-    opacity:
-        0;
-
-    transform:
-        translateY(14px);
-
-    pointer-events:
-        none;
-
-    transition:
-        .22s;
-
-    font-size:
-        9px;
-}
-
-
-.toast.show {
-
-    opacity:
-        1;
-
-    transform:
-        translateY(0);
-}
-
-
-.toast.success {
-
-    border-color:
-        rgba(99,223,155,.25);
-}
-
-
-.toast.error {
-
-    border-color:
-        rgba(255,107,107,.25);
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width:1150px) {
-
-    body {
-
-        padding:
-            13px;
-    }
-
-
-    .studio {
-
-        height:
-            auto;
-
-        display:
-            flex;
-
-        flex-direction:
-            column;
-
-        overflow:
-            visible;
-    }
-
-
-    .preview-shell {
-
-        order:
-            -1;
-
-        height:
-            auto;
-    }
-
-
-    .preview-stage-wrap {
-
-        min-height:
-            300px;
-    }
-
-
-    .editor {
-
-        height:
-            auto;
-    }
-
-
-    .editor-body {
-
-        max-height:
-            none;
-
-        overflow:
-            visible;
-    }
-
-
-    .editor-footer {
-
-        position:
-            sticky;
-
-        bottom:
-            0;
-
-        z-index:
-            10;
-    }
-}
-
-
-@media (max-width:720px) {
-
-    .topbar {
-
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
-    }
-
-
-    .stats {
-
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .grid2,
-    .actions2 {
-
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .tiers {
-
-        grid-template-columns:
-            1fr 1fr;
-    }
-
-
-    .quick {
-
-        grid-template-columns:
-            repeat(3,1fr);
-    }
-
-
-    .preview-stage-wrap {
-
-        min-height:
-            0;
-    }
-
-
-    .alert-card {
-
-        left:
-            4%;
-
-        right:
-            4%;
-
-        grid-template-columns:
-
-            40px
-
-            minmax(0,1fr);
-    }
-
-
-    .avatar {
-
-        width:
-            36px;
-
-        height:
-            36px;
-    }
-
-
-    .p-amount {
-
-        grid-column:
-            2;
-
-        padding-left:
-            0;
-
-        font-size:
-            16px;
-    }
-
-
-    .preview-actions {
-
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .editor-footer {
-
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
-    }
-
-
-    .editor-footer-actions {
-
-        width:
-            100%;
-    }
-
-
-    .editor-footer-actions
-    .btn {
-
-        flex:
-            1;
-    }
-}
-
 </style>
-
 </head>
-
-
 <body>
-
-
 <!-- =========================================================
-     LOGIN
+LOGIN
 ========================================================= -->
-
 <div
-    class="login"
-    id="login-screen"
+class="login-screen"
+id="login-screen"
 >
-
-    <div class="login-card">
-
-        <div class="login-logo">
-            ❤️
-        </div>
-
-        <h1>
-            AMR29 Donation Studio
-        </h1>
-
-        <p>
-            จัดการ Alert, Test, Goal และดู Preview แบบสด
-        </p>
-
-
-        <div class="field">
-
-            <label>
-                ADMIN KEY
-            </label>
-
-            <input
-                id="admin-key-input"
-                type="password"
-                placeholder="ใส่ ADMIN_KEY"
-                autocomplete="off"
-            >
-
-        </div>
-
-
-        <button
-            class="btn btn-primary btn-wide"
-            onclick="login()"
-        >
-            เข้าสู่ Dashboard
-        </button>
-
-
-        <div
-            class="login-error"
-            id="login-error"
-        ></div>
-
-    </div>
-
+<div class="login-card">
+<div class="login-logo">
+❤️
 </div>
-
-
-
-<!-- =========================================================
-     APP
-========================================================= -->
-
-<div
-    class="app"
-    id="dashboard"
+<h1>
+AMR29 Dashboard
+</h1>
+<p>
+จัดการ Donation, Goal, Alert
+และ Test จากหน้าเดียว
+</p>
+<div class="field">
+<label>
+ADMIN KEY
+</label>
+<input
+id="admin-key-input"
+type="password"
+placeholder="ใส่ Admin Key"
+autocomplete="off"
 >
-
-
-    <!-- =====================================================
-         TOPBAR
-    ====================================================== -->
-
-    <header class="topbar">
-
-
-        <div class="brand">
-
-            <div class="brand-logo">
-                ❤️
-            </div>
-
-
-            <div>
-
-                <h1>
-                    AMR29 Donation Studio
-                </h1>
-
-                <p>
-                    LIVE ALERT CONTROL CENTER
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="top-actions">
-
-
-            <div
-                class="status-pill"
-                id="connection"
-            >
-
-                <span
-                    class="status-dot"
-                ></span>
-
-                <span
-                    id="connection-text"
-                >
-                    Connecting
-                </span>
-
-            </div>
-
-
-
-            <button
-                class="btn btn-soft"
-                onclick="window.open('/','_blank')"
-            >
-                🌐 Donate
-            </button>
-
-
-
-            <button
-                class="btn btn-soft"
-                onclick="window.open('/overlay.html','_blank')"
-            >
-                🖥 Overlay
-            </button>
-
-
-
-            <button
-                class="btn btn-soft"
-                onclick="refreshDashboard()"
-            >
-                ↻ Refresh
-            </button>
-
-
-
-            <button
-                class="btn btn-danger"
-                onclick="logout()"
-            >
-                ออกจากระบบ
-            </button>
-
-
-        </div>
-
-
-    </header>
-
-
-
-    <!-- =====================================================
-         STATS
-    ====================================================== -->
-
-    <section class="stats">
-
-
-        <div class="stat">
-
-            <div class="stat-label">
-                TODAY
-            </div>
-
-            <div class="stat-row">
-
-                <div
-                    class="stat-value"
-                    id="today-total"
-                >
-                    ฿0
-                </div>
-
-                <div
-                    class="stat-count"
-                    id="today-count"
-                >
-                    0 Donations
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="stat">
-
-            <div class="stat-label">
-                THIS MONTH
-            </div>
-
-            <div class="stat-row">
-
-                <div
-                    class="stat-value"
-                    id="month-total"
-                >
-                    ฿0
-                </div>
-
-                <div
-                    class="stat-count"
-                    id="month-count"
-                >
-                    0 Donations
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="stat">
-
-            <div class="stat-label">
-                ALL TIME
-            </div>
-
-            <div class="stat-row">
-
-                <div
-                    class="stat-value"
-                    id="all-total"
-                >
-                    ฿0
-                </div>
-
-                <div
-                    class="stat-count"
-                    id="all-count"
-                >
-                    0 Donations
-                </div>
-
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =====================================================
-         STUDIO
-    ====================================================== -->
-
-    <main class="studio">
-
-
-        <!-- =================================================
-             EDITOR
-        ================================================== -->
-
-        <section class="editor">
-
-
-            <div class="editor-head">
-
-                <div>
-
-                    <div class="editor-title">
-                        ⚙️ Alert Studio
-                    </div>
-
-                    <div class="editor-sub">
-                        เลือกหมวดด้านล่าง — Preview ด้านขวาอยู่ตลอด
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="dirty"
-                    id="dirty-indicator"
-                >
-
-                    <span
-                        class="dirty-dot"
-                    ></span>
-
-                    <span
-                        id="dirty-text"
-                    >
-                        Saved
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =============================================
-                 TABS
-            ============================================== -->
-
-            <nav class="tabs">
-
-
-                <button
-                    class="tab active"
-                    data-tab="alert"
-                    onclick="switchTab('alert')"
-                >
-                    🔔 Alert
-                </button>
-
-
-                <button
-                    class="tab"
-                    data-tab="test"
-                    onclick="switchTab('test')"
-                >
-                    🧪 Test
-                </button>
-
-
-                <button
-                    class="tab"
-                    data-tab="goal"
-                    onclick="switchTab('goal')"
-                >
-                    🎯 Goal
-                </button>
-
-
-                <button
-                    class="tab"
-                    data-tab="history"
-                    onclick="switchTab('history')"
-                >
-                    📊 History
-                </button>
-
-
-            </nav>
-
-
-
-            <!-- =============================================
-                 EDITOR BODY
-            ============================================== -->
-
-            <div class="editor-body">
-
-
-
-                <!-- =========================================
-                     ALERT TAB
-                ========================================== -->
-
-                <div
-                    class="tab-panel active"
-                    id="tab-alert"
-                >
-
-
-                    <!-- TTS -->
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    เสียงพูดและเวลา
-                                </div>
-
-                                <div class="section-sub">
-                                    ค่าเหล่านี้ Save แล้วส่งเข้า OBS แบบ Realtime
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                LIVE
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="grid2">
-
-
-                            <div class="setting">
-
-                                <div class="setting-row">
-
-                                    <div>
-
-                                        <div class="setting-title">
-                                            Text-to-Speech
-                                        </div>
-
-                                        <div class="setting-desc">
-                                            อ่านชื่อและยอดโดเนท
-                                        </div>
-
-                                    </div>
-
-
-                                    <label class="switch">
-
-                                        <input
-                                            id="alert-tts-enabled"
-                                            type="checkbox"
-                                        >
-
-                                        <span></span>
-
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="setting">
-
-                                <div class="setting-row">
-
-                                    <div>
-
-                                        <div class="setting-title">
-                                            อ่านข้อความ
-                                        </div>
-
-                                        <div class="setting-desc">
-                                            อ่านข้อความจากผู้สนับสนุน
-                                        </div>
-
-                                    </div>
-
-
-                                    <label class="switch">
-
-                                        <input
-                                            id="alert-read-message"
-                                            type="checkbox"
-                                        >
-
-                                        <span></span>
-
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="setting">
-
-                                <div class="setting-title">
-                                    TTS Speed
-                                </div>
-
-                                <div class="setting-desc">
-                                    0.5x – 2.0x
-                                </div>
-
-
-                                <div class="setting-input">
-
-                                    <input
-                                        id="alert-tts-rate"
-                                        type="number"
-                                        min="0.5"
-                                        max="2"
-                                        step="0.1"
-                                    >
-
-                                    <span class="unit">
-                                        x
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="setting">
-
-                                <div class="setting-title">
-                                    ค้างหลัง TTS
-                                </div>
-
-                                <div class="setting-desc">
-                                    เวลาหลังอ่านจบ
-                                </div>
-
-
-                                <div class="setting-input">
-
-                                    <input
-                                        id="alert-after-tts"
-                                        type="number"
-                                        min="0"
-                                        max="10"
-                                        step="0.1"
-                                    >
-
-                                    <span class="unit">
-                                        sec
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="setting">
-
-                                <div class="setting-title">
-                                    Alert Duration
-                                </div>
-
-                                <div class="setting-desc">
-                                    ใช้ตอนปิด TTS
-                                </div>
-
-
-                                <div class="setting-input">
-
-                                    <input
-                                        id="alert-duration"
-                                        type="number"
-                                        min="1"
-                                        max="30"
-                                        step="0.1"
-                                    >
-
-                                    <span class="unit">
-                                        sec
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <!-- BIG / MEGA -->
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    ระดับ Alert
-                                </div>
-
-                                <div class="section-sub">
-                                    Preview จะเปลี่ยนทันที แม้ยังไม่กด Save
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                EFFECT
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="grid2">
-
-
-                            <div class="setting">
-
-                                <div class="setting-title">
-                                    BIG Donation
-                                </div>
-
-                                <div class="setting-desc">
-                                    ยอดขั้นต่ำ BIG Effect
-                                </div>
-
-                                <div class="setting-input">
-
-                                    <span class="unit">
-                                        ฿
-                                    </span>
-
-                                    <input
-                                        id="alert-big-amount"
-                                        type="number"
-                                        min="1"
-                                    >
-
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="setting">
-
-                                <div class="setting-title">
-                                    MEGA Donation
-                                </div>
-
-                                <div class="setting-desc">
-                                    ต้องมากกว่า BIG
-                                </div>
-
-                                <div class="setting-input">
-
-                                    <span class="unit">
-                                        ฿
-                                    </span>
-
-                                    <input
-                                        id="alert-mega-amount"
-                                        type="number"
-                                        min="2"
-                                    >
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <!-- SOUND TIERS -->
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    Sound Tier + Particle
-                                </div>
-
-                                <div class="section-sub">
-                                    กดแต่ละ Tier เพื่อเปลี่ยนยอด Test และดู Preview ทันที
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                6 TIERS
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            class="tiers"
-                            id="tier-matrix"
-                        ></div>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- =========================================
-                     TEST TAB
-                ========================================== -->
-
-                <div
-                    class="tab-panel"
-                    id="tab-test"
-                >
-
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    ข้อมูล Test Donation
-                                </div>
-
-                                <div class="section-sub">
-                                    พิมพ์แล้ว Preview ขวาเปลี่ยนสด
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                NO DB
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="grid2">
-
-
-                            <div class="field">
-
-                                <label>
-                                    ชื่อ
-
-                                    <small>
-                                        สูงสุด 30 ตัว
-                                    </small>
-                                </label>
-
-                                <input
-                                    id="test-name"
-                                    type="text"
-                                    maxlength="30"
-                                    value="AMR29 Test"
-                                >
-
-                            </div>
-
-
-
-                            <div class="field">
-
-                                <label>
-                                    จำนวนเงิน
-                                </label>
-
-                                <input
-                                    id="test-amount"
-                                    type="number"
-                                    min="1"
-                                    value="100"
-                                >
-
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div class="quick">
-
-
-                            <button
-                                data-test-amount="20"
-                                onclick="setTestAmount(20)"
-                            >
-                                ฿20
-
-                                <small>
-                                    alert
-                                </small>
-                            </button>
-
-
-                            <button
-                                data-test-amount="50"
-                                onclick="setTestAmount(50)"
-                            >
-                                ฿50
-
-                                <small>
-                                    alert2
-                                </small>
-                            </button>
-
-
-                            <button
-                                data-test-amount="100"
-                                onclick="setTestAmount(100)"
-                            >
-                                ฿100
-
-                                <small>
-                                    alert3
-                                </small>
-                            </button>
-
-
-                            <button
-                                data-test-amount="300"
-                                onclick="setTestAmount(300)"
-                            >
-                                ฿300
-
-                                <small>
-                                    alert4
-                                </small>
-                            </button>
-
-
-                            <button
-                                data-test-amount="500"
-                                onclick="setTestAmount(500)"
-                            >
-                                ฿500
-
-                                <small>
-                                    alert5
-                                </small>
-                            </button>
-
-
-                            <button
-                                data-test-amount="1000"
-                                onclick="setTestAmount(1000)"
-                            >
-                                ฿1K
-
-                                <small>
-                                    alert5
-                                </small>
-                            </button>
-
-
-                        </div>
-
-
-
-                        <div
-                            class="field"
-                            style="margin-top:10px"
-                        >
-
-                            <label>
-
-                                ข้อความ
-
-                                <small>
-                                    สูงสุด 200 ตัว
-                                </small>
-
-                            </label>
-
-                            <textarea
-                                id="test-message"
-                                maxlength="200"
-                            >ทดสอบ Donation ครับ</textarea>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="section">
-
-
-                        <div class="test-summary">
-
-
-                            <div>
-
-                                <div
-                                    class="test-sound"
-                                    id="test-sound-name"
-                                >
-                                    alert3.mp3
-                                </div>
-
-                                <div
-                                    class="test-range"
-                                    id="test-sound-range"
-                                >
-                                    100–299 บาท
-                                </div>
-
-                            </div>
-
-
-                            <span
-                                class="badge"
-                                id="test-tier-badge"
-                            >
-                                TIER 3
-                            </span>
-
-
-                        </div>
-
-
-
-                        <div
-                            class="actions2"
-                            style="margin-top:8px"
-                        >
-
-
-                            <button
-                                class="btn btn-soft"
-                                onclick="previewTestSound()"
-                            >
-                                🔊 ฟังเสียง
-                            </button>
-
-
-                            <button
-                                class="btn btn-soft"
-                                onclick="playPreviewAnimation()"
-                            >
-                                ✨ เล่น Preview
-                            </button>
-
-
-                        </div>
-
-
-
-                        <button
-                            class="btn btn-primary btn-wide"
-                            id="test-button"
-                            style="margin-top:7px"
-                            onclick="sendTestDonation()"
-                        >
-                            🧪 ส่ง Test Donation เข้า OBS
-                        </button>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- =========================================
-                     GOAL TAB
-                ========================================== -->
-
-                <div
-                    class="tab-panel"
-                    id="tab-goal"
-                >
-
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    Donation Goal
-                                </div>
-
-                                <div class="section-sub">
-                                    แก้ชื่อ เป้าหมาย และเปิด/ปิด Widget
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                REALTIME
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="goal-preview">
-
-
-                            <div class="goal-top">
-
-                                <div
-                                    class="goal-name"
-                                    id="goal-name"
-                                >
-                                    Donation Goal
-                                </div>
-
-                                <div
-                                    class="goal-percent"
-                                    id="goal-percent"
-                                >
-                                    0%
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="goal-bar">
-
-                                <div
-                                    class="goal-fill"
-                                    id="goal-fill"
-                                ></div>
-
-                            </div>
-
-
-
-                            <div class="goal-money">
-
-                                <span
-                                    id="goal-current"
-                                >
-                                    ฿0
-                                </span>
-
-                                <span
-                                    id="goal-target-text"
-                                >
-                                    / ฿0
-                                </span>
-
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div
-                            class="field"
-                            style="margin-top:12px"
-                        >
-
-                            <label>
-                                ชื่อ Goal
-                            </label>
-
-                            <input
-                                id="goal-title-input"
-                                type="text"
-                                maxlength="60"
-                            >
-
-                        </div>
-
-
-
-                        <div class="field">
-
-                            <label>
-                                เป้าหมาย
-                            </label>
-
-                            <input
-                                id="goal-target-input"
-                                type="number"
-                                min="1"
-                            >
-
-                        </div>
-
-
-
-                        <label class="check">
-
-                            <input
-                                id="goal-enabled-input"
-                                type="checkbox"
-                            >
-
-                            เปิดแสดง Donation Goal
-
-                        </label>
-
-
-
-                        <div
-                            class="actions2"
-                            style="margin-top:10px"
-                        >
-
-                            <button
-                                class="btn btn-primary"
-                                onclick="saveGoal()"
-                            >
-                                💾 บันทึก Goal
-                            </button>
-
-
-                            <button
-                                class="btn btn-danger"
-                                onclick="resetGoal()"
-                            >
-                                ↺ Reset Goal
-                            </button>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- =========================================
-                     HISTORY TAB
-                ========================================== -->
-
-                <div
-                    class="tab-panel"
-                    id="tab-history"
-                >
-
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    Top Supporters
-                                </div>
-
-                                <div class="section-sub">
-                                    3 อันดับผู้สนับสนุนสูงสุด
-                                </div>
-
-                            </div>
-
-
-                            <span class="badge">
-                                TOP 3
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            class="top-donors"
-                            id="top-donors"
-                        ></div>
-
-
-                    </div>
-
-
-
-                    <div class="section">
-
-
-                        <div class="section-head">
-
-                            <div>
-
-                                <div class="section-title">
-                                    Donation ล่าสุด
-                                </div>
-
-                                <div class="section-sub">
-                                    Replay Alert ได้โดยไม่เพิ่มยอด
-                                </div>
-
-                            </div>
-
-
-                            <button
-                                class="btn btn-soft btn-small"
-                                onclick="refreshDashboard()"
-                            >
-                                ↻ Refresh
-                            </button>
-
-                        </div>
-
-
-
-                        <div class="table-wrap">
-
-
-                            <table>
-
-
-                                <thead>
-
-                                    <tr>
-
-                                        <th>
-                                            เวลา
-                                        </th>
-
-                                        <th>
-                                            ชื่อ
-                                        </th>
-
-                                        <th>
-                                            ยอด
-                                        </th>
-
-                                        <th>
-                                            ข้อความ
-                                        </th>
-
-                                        <th>
-                                            Alert
-                                        </th>
-
-                                    </tr>
-
-                                </thead>
-
-
-                                <tbody
-                                    id="recent-body"
-                                ></tbody>
-
-
-                            </table>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- =============================================
-                 EDITOR FOOTER
-            ============================================== -->
-
-            <footer class="editor-footer">
-
-
-                <div class="editor-footer-note">
-
-                    <b>Tip:</b>
-                    Preview ใช้ค่าที่กำลังแก้ทันที
-                    ส่วน OBS จะใช้ค่าที่ Save แล้ว
-
-                </div>
-
-
-                <div class="editor-footer-actions">
-
-
-                    <button
-                        class="btn btn-soft"
-                        onclick="reloadSavedSettings()"
-                    >
-                        ↺ คืนค่าที่ Save
-                    </button>
-
-
-                    <button
-                        class="btn btn-primary"
-                        id="save-alert-button"
-                        onclick="saveAlertSettings()"
-                    >
-                        💾 Save Alert
-                    </button>
-
-
-                </div>
-
-
-            </footer>
-
-
-        </section>
-
-
-
-        <!-- =================================================
-             PREVIEW
-        ================================================== -->
-
-        <aside class="preview-shell">
-
-
-            <!-- HEADER -->
-
-            <div class="preview-head">
-
-
-                <div class="preview-title-wrap">
-
-
-                    <span
-                        class="live-dot"
-                    ></span>
-
-
-                    <div>
-
-                        <div class="preview-title">
-                            LIVE ALERT PREVIEW
-                        </div>
-
-                        <div class="preview-sub">
-                            ไม่ต้องเลื่อนกลับขึ้นมาดู
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <div class="preview-tools">
-
-
-                    <button
-                        class="mode-btn active"
-                        id="scene-mode"
-                        onclick="setPreviewMode('scene')"
-                    >
-                        SCENE
-                    </button>
-
-
-                    <button
-                        class="mode-btn"
-                        id="transparent-mode"
-                        onclick="setPreviewMode('transparent')"
-                    >
-                        ALPHA
-                    </button>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- STAGE -->
-
-            <div class="preview-stage-wrap">
-
-
-                <div
-                    class="preview-stage grid"
-                    id="preview-stage"
-                >
-
-
-                    <div class="watermark">
-                        AMR29 • PREVIEW
-                    </div>
-
-
-
-                    <div
-                        class="particles"
-                        id="preview-particles"
-                    ></div>
-
-
-
-                    <!-- ALERT -->
-
-                    <div
-                        class="alert-card show"
-                        id="preview-alert"
-                    >
-
-
-                        <div
-                            class="avatar"
-                            id="preview-avatar"
-                        >
-                            A
-                        </div>
-
-
-
-                        <div class="copy">
-
-
-                            <div class="alert-label">
-
-
-                                <span
-                                    id="preview-label"
-                                >
-                                    NEW DONATION
-                                </span>
-
-
-                                <span
-                                    class="sound-badge"
-                                    id="preview-sound-badge"
-                                >
-                                    TIER SOUND
-                                </span>
-
-
-                            </div>
-
-
-
-                            <div
-                                class="p-name"
-                                id="preview-name"
-                            >
-                                AMR29 Test
-                            </div>
-
-
-
-                            <div
-                                class="p-message"
-                                id="preview-message"
-                            >
-                                ทดสอบ Donation ครับ
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div
-                            class="p-amount"
-                            id="preview-amount"
-                        >
-                            ฿100
-                        </div>
-
-
-
-                        <div class="progress">
-
-                            <span></span>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- META -->
-
-            <div class="preview-meta">
-
-
-                <span
-                    class="chip"
-                    id="preview-level-chip"
-                >
-                    LEVEL: NORMAL
-                </span>
-
-
-                <span
-                    class="chip"
-                    id="preview-sound-chip"
-                >
-                    SOUND: alert3.mp3
-                </span>
-
-
-                <span
-                    class="chip effect"
-                    id="preview-particle-chip"
-                >
-                    PARTICLE: 12
-                </span>
-
-
-                <span
-                    class="chip"
-                    id="preview-tts-chip"
-                >
-                    TTS: ON
-                </span>
-
-
-            </div>
-
-
-
-            <!-- ACTIONS -->
-
-            <div class="preview-actions">
-
-
-                <button
-                    class="btn btn-soft"
-                    onclick="playPreviewAnimation()"
-                >
-                    ✨ Preview
-                </button>
-
-
-                <button
-                    class="btn btn-soft"
-                    onclick="previewTestSound()"
-                >
-                    🔊 Sound
-                </button>
-
-
-                <button
-                    class="btn btn-primary"
-                    onclick="sendTestDonation()"
-                >
-                    🧪 OBS Test
-                </button>
-
-
-            </div>
-
-
-
-            <div class="preview-note">
-
-                Preview ไม่เพิ่มยอด •
-                OBS Test ไม่บันทึก Database / Goal / Ranking
-
-            </div>
-
-
-        </aside>
-
-
-    </main>
-
-
 </div>
-
-
-
-<!-- =========================================================
-     AUDIO
-========================================================= -->
-
-<audio
-    id="test-audio-player"
-    preload="none"
-></audio>
-
-
-
-<!-- =========================================================
-     TOAST
-========================================================= -->
-
+<button
+class="primary"
+style="width:100%"
+onclick="login()"
+>
+เข้าสู่ Dashboard
+</button>
 <div
-    class="toast"
-    id="toast"
+class="login-error"
+id="login-error"
 ></div>
-
-
-
+</div>
+</div>
+<!-- =========================================================
+APP
+========================================================= -->
+<div
+class="app"
+id="app"
+>
+<!-- SIDEBAR -->
+<aside
+class="sidebar"
+id="sidebar"
+>
+<div class="sidebar-brand">
+<div class="sidebar-logo">
+❤️
+</div>
+<div>
+<div class="sidebar-name">
+AMR29
+</div>
+<div class="sidebar-sub">
+DONATION SYSTEM
+</div>
+</div>
+</div>
+<div class="nav-label">
+OVERVIEW
+</div>
+<button
+class="nav-btn"
+onclick="go('overview')"
+>
+<span class="nav-icon">
+▦
+</span>
+Dashboard
+</button>
+<button
+class="nav-btn"
+onclick="go('donations')"
+>
+<span class="nav-icon">
+💸
+</span>
+Donations
+</button>
+<button
+class="nav-btn"
+onclick="go('goal-section')"
+>
+<span class="nav-icon">
+🎯
+</span>
+Donation Goal
+</button>
+<button
+class="nav-btn"
+onclick="go('alert-section')"
+>
+<span class="nav-icon">
+🔔
+</span>
+Alert Settings
+</button>
+<div class="nav-label">
+CONTROL
+</div>
+<button
+class="nav-btn"
+onclick="openTest()"
+>
+<span class="nav-icon">
+🧪
+</span>
+Test Donation
+</button>
+<button
+class="nav-btn"
+onclick="refreshAll()"
+>
+<span class="nav-icon">
+↻
+</span>
+Refresh Data
+</button>
+<div class="sidebar-bottom">
+<div class="server-box">
+<div class="server-row">
+<span class="server-label">
+SERVER
+</span>
+<span
+class="server-value"
+id="server-state"
+>
+<span class="server-dot"></span>
+<span>
+OFFLINE
+</span>
+</span>
+</div>
+</div>
+<button
+class="nav-btn"
+onclick="logout()"
+>
+<span class="nav-icon">
+↪
+</span>
+ออกจากระบบ
+</button>
+</div>
+</aside>
+<div
+class="mobile-overlay"
+id="mobile-overlay"
+onclick="closeSidebar()"
+></div>
+<!-- =====================================================
+MAIN
+====================================================== -->
+<main
+class="main"
+id="overview"
+>
+<!-- TOPBAR -->
+<div class="topbar">
+<div
+style="
+display:flex;
+gap:10px;
+align-items:center
+"
+>
+<button
+class="icon-btn mobile-nav"
+onclick="openSidebar()"
+>
+☰
+</button>
+<div class="page-title">
+<h1>
+Dashboard
+</h1>
+<p>
+ภาพรวมระบบ Donation ของ AMR29
+</p>
+</div>
+</div>
+<div class="top-actions">
+<button
+class="secondary"
+onclick="refreshAll()"
+>
+↻ Refresh
+</button>
+<button
+class="primary"
+onclick="openTest()"
+>
+🧪 Test Donation
+</button>
+</div>
+</div>
+<!-- =================================================
+STATS
+================================================== -->
+<div class="stats">
+<div class="stat">
+<div class="stat-top">
+<div class="stat-label">
+TODAY
+</div>
+<div class="stat-icon">
+฿
+</div>
+</div>
+<div
+class="stat-value"
+id="today-total"
+>
+฿0
+</div>
+<div
+class="stat-count"
+id="today-count"
+>
+0 Donations
+</div>
+</div>
+<div class="stat">
+<div class="stat-top">
+<div class="stat-label">
+THIS MONTH
+</div>
+<div class="stat-icon">
+📅
+</div>
+</div>
+<div
+class="stat-value"
+id="month-total"
+>
+฿0
+</div>
+<div
+class="stat-count"
+id="month-count"
+>
+0 Donations
+</div>
+</div>
+<div class="stat">
+<div class="stat-top">
+<div class="stat-label">
+ALL TIME
+</div>
+<div class="stat-icon">
+∞
+</div>
+</div>
+<div
+class="stat-value"
+id="all-total"
+>
+฿0
+</div>
+<div
+class="stat-count"
+id="all-count"
+>
+0 Donations
+</div>
+</div>
+</div>
+<div class="grid">
+<!-- =================================================
+LEFT COLUMN
+================================================== -->
+<div class="col">
+<!-- DONATION HISTORY -->
+<section
+class="panel"
+id="donations"
+>
+<div class="panel-header">
+<div>
+<div class="panel-title">
+💸 Donation ล่าสุด
+</div>
+<div class="panel-sub">
+รายการที่บันทึกใน Database
+</div>
+</div>
+<div class="search">
+<span>
+🔍
+</span>
+<input
+id="donation-search"
+placeholder="ค้นหาชื่อ / ข้อความ..."
+>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>
+ผู้สนับสนุน
+</th>
+<th>
+จำนวน
+</th>
+<th>
+ข้อความ
+</th>
+<th>
+เวลา
+</th>
+<th>
+ALERT
+</th>
+</tr>
+</thead>
+<tbody id="recent-body">
+</tbody>
+</table>
+</div>
+</section>
+<!-- =================================================
+ALERT SETTINGS
+================================================== -->
+<section
+class="panel"
+id="alert-section"
+>
+<div class="panel-header">
+<div>
+<div class="panel-title">
+🔔 Alert Settings
+</div>
+<div class="panel-sub">
+ปรับค่า Overlay แบบ Realtime
+ไม่ต้อง Refresh OBS
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="alert-grid">
+<div class="setting-card">
+<div class="setting-top">
+<div>
+<div class="setting-title">
+Text-to-Speech
+</div>
+<div class="setting-desc">
+อ่านชื่อและยอด Donation
+</div>
+</div>
+<label class="toggle">
+<input
+id="tts-enabled"
+type="checkbox"
+>
+<span></span>
+</label>
+</div>
+</div>
+<div class="setting-card">
+<div class="setting-top">
+<div>
+<div class="setting-title">
+อ่านข้อความ
+</div>
+<div class="setting-desc">
+อ่านข้อความที่ผู้สนับสนุนพิมพ์ต่อท้าย TTS
+</div>
+</div>
+<label class="toggle">
+<input
+id="read-message"
+type="checkbox"
+>
+<span></span>
+</label>
+</div>
+</div>
+<div class="setting-card">
+<div
+class="field"
+style="margin:0"
+>
+<label>
+TTS Speed
+</label>
+<input
+id="tts-rate"
+type="number"
+min="0.5"
+max="2"
+step="0.1"
+>
+<div class="hint">
+0.5x - 2.0x
+</div>
+</div>
+</div>
+<div class="setting-card">
+<div
+class="field"
+style="margin:0"
+>
+<label>
+Big Donation (บาท)
+</label>
+<input
+id="big-amount"
+type="number"
+min="1"
+step="1"
+>
+<div class="hint">
+ตั้งแต่ยอดนี้ขึ้นไปใช้ Alert สีทอง
+</div>
+</div>
+</div>
+<div class="setting-card">
+<div
+class="field"
+style="margin:0"
+>
+<label>
+Mega Donation (บาท)
+</label>
+<input
+id="mega-amount"
+type="number"
+min="2"
+step="1"
+>
+<div class="hint">
+ต้องมากกว่า Big Donation
+</div>
+</div>
+</div>
+<div class="setting-card">
+<div
+class="field"
+style="margin:0"
+>
+<label>
+ค้างหลัง TTS (วินาที)
+</label>
+<input
+id="after-tts"
+type="number"
+min="0"
+max="10"
+step="0.1"
+>
+<div class="hint">
+หลังเสียงพูดจบ Alert จะค้างต่อ
+</div>
+</div>
+</div>
+<div class="setting-card">
+<div
+class="field"
+style="margin:0"
+>
+<label>
+เวลาค้างเมื่อปิด TTS (วินาที)
+</label>
+<input
+id="no-tts-time"
+type="number"
+min="1"
+max="30"
+step="0.1"
+>
+<div class="hint">
+ใช้เมื่อปิด TTS
+</div>
+</div>
+</div>
+</div>
+<div class="settings-actions">
+<div class="settings-note">
+กด Save แล้ว Browser Source ใน OBS
+รับค่าใหม่ผ่าน Socket.IO ทันที
+</div>
+<button
+class="primary"
+id="save-alert-btn"
+onclick="saveAlertSettings()"
+>
+บันทึก Alert Settings
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- =================================================
+RIGHT COLUMN
+================================================== -->
+<div class="col">
+<!-- GOAL -->
+<section
+class="panel"
+id="goal-section"
+>
+<div class="panel-header">
+<div>
+<div class="panel-title">
+🎯 Donation Goal
+</div>
+<div class="panel-sub">
+ควบคุม Goal หน้าเว็บและ OBS
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="goal-head">
+<div
+class="goal-name"
+id="goal-name"
+>
+Donation Goal
+</div>
+<div
+class="goal-pct"
+id="goal-percent"
+>
+0%
+</div>
+</div>
+<div class="goal-bar">
+<div
+class="goal-fill"
+id="goal-fill"
+></div>
+</div>
+<div class="goal-money">
+<span id="goal-current">
+฿0
+</span>
+<span id="goal-target-text">
+/ ฿0
+</span>
+</div>
+<div class="goal-form">
+<div class="field">
+<label>
+ชื่อ Goal
+</label>
+<input
+id="goal-title-input"
+maxlength="60"
+>
+</div>
+<div class="field">
+<label>
+เป้าหมาย
+</label>
+<input
+id="goal-target-input"
+type="number"
+min="1"
+>
+</div>
+<label class="check">
+<input
+id="goal-enabled-input"
+type="checkbox"
+>
+เปิดแสดง Donation Goal
+</label>
+<div class="row-actions">
+<button
+class="primary"
+onclick="saveGoal()"
+>
+บันทึก
+</button>
+<button
+class="danger"
+onclick="resetGoal()"
+>
+Reset
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- TOP -->
+<section class="panel">
+<div class="panel-header">
+<div>
+<div class="panel-title">
+🏆 Top Supporters
+</div>
+<div class="panel-sub">
+ผู้สนับสนุนสูงสุดตลอดกาล
+</div>
+</div>
+</div>
+<div
+class="panel-body"
+id="top-donors"
+></div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<!-- =========================================================
+TEST DONATION MODAL
+========================================================= -->
+<div
+class="modal-bg"
+id="test-modal"
+onclick="
+if(event.target === this)
+closeTest()
+"
+>
+<div class="modal">
+<div class="modal-head">
+<div>
+<div class="panel-title">
+🧪 Test Donation
+</div>
+<div class="panel-sub">
+ทดสอบ OBS โดยไม่บันทึก Database
+</div>
+</div>
+<button
+class="close"
+onclick="closeTest()"
+>
+✕
+</button>
+</div>
+<div class="modal-body">
+<!-- NAME -->
+<div class="field">
+<label>
+ชื่อ
+</label>
+<input
+id="test-name"
+maxlength="30"
+value="AMR29 Test"
+>
+</div>
+<!-- AMOUNT -->
+<div class="field">
+<label>
+จำนวนเงิน
+</label>
+<input
+id="test-amount"
+type="number"
+min="10"
+value="100"
+>
+<div class="test-quick">
+<button
+onclick="setTestAmount(10)"
+>
+฿10
+</button>
+<button
+onclick="setTestAmount(50)"
+>
+฿50
+</button>
+<button
+onclick="setTestBig()"
+>
+BIG
+</button>
+<button
+onclick="setTestMega()"
+>
+MEGA
+</button>
+<button
+onclick="setTestAmount(1000)"
+>
+฿1K
+</button>
+</div>
+</div>
+<!-- MESSAGE -->
+<div class="field">
+<label>
+ข้อความ
+</label>
+<textarea
+id="test-message"
+maxlength="200"
+>ทดสอบ Donation ครับ</textarea>
+</div>
+<!-- =================================================
+VIDEO TEST
+================================================== -->
+<div class="test-video">
+<div class="test-video-head">
+<div>
+<div class="test-video-title">
+🎬 Video Donation
+</div>
+<div class="test-video-desc">
+ทดสอบ YouTube Video บน OBS
+โดยไม่ต้องโดเนทเงินจริง
+• ใช้ได้ตั้งแต่ 10 บาท
+</div>
+</div>
+<div
+class="video-badge"
+id="test-video-badge"
+>
+10+ บาท
+</div>
+</div>
+<!-- URL -->
+<div class="field">
+<label>
+YouTube URL
+</label>
+<input
+id="test-video-url"
+type="url"
+placeholder="https://youtu.be/..."
+>
+</div>
+<div class="test-video-row">
+<div class="field">
+<label>
+เริ่มเล่นที่
+</label>
+<input
+id="test-video-start"
+type="text"
+value="00:00"
+placeholder="01:25"
+>
+</div>
+<div class="field">
+<label>
+ระยะเวลา
+</label>
+<select id="test-video-duration">
+<option value="5">
+5 วินาที
+</option>
+<option value="10">
+10 วินาที
+</option>
+<option value="15">
+15 วินาที
+</option>
+<option
+value="20"
+selected
+>
+20 วินาที
+</option>
+</select>
+</div>
+</div>
+<div
+class="test-video-status"
+id="test-video-status"
+>
+ไม่บังคับ • Video Donation ขั้นต่ำ 10 บาท
+</div>
+<!-- PREVIEW -->
+<div
+class="test-video-preview"
+id="test-video-preview"
+>
+<div class="test-video-player">
+<iframe
+id="test-video-frame"
+src=""
+title="YouTube Preview"
+allow="
+autoplay;
+encrypted-media;
+picture-in-picture
+"
+allowfullscreen
+></iframe>
+</div>
+<div class="test-video-preview-info">
+<strong>
+YOUTUBE PREVIEW
+</strong>
+<span id="test-video-preview-meta">
+00:00 • 20 วินาที
+</span>
+</div>
+</div>
+</div>
+<!-- SEND -->
+<button
+class="primary"
+id="test-button"
+style="width:100%"
+onclick="sendTestDonation()"
+>
+🧪 ส่ง Test Donation เข้า OBS
+</button>
+<div class="test-note">
+ไม่มี Video = Alert + Sound Tier + TTS เหมือนของจริง
+• มี Video = เล่นเฉพาะ YouTube พร้อมเสียงคลิป
+ไม่เล่น Alert Sound และไม่อ่าน TTS
+• Test ไม่เพิ่ม Database, Ranking, Goal หรือสถิติ
+</div>
+</div>
+</div>
+</div>
+<div
+class="toast"
+id="toast"
+></div>
 <script src="/socket.io/socket.io.js"></script>
-
-
 <script>
-
 /* =========================================================
-   STATE
+CONFIG
 ========================================================= */
-
+const REPLAY_ENDPOINT =
+id =>
+`/api/admin/donation/${id}/replay`;
+const VIDEO_TEST_MIN_AMOUNT =
+10;
+const VIDEO_TEST_MAX_DURATION =
+20;
+/* =========================================================
+STATE
+========================================================= */
 let adminKey =
-
-    sessionStorage.getItem(
-        "amr29_admin_key"
-    )
-
-    ||
-
-    "";
-
-
-const socket =
-    io();
-
-
-let toastTimer =
-    null;
-
-
+sessionStorage.getItem(
+"amr29_admin_key"
+)
+||
+"";
+let recentDonations =
+[];
 let alertSettings = {
-
-    ttsEnabled:
-        true,
-
-    readMessage:
-        true,
-
-    ttsRate:
-        1,
-
-    bigAmount:
-        500,
-
-    megaAmount:
-        1000,
-
-    afterTtsDelay:
-        1000,
-
-    noTtsDisplayTime:
-        4500
+ttsEnabled:
+true,
+readMessage:
+true,
+ttsRate:
+1,
+bigAmount:
+500,
+megaAmount:
+1000,
+afterTtsDelay:
+1000,
+noTtsDisplayTime:
+4500
 };
-
-
-let savedAlertSettings = {
-
-    ...alertSettings
-};
-
-
-let isDirty =
-    false;
-
-
-const testAmountInput =
-    document.getElementById(
-        "test-amount"
-    );
-
-
-const testAudioPlayer =
-    document.getElementById(
-        "test-audio-player"
-    );
-
-
+let toastTimer =
+null;
+const socket =
+io();
 /* =========================================================
-   API
+API
 ========================================================= */
-
 async function api(
-    url,
-    options = {}
-) {
-
-    const headers = {
-
-        ...(options.headers || {}),
-
-        "x-admin-key":
-            adminKey
-    };
-
-
-    const response =
-        await fetch(
-            url,
-            {
-
-                ...options,
-
-                headers,
-
-                cache:
-
-                    options.cache
-
-                    ||
-
-                    "no-store"
-            }
-        );
-
-
-    const raw =
-        await response.text();
-
-
-    let data = {};
-
-
-    try {
-
-        data =
-
-            raw
-
-                ?
-
-                JSON.parse(
-                    raw
-                )
-
-                :
-
-                {};
-
-
-    } catch {
-
-        throw new Error(
-
-            `API ${response.status}: Server ไม่ได้ตอบ JSON`
-        );
-    }
-
-
-    if (
-        response.status === 401
-
-        ||
-
-        response.status === 403
-    ) {
-
-        throw new Error(
-            "UNAUTHORIZED"
-        );
-    }
-
-
-    if (
-        !response.ok
-
-        ||
-
-        data.success === false
-    ) {
-
-        throw new Error(
-
-            data.message
-
-            ||
-
-            `Server Error ${response.status}`
-        );
-    }
-
-
-    return data;
+url,
+options = {}
+){
+const headers = {
+...(
+options.headers
+||
+{}
+),
+"x-admin-key":
+adminKey
+};
+const response =
+await fetch(
+url,
+{
+...options,
+headers
 }
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login() {
-
-    const input =
-        document.getElementById(
-            "admin-key-input"
-        );
-
-
-    const key =
-        input
-            .value
-            .trim();
-
-
-    if (
-        !key
-    ) {
-
-        showLoginError(
-            "กรุณาใส่ Admin Key"
-        );
-
-        return;
-    }
-
-
-    adminKey =
-        key;
-
-
-    try {
-
-        await loadDashboard();
-
-
-        sessionStorage.setItem(
-            "amr29_admin_key",
-            adminKey
-        );
-
-
-        document
-            .getElementById(
-                "login-screen"
-            )
-            .style
-            .display =
-            "none";
-
-
-        document
-            .getElementById(
-                "dashboard"
-            )
-            .style
-            .display =
-            "block";
-
-
-        refreshAlertPreview();
-
-
-    } catch (error) {
-
-        adminKey =
-            "";
-
-
-        showLoginError(
-
-            error.message ===
-            "UNAUTHORIZED"
-
-                ?
-
-                "Admin Key ไม่ถูกต้อง"
-
-                :
-
-                error.message
-        );
-    }
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-function logout() {
-
-    sessionStorage.removeItem(
-        "amr29_admin_key"
-    );
-
-
-    location.reload();
-}
-
-
-/* =========================================================
-   LOGIN ERROR
-========================================================= */
-
-function showLoginError(
-    text
-) {
-
-    const box =
-        document.getElementById(
-            "login-error"
-        );
-
-
-    box.style.display =
-        "block";
-
-
-    box.innerText =
-        text;
-}
-
-
-/* =========================================================
-   LOAD DASHBOARD
-========================================================= */
-
-async function loadDashboard() {
-
-    const data =
-        await api(
-            "/api/dashboard"
-        );
-
-
-    renderStats(
-        data.stats
-    );
-
-
-    renderRecent(
-        data.recent
-        ||
-        []
-    );
-
-
-    renderTopDonors(
-        data.topDonors
-        ||
-        []
-    );
-
-
-    renderGoal(
-        data.goal
-    );
-
-
-    if (
-        data.alertSettings
-    ) {
-
-        alertSettings = {
-
-            ...alertSettings,
-
-            ...data.alertSettings
-        };
-
-
-        savedAlertSettings = {
-
-            ...alertSettings
-        };
-
-
-        renderAlertSettings(
-            alertSettings
-        );
-
-
-        setDirty(
-            false
-        );
-    }
-
-
-    refreshAlertPreview();
-
-
-    return data;
-}
-
-
-/* =========================================================
-   REFRESH DASHBOARD
-========================================================= */
-
-async function refreshDashboard() {
-
-    try {
-
-        await loadDashboard();
-
-
-        showToast(
-            "อัปเดตข้อมูลล่าสุดแล้ว",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   RELOAD SAVED SETTINGS
-========================================================= */
-
-async function reloadSavedSettings() {
-
-    alertSettings = {
-
-        ...savedAlertSettings
-    };
-
-
-    renderAlertSettings(
-        alertSettings
-    );
-
-
-    setDirty(
-        false
-    );
-
-
-    refreshAlertPreview();
-
-
-    showToast(
-        "คืนค่า Alert ที่บันทึกไว้แล้ว",
-        "success"
-    );
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-function renderStats(
-    stats
-) {
-
-    setText(
-        "today-total",
-        money(
-            stats?.today?.total
-        )
-    );
-
-
-    setText(
-
-        "today-count",
-
-        `${stats?.today?.count || 0} Donations`
-    );
-
-
-    setText(
-        "month-total",
-        money(
-            stats?.month?.total
-        )
-    );
-
-
-    setText(
-
-        "month-count",
-
-        `${stats?.month?.count || 0} Donations`
-    );
-
-
-    setText(
-        "all-total",
-        money(
-            stats?.all?.total
-        )
-    );
-
-
-    setText(
-
-        "all-count",
-
-        `${stats?.all?.count || 0} Donations`
-    );
-}
-
-
-/* =========================================================
-   SWITCH TAB
-========================================================= */
-
-function switchTab(
-    name
-) {
-
-    document
-        .querySelectorAll(
-            ".tab"
-        )
-        .forEach(
-            button => {
-
-                button
-                    .classList
-                    .toggle(
-
-                        "active",
-
-                        button.dataset.tab ===
-                        name
-                    );
-            }
-        );
-
-
-    document
-        .querySelectorAll(
-            ".tab-panel"
-        )
-        .forEach(
-            panel => {
-
-                panel
-                    .classList
-                    .toggle(
-
-                        "active",
-
-                        panel.id ===
-                        `tab-${name}`
-                    );
-            }
-        );
-}
-
-
-/* =========================================================
-   RENDER ALERT SETTINGS
-========================================================= */
-
-function renderAlertSettings(
-    settings
-) {
-
-    document
-        .getElementById(
-            "alert-tts-enabled"
-        )
-        .checked =
-
-        Boolean(
-            settings.ttsEnabled
-        );
-
-
-    document
-        .getElementById(
-            "alert-read-message"
-        )
-        .checked =
-
-        Boolean(
-            settings.readMessage
-        );
-
-
-    document
-        .getElementById(
-            "alert-tts-rate"
-        )
-        .value =
-
-        Number(
-            settings.ttsRate
-            ||
-            1
-        );
-
-
-    document
-        .getElementById(
-            "alert-big-amount"
-        )
-        .value =
-
-        Number(
-            settings.bigAmount
-            ||
-            500
-        );
-
-
-    document
-        .getElementById(
-            "alert-mega-amount"
-        )
-        .value =
-
-        Number(
-            settings.megaAmount
-            ||
-            1000
-        );
-
-
-    document
-        .getElementById(
-            "alert-after-tts"
-        )
-        .value =
-
-        (
-            Number(
-                settings.afterTtsDelay
-                ||
-                0
-            )
-
-            /
-
-            1000
-        )
-        .toFixed(
-            1
-        );
-
-
-    document
-        .getElementById(
-            "alert-duration"
-        )
-        .value =
-
-        (
-            Number(
-                settings.noTtsDisplayTime
-                ||
-                4500
-            )
-
-            /
-
-            1000
-        )
-        .toFixed(
-            1
-        );
-}
-
-
-/* =========================================================
-   GET EDITOR SETTINGS
-========================================================= */
-
-function getEditorSettings() {
-
-    const big =
-        Number(
-            document
-                .getElementById(
-                    "alert-big-amount"
-                )
-                .value
-        );
-
-
-    const mega =
-        Number(
-            document
-                .getElementById(
-                    "alert-mega-amount"
-                )
-                .value
-        );
-
-
-    return {
-
-
-        ttsEnabled:
-
-            document
-                .getElementById(
-                    "alert-tts-enabled"
-                )
-                .checked,
-
-
-        readMessage:
-
-            document
-                .getElementById(
-                    "alert-read-message"
-                )
-                .checked,
-
-
-        ttsRate:
-
-            Number(
-                document
-                    .getElementById(
-                        "alert-tts-rate"
-                    )
-                    .value
-            )
-
-            ||
-
-            1,
-
-
-        bigAmount:
-
-            Number.isFinite(
-                big
-            )
-
-            &&
-
-            big > 0
-
-                ?
-
-                big
-
-                :
-
-                alertSettings.bigAmount,
-
-
-        megaAmount:
-
-            Number.isFinite(
-                mega
-            )
-
-            &&
-
-            mega > 0
-
-                ?
-
-                mega
-
-                :
-
-                alertSettings.megaAmount,
-
-
-        afterTtsDelay:
-
-            Math.round(
-
-                (
-                    Number(
-
-                        document
-                            .getElementById(
-                                "alert-after-tts"
-                            )
-                            .value
-                    )
-
-                    ||
-
-                    0
-                )
-
-                *
-
-                1000
-            ),
-
-
-        noTtsDisplayTime:
-
-            Math.round(
-
-                (
-                    Number(
-
-                        document
-                            .getElementById(
-                                "alert-duration"
-                            )
-                            .value
-                    )
-
-                    ||
-
-                    4.5
-                )
-
-                *
-
-                1000
-            )
-    };
-}
-
-
-/* =========================================================
-   SAVE ALERT SETTINGS
-========================================================= */
-
-async function saveAlertSettings() {
-
-    const button =
-        document.getElementById(
-            "save-alert-button"
-        );
-
-
-    const payload =
-        getEditorSettings();
-
-
-    if (
-        payload.ttsRate < .5
-
-        ||
-
-        payload.ttsRate > 2
-    ) {
-
-        showToast(
-            "TTS Speed ต้องอยู่ระหว่าง 0.5 - 2.0",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        payload.bigAmount <= 0
-    ) {
-
-        showToast(
-            "BIG Donation ไม่ถูกต้อง",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        payload.megaAmount <=
-        payload.bigAmount
-    ) {
-
-        showToast(
-            "MEGA ต้องมากกว่า BIG",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        payload.afterTtsDelay < 0
-
-        ||
-
-        payload.afterTtsDelay > 10000
-    ) {
-
-        showToast(
-            "ค้างหลัง TTS ต้องอยู่ระหว่าง 0 - 10 วินาที",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        payload.noTtsDisplayTime < 1000
-
-        ||
-
-        payload.noTtsDisplayTime > 30000
-    ) {
-
-        showToast(
-            "Alert Duration ต้องอยู่ระหว่าง 1 - 30 วินาที",
-            "error"
-        );
-
-        return;
-    }
-
-
-    button.disabled =
-        true;
-
-
-    button.innerText =
-        "กำลังบันทึก...";
-
-
-    try {
-
-        const data =
-            await api(
-                "/api/admin/alert-settings",
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify(
-                            payload
-                        )
-                }
-            );
-
-
-        alertSettings = {
-
-            ...alertSettings,
-
-            ...data.settings
-        };
-
-
-        savedAlertSettings = {
-
-            ...alertSettings
-        };
-
-
-        renderAlertSettings(
-            alertSettings
-        );
-
-
-        setDirty(
-            false
-        );
-
-
-        refreshAlertPreview();
-
-
-        showToast(
-            "🔔 บันทึก Alert Settings และส่งไป OBS แล้ว",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-
-
-    } finally {
-
-        button.disabled =
-            false;
-
-
-        button.innerText =
-            "💾 Save Alert";
-    }
-}
-
-
-/* =========================================================
-   DIRTY STATE
-========================================================= */
-
-function setDirty(
-    value = true
-) {
-
-    isDirty =
-        value;
-
-
-    const box =
-        document.getElementById(
-            "dirty-indicator"
-        );
-
-
-    box
-        .classList
-        .toggle(
-            "on",
-            value
-        );
-
-
-    setText(
-
-        "dirty-text",
-
-        value
-
-            ?
-
-            "Unsaved"
-
-            :
-
-            "Saved"
-    );
-}
-
-
-/* =========================================================
-   SOUND TIERS
-========================================================= */
-
-function getTier(
-    amount
-) {
-
-    const value =
-        Number(
-            amount
-        )
-        ||
-        0;
-
-
-    if (
-        value >=
-        1000
-    ) {
-
-        return {
-
-            key:
-                "1000+",
-
-            tier:
-                "MEGA",
-
-            file:
-                "alert5.mp3",
-
-            url:
-                "/sounds/alert5.mp3",
-
-            range:
-                "1,000+ บาท",
-
-            particle:
-                "mega",
-
-            particleCount:
-                48
-        };
-    }
-
-
-    if (
-        value >=
-        500
-    ) {
-
-        return {
-
-            key:
-                "500-999",
-
-            tier:
-                "BIG",
-
-            file:
-                "alert5.mp3",
-
-            url:
-                "/sounds/alert5.mp3",
-
-            range:
-                "500–999 บาท",
-
-            particle:
-                "gold",
-
-            particleCount:
-                30
-        };
-    }
-
-
-    if (
-        value >=
-        300
-    ) {
-
-        return {
-
-            key:
-                "300-499",
-
-            tier:
-                "TIER 4",
-
-            file:
-                "alert4.mp3",
-
-            url:
-                "/sounds/alert4.mp3",
-
-            range:
-                "300–499 บาท",
-
-            particle:
-                "pink",
-
-            particleCount:
-                20
-        };
-    }
-
-
-    if (
-        value >=
-        100
-    ) {
-
-        return {
-
-            key:
-                "100-299",
-
-            tier:
-                "TIER 3",
-
-            file:
-                "alert3.mp3",
-
-            url:
-                "/sounds/alert3.mp3",
-
-            range:
-                "100–299 บาท",
-
-            particle:
-                "pink",
-
-            particleCount:
-                12
-        };
-    }
-
-
-    if (
-        value >=
-        50
-    ) {
-
-        return {
-
-            key:
-                "50-99",
-
-            tier:
-                "TIER 2",
-
-            file:
-                "alert2.mp3",
-
-            url:
-                "/sounds/alert2.mp3",
-
-            range:
-                "50–99 บาท",
-
-            particle:
-                null,
-
-            particleCount:
-                0
-        };
-    }
-
-
-    return {
-
-        key:
-            "1-49",
-
-        tier:
-            "TIER 1",
-
-        file:
-            "alert.mp3",
-
-        url:
-            "/sounds/alert.mp3",
-
-        range:
-            "1–49 บาท",
-
-        particle:
-            null,
-
-        particleCount:
-            0
-    };
-}
-
-
-/* =========================================================
-   RENDER TIER MATRIX
-========================================================= */
-
-function renderTierMatrix() {
-
-    const box =
-        document.getElementById(
-            "tier-matrix"
-        );
-
-
-    const items = [
-
-        20,
-
-        50,
-
-        100,
-
-        300,
-
-        500,
-
-        1000
-    ];
-
-
-    box.innerHTML =
-
-        items
-            .map(
-                amount => {
-
-                    const tier =
-                        getTier(
-                            amount
-                        );
-
-
-                    return `
-
-                        <button
-                            class="tier"
-                            data-tier-amount="${amount}"
-                            onclick="setTestAmount(${amount})"
-                        >
-
-                            <div class="tier-top">
-
-                                <span class="tier-money">
-                                    ${money(amount)}
-                                </span>
-
-                                <span class="badge">
-                                    ${tier.tier}
-                                </span>
-
-                            </div>
-
-
-                            <div class="tier-file">
-
-                                🎵 ${tier.file}
-
-                            </div>
-
-
-                            <div class="tier-effect">
-
-                                ${
-                                    tier.particleCount
-
-                                        ?
-
-                                        `✨ Particle ${tier.particleCount}`
-
-                                        :
-
-                                        "Particle OFF"
-                                }
-
-                            </div>
-
-                        </button>
-                    `;
-                }
-            )
-            .join("");
-
-
-    updateTierActive();
-}
-
-
-/* =========================================================
-   ACTIVE TIER
-========================================================= */
-
-function updateTierActive() {
-
-    const amount =
-        Number(
-            testAmountInput.value
-        )
-        ||
-        0;
-
-
-    document
-        .querySelectorAll(
-            "[data-tier-amount]"
-        )
-        .forEach(
-            element => {
-
-                element
-                    .classList
-                    .toggle(
-
-                        "active",
-
-                        Number(
-                            element.dataset
-                                .tierAmount
-                        )
-
-                        ===
-
-                        amount
-                    );
-            }
-        );
-}
-
-
-/* =========================================================
-   UPDATE TEST UI
-========================================================= */
-
-function updateTestUI() {
-
-    const amount =
-        Number(
-            testAmountInput.value
-        )
-        ||
-        0;
-
-
-    const tier =
-        getTier(
-            amount
-        );
-
-
-    setText(
-        "test-sound-name",
-        tier.file
-    );
-
-
-    setText(
-        "test-sound-range",
-        tier.range
-    );
-
-
-    setText(
-        "test-tier-badge",
-        tier.tier
-    );
-
-
-    document
-        .querySelectorAll(
-            ".quick button"
-        )
-        .forEach(
-            button => {
-
-                button
-                    .classList
-                    .toggle(
-
-                        "active",
-
-                        Number(
-                            button.dataset
-                                .testAmount
-                        )
-
-                        ===
-
-                        amount
-                    );
-            }
-        );
-
-
-    updateTierActive();
-
-
-    refreshAlertPreview();
-}
-
-
-/* =========================================================
-   SET TEST AMOUNT
-========================================================= */
-
-function setTestAmount(
-    amount
-) {
-
-    testAmountInput.value =
-        amount;
-
-
-    updateTestUI();
-}
-
-
-/* =========================================================
-   PREVIEW SOUND
-========================================================= */
-
-async function previewTestSound() {
-
-    const tier =
-        getTier(
-
-            Number(
-                testAmountInput.value
-            )
-        );
-
-
-    try {
-
-        testAudioPlayer.pause();
-
-
-        testAudioPlayer.currentTime =
-            0;
-
-
-        testAudioPlayer.src =
-            tier.url;
-
-
-        testAudioPlayer.load();
-
-
-        await testAudioPlayer.play();
-
-
-        showToast(
-
-            `🔊 กำลังเล่น ${tier.file}`,
-
-            "success"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        showToast(
-
-            `เปิด ${tier.file} ไม่ได้ ตรวจสอบโฟลเดอร์ sounds`,
-
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   TEST DONATION
-========================================================= */
-
-async function sendTestDonation() {
-
-    const button =
-        document.getElementById(
-            "test-button"
-        );
-
-
-    const name =
-
-        document
-            .getElementById(
-                "test-name"
-            )
-            .value
-            .trim()
-
-        ||
-
-        "AMR29 Test";
-
-
-    const amount =
-        Number(
-            testAmountInput.value
-        );
-
-
-    const message =
-        document
-            .getElementById(
-                "test-message"
-            )
-            .value
-            .trim();
-
-
-    if (
-        !Number.isFinite(
-            amount
-        )
-
-        ||
-
-        amount <= 0
-    ) {
-
-        showToast(
-            "จำนวนเงิน Test ไม่ถูกต้อง",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        button
-    ) {
-
-        button.disabled =
-            true;
-
-
-        button.innerText =
-            "กำลังส่ง Test...";
-    }
-
-
-    try {
-
-        const data =
-            await api(
-                "/test-donation",
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            name,
-
-                            message,
-
-                            amount
-                        })
-                }
-            );
-
-
-        showToast(
-
-            `🧪 ${money(amount)} → ${
-                data.donation?.soundUrl
-                ||
-                getTier(
-                    amount
-                ).file
-            } ส่งไป OBS แล้ว`,
-
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-
-
-    } finally {
-
-        if (
-            button
-        ) {
-
-            button.disabled =
-                false;
-
-
-            button.innerText =
-                "🧪 ส่ง Test Donation เข้า OBS";
-        }
-    }
-}
-
-
-/* =========================================================
-   GOAL
-========================================================= */
-
-function renderGoal(
-    goal
-) {
-
-    if (
-        !goal
-    ) {
-
-        return;
-    }
-
-
-    const total =
-        Number(
-            goal.total
-            ||
-            0
-        );
-
-
-    const target =
-        Number(
-            goal.target
-            ||
-            0
-        );
-
-
-    const percent =
-
-        target > 0
-
-            ?
-
-            Math.min(
-
-                100,
-
-                Math.max(
-
-                    0,
-
-                    total /
-                    target *
-                    100
-                )
-            )
-
-            :
-
-            0;
-
-
-    setText(
-
-        "goal-name",
-
-        goal.title
-
-        ||
-
-        "Donation Goal"
-    );
-
-
-    setText(
-
-        "goal-percent",
-
-        `${Math.round(
-            percent
-        )}%`
-    );
-
-
-    setText(
-        "goal-current",
-        money(
-            total
-        )
-    );
-
-
-    setText(
-
-        "goal-target-text",
-
-        `/ ${money(
-            target
-        )}`
-    );
-
-
-    document
-        .getElementById(
-            "goal-fill"
-        )
-        .style
-        .width =
-
-        `${percent}%`;
-
-
-    document
-        .getElementById(
-            "goal-title-input"
-        )
-        .value =
-
-        goal.title
-
-        ||
-
-        "";
-
-
-    document
-        .getElementById(
-            "goal-target-input"
-        )
-        .value =
-        target;
-
-
-    document
-        .getElementById(
-            "goal-enabled-input"
-        )
-        .checked =
-
-        goal.enabled === true
-
-        ||
-
-        goal.enabled === 1
-
-        ||
-
-        goal.enabled === "1";
-}
-
-
-/* =========================================================
-   SAVE GOAL
-========================================================= */
-
-async function saveGoal() {
-
-    const title =
-        document
-            .getElementById(
-                "goal-title-input"
-            )
-            .value
-            .trim();
-
-
-    const target =
-        Number(
-
-            document
-                .getElementById(
-                    "goal-target-input"
-                )
-                .value
-        );
-
-
-    const enabled =
-        document
-            .getElementById(
-                "goal-enabled-input"
-            )
-            .checked;
-
-
-    if (
-        !Number.isFinite(
-            target
-        )
-
-        ||
-
-        target <= 0
-    ) {
-
-        showToast(
-            "เป้าหมายต้องมากกว่า 0 บาท",
-            "error"
-        );
-
-        return;
-    }
-
-
-    try {
-
-        await api(
-            "/api/admin/goal",
-            {
-
-                method:
-                    "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:
-                    JSON.stringify({
-
-                        title,
-
-                        target,
-
-                        enabled
-                    })
-            }
-        );
-
-
-        await loadDashboard();
-
-
-        showToast(
-            "บันทึก Goal แล้ว",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   RESET GOAL
-========================================================= */
-
-async function resetGoal() {
-
-    const ok =
-        confirm(
-
-            "ต้องการเริ่ม Goal ใหม่จาก 0 ใช่ไหม?\n\nประวัติ Donation จะไม่ถูกลบ"
-        );
-
-
-    if (
-        !ok
-    ) {
-
-        return;
-    }
-
-
-    try {
-
-        await api(
-            "/api/admin/goal/reset",
-            {
-
-                method:
-                    "POST"
-            }
-        );
-
-
-        await loadDashboard();
-
-
-        showToast(
-            "Reset Goal แล้ว",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   TOP DONORS
-========================================================= */
-
-function renderTopDonors(
-    donors
-) {
-
-    const box =
-        document.getElementById(
-            "top-donors"
-        );
-
-
-    if (
-        !donors.length
-    ) {
-
-        box.innerHTML = `
-
-            <div
-                class="empty"
-                style="grid-column:1/-1"
-            >
-                ยังไม่มีผู้สนับสนุน
-            </div>
-        `;
-
-
-        return;
-    }
-
-
-    const medals = [
-
-        "🥇",
-
-        "🥈",
-
-        "🥉"
-    ];
-
-
-    box.innerHTML =
-
-        donors
-            .slice(
-                0,
-                3
-            )
-            .map(
-                (
-                    donor,
-                    index
-                ) => `
-
-                    <div class="donor">
-
-                        <div class="donor-rank">
-
-                            ${medals[index]}
-
-                        </div>
-
-
-                        <div class="donor-name">
-
-                            ${escapeHTML(
-                                donor.name
-                            )}
-
-                        </div>
-
-
-                        <div class="donor-amount">
-
-                            ${money(
-                                donor.amount
-                            )}
-
-                        </div>
-
-                    </div>
-                `
-            )
-            .join("");
-}
-
-
-/* =========================================================
-   RECENT DONATIONS
-========================================================= */
-
-function renderRecent(
-    donations
-) {
-
-    const body =
-        document.getElementById(
-            "recent-body"
-        );
-
-
-    if (
-        !donations.length
-    ) {
-
-        body.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="5"
-                    class="empty"
-                >
-                    ยังไม่มี Donation
-                </td>
-
-            </tr>
-        `;
-
-
-        return;
-    }
-
-
-    body.innerHTML =
-
-        donations
-            .map(
-                donation => `
-
-                    <tr>
-
-                        <td class="time">
-
-                            ${formatDate(
-                                donation.created_at
-                            )}
-
-                        </td>
-
-
-                        <td>
-
-                            ${escapeHTML(
-                                donation.name
-                                ||
-                                "Anonymous"
-                            )}
-
-                        </td>
-
-
-                        <td class="money">
-
-                            ${money(
-                                donation.amount
-                            )}
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="msg">
-
-                                ${
-                                    donation.message
-
-                                        ?
-
-                                        escapeHTML(
-                                            donation.message
-                                        )
-
-                                        :
-
-                                        "-"
-                                }
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <button
-                                class="btn btn-soft btn-small"
-                                onclick="replayDonation(
-                                    ${Number(
-                                        donation.id
-                                    )}
-                                )"
-                            >
-                                ▶ Replay
-                            </button>
-
-                        </td>
-
-
-                    </tr>
-                `
-            )
-            .join("");
-}
-
-
-/* =========================================================
-   REPLAY
-========================================================= */
-
-async function replayDonation(
-    id
-) {
-
-    try {
-
-        await api(
-
-            `/api/admin/donation/${id}/replay`,
-
-            {
-                method:
-                    "POST"
-            }
-        );
-
-
-        showToast(
-            "▶ เล่น Donation Alert ซ้ำแล้ว",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        showToast(
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   PREVIEW DATA
-========================================================= */
-
-function getPreviewData() {
-
-    const amount =
-        Number(
-            testAmountInput.value
-        )
-        ||
-        0;
-
-
-    const settings =
-        getEditorSettings();
-
-
-    const tier =
-        getTier(
-            amount
-        );
-
-
-    const name =
-
-        document
-            .getElementById(
-                "test-name"
-            )
-            .value
-            .trim()
-
-        ||
-
-        "Anonymous";
-
-
-    const message =
-
-        document
-            .getElementById(
-                "test-message"
-            )
-            .value
-            .trim()
-
-        ||
-
-        "ข้อความตัวอย่าง";
-
-
-    return {
-
-        amount,
-
-        settings,
-
-        tier,
-
-        name,
-
-        message
-    };
-}
-
-
-/* =========================================================
-   REFRESH PREVIEW
-========================================================= */
-
-function refreshAlertPreview() {
-
-    const alert =
-        document.getElementById(
-            "preview-alert"
-        );
-
-
-    if (
-        !alert
-    ) {
-
-        return;
-    }
-
-
-    const {
-
-        amount,
-
-        settings,
-
-        tier,
-
-        name,
-
-        message
-
-    } =
-        getPreviewData();
-
-
-    const isMega =
-
-        amount >=
-        settings.megaAmount;
-
-
-    const isBig =
-
-        amount >=
-        settings.bigAmount;
-
-
-    alert
-        .classList
-        .toggle(
-            "big",
-            isBig
-        );
-
-
-    alert
-        .classList
-        .toggle(
-            "mega",
-            isMega
-        );
-
-
-    setText(
-
-        "preview-label",
-
-        isMega
-
-            ?
-
-            "MEGA DONATION"
-
-            :
-
-            isBig
-
-                ?
-
-                "BIG DONATION"
-
-                :
-
-                "NEW DONATION"
-    );
-
-
-    setText(
-        "preview-name",
-        name
-    );
-
-
-    setText(
-        "preview-message",
-        message
-    );
-
-
-    setText(
-        "preview-amount",
-        money(
-            amount
-        )
-    );
-
-
-    setText(
-
-        "preview-avatar",
-
-        firstChar(
-            name
-        )
-    );
-
-
-    setText(
-
-        "preview-level-chip",
-
-        `LEVEL: ${
-            isMega
-
-                ?
-
-                "MEGA"
-
-                :
-
-                isBig
-
-                    ?
-
-                    "BIG"
-
-                    :
-
-                    "NORMAL"
-        }`
-    );
-
-
-    setText(
-
-        "preview-sound-chip",
-
-        `SOUND: ${tier.file}`
-    );
-
-
-    setText(
-
-        "preview-particle-chip",
-
-        tier.particleCount
-
-            ?
-
-            `PARTICLE: ${tier.particleCount}`
-
-            :
-
-            "PARTICLE: OFF"
-    );
-
-
-    setText(
-
-        "preview-tts-chip",
-
-        `TTS: ${
-            settings.ttsEnabled
-
-                ?
-
-                "ON"
-
-                :
-
-                "OFF"
-        }`
-    );
-
-
-    setText(
-        "preview-sound-badge",
-        tier.tier
-    );
-}
-
-
-/* =========================================================
-   PLAY PREVIEW
-========================================================= */
-
-function playPreviewAnimation() {
-
-    refreshAlertPreview();
-
-
-    const alert =
-        document.getElementById(
-            "preview-alert"
-        );
-
-
-    const tier =
-        getTier(
-
-            Number(
-                testAmountInput.value
-            )
-        );
-
-
-    alert
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document
-        .getElementById(
-            "preview-particles"
-        )
-        .innerHTML =
-        "";
-
-
-    void alert.offsetWidth;
-
-
-    requestAnimationFrame(
-        () => {
-
-            alert
-                .classList
-                .add(
-                    "show"
-                );
-        }
-    );
-
-
-    if (
-        tier.particleCount
-    ) {
-
-        createPreviewParticles(
-
-            tier.particleCount,
-
-            tier.particle
-        );
-    }
-}
-
-
-/* =========================================================
-   CREATE PREVIEW PARTICLES
-========================================================= */
-
-function createPreviewParticles(
-    count,
-    theme = "pink"
-) {
-
-    const box =
-        document.getElementById(
-            "preview-particles"
-        );
-
-
-    box.innerHTML =
-        "";
-
-
-    for (
-        let index = 0;
-        index < count;
-        index++
-    ) {
-
-        const particle =
-            document.createElement(
-                "div"
-            );
-
-
-        particle.className =
-            `particle ${theme}`;
-
-
-        particle.style.left =
-
-            `${10 + Math.random() * 80}%`;
-
-
-        particle.style.bottom =
-
-            `${22 + Math.random() * 95}px`;
-
-
-        particle.style.animationDelay =
-
-            `${Math.random() * .45}s`;
-
-
-        particle.style.animationDuration =
-
-            `${1.05 + Math.random() * .8}s`;
-
-
-        let size =
-
-            4
-
-            +
-
-            Math.random() *
-            5;
-
-
-        if (
-            theme ===
-            "gold"
-        ) {
-
-            size =
-
-                5
-
-                +
-
-                Math.random() *
-                6;
-        }
-
-
-        if (
-            theme ===
-            "mega"
-        ) {
-
-            size =
-
-                6
-
-                +
-
-                Math.random() *
-                8;
-        }
-
-
-        particle.style.width =
-            `${size}px`;
-
-
-        particle.style.height =
-            `${size}px`;
-
-
-        if (
-            Math.random() >
-            .6
-        ) {
-
-            particle.style
-                .borderRadius =
-                "2px";
-        }
-
-
-        box.appendChild(
-            particle
-        );
-    }
-}
-
-
-/* =========================================================
-   PREVIEW MODE
-========================================================= */
-
-function setPreviewMode(
-    mode
-) {
-
-    const stage =
-        document.getElementById(
-            "preview-stage"
-        );
-
-
-    const scene =
-        document.getElementById(
-            "scene-mode"
-        );
-
-
-    const alpha =
-        document.getElementById(
-            "transparent-mode"
-        );
-
-
-    stage
-        .classList
-        .toggle(
-            "transparent",
-            mode === "transparent"
-        );
-
-
-    stage
-        .classList
-        .toggle(
-            "grid",
-            mode === "scene"
-        );
-
-
-    scene
-        .classList
-        .toggle(
-            "active",
-            mode === "scene"
-        );
-
-
-    alpha
-        .classList
-        .toggle(
-            "active",
-            mode === "transparent"
-        );
-}
-
-
-/* =========================================================
-   BIND INPUTS
-========================================================= */
-
-function bindInputs() {
-
-    const alertInputIds = [
-
-        "alert-tts-enabled",
-
-        "alert-read-message",
-
-        "alert-tts-rate",
-
-        "alert-big-amount",
-
-        "alert-mega-amount",
-
-        "alert-after-tts",
-
-        "alert-duration"
-    ];
-
-
-    alertInputIds
-        .forEach(
-            id => {
-
-                const element =
-                    document.getElementById(
-                        id
-                    );
-
-
-                [
-                    "input",
-                    "change"
-                ]
-                .forEach(
-                    eventName => {
-
-                        element.addEventListener(
-
-                            eventName,
-
-                            () => {
-
-                                setDirty(
-                                    true
-                                );
-
-
-                                refreshAlertPreview();
-                            }
-                        );
-                    }
-                );
-            }
-        );
-
-
-    [
-        "test-name",
-        "test-message"
-    ]
-    .forEach(
-        id => {
-
-            const element =
-                document.getElementById(
-                    id
-                );
-
-
-            element.addEventListener(
-                "input",
-                refreshAlertPreview
-            );
-        }
-    );
-
-
-    testAmountInput
-        .addEventListener(
-            "input",
-            updateTestUI
-        );
-}
-
-
-/* =========================================================
-   SOCKET STATUS
-========================================================= */
-
-socket.on(
-    "connect",
-    () => {
-
-        document
-            .getElementById(
-                "connection"
-            )
-            .classList
-            .add(
-                "online"
-            );
-
-
-        setText(
-            "connection-text",
-            "Server Online"
-        );
-    }
 );
-
-
-socket.on(
-    "disconnect",
-    () => {
-
-        document
-            .getElementById(
-                "connection"
-            )
-            .classList
-            .remove(
-                "online"
-            );
-
-
-        setText(
-            "connection-text",
-            "Disconnected"
-        );
-    }
+const raw =
+await response
+.text();
+let data;
+try{
+data =
+JSON.parse(
+raw
 );
-
-
-/* =========================================================
-   REAL DONATION
-========================================================= */
-
-socket.on(
-    "donation",
-
-    donation => {
-
-        if (
-            donation?.isTest
-
-            ||
-
-            donation?.test
-
-            ||
-
-            donation?.isReplay
-
-            ||
-
-            donation?.replay
-        ) {
-
-            return;
-        }
-
-
-        if (
-            adminKey
-        ) {
-
-            loadDashboard()
-                .catch(
-                    () => {}
-                );
-        }
-    }
+}catch{
+throw new Error(
+`API Error ${response.status}`
 );
-
-
-/* =========================================================
-   RANKING REALTIME
-========================================================= */
-
-socket.on(
-    "ranking-update",
-
-    donors => {
-
-        renderTopDonors(
-            donors
-            ||
-            []
-        );
-    }
+}
+if(
+response.status ===
+401
+||
+response.status ===
+403
+){
+throw new Error(
+"UNAUTHORIZED"
 );
-
-
-/* =========================================================
-   GOAL REALTIME
-========================================================= */
-
-socket.on(
-    "goal-update",
-
-    goal => {
-
-        renderGoal(
-            goal
-        );
-    }
+}
+if(
+!response.ok
+||
+data.success ===
+false
+){
+throw new Error(
+data.message
+||
+`Server Error ${response.status}`
 );
-
-
-/* =========================================================
-   ALERT SETTINGS REALTIME
-========================================================= */
-
-socket.on(
-    "alert-settings-update",
-
-    settings => {
-
-        if (
-            !settings
-        ) {
-
-            return;
-        }
-
-
-        alertSettings = {
-
-            ...alertSettings,
-
-            ...settings
-        };
-
-
-        savedAlertSettings = {
-
-            ...alertSettings
-        };
-
-
-        renderAlertSettings(
-            alertSettings
-        );
-
-
-        setDirty(
-            false
-        );
-
-
-        refreshAlertPreview();
-    }
-);
-
-
-/* =========================================================
-   MONEY
-========================================================= */
-
-function money(
-    value
-) {
-
-    return (
-
-        "฿"
-
-        +
-
-        Number(
-            value
-            ||
-            0
-        )
-        .toLocaleString(
-            "th-TH"
-        )
-    );
 }
-
-
-/* =========================================================
-   SET TEXT
-========================================================= */
-
-function setText(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(
-            id
-        );
-
-
-    if (
-        element
-    ) {
-
-        element.innerText =
-            value;
-    }
+return data;
 }
-
-
 /* =========================================================
-   ESCAPE HTML
+LOGIN
 ========================================================= */
-
-function escapeHTML(
-    value
-) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        String(
-            value
-            ||
-            ""
-        );
-
-
-    return div.innerHTML;
-}
-
-
-/* =========================================================
-   AVATAR
-========================================================= */
-
-function firstChar(
-    value
-) {
-
-    return (
-
-        Array.from(
-
-            String(
-                value
-                ||
-                "A"
-            )
-            .trim()
-
-            ||
-
-            "A"
-        )[0]
-
-        ||
-
-        "A"
-    )
-    .toUpperCase();
-}
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function formatDate(
-    value
-) {
-
-    if (
-        !value
-    ) {
-
-        return "-";
-    }
-
-
-    let text =
-        String(
-            value
-        );
-
-
-    if (
-        !/[zZ]|[+-]\d\d:?\d\d$/
-        .test(
-            text
-        )
-    ) {
-
-        text =
-
-            text.replace(
-                " ",
-                "T"
-            )
-
-            +
-
-            "Z";
-    }
-
-
-    const date =
-        new Date(
-            text
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return value;
-    }
-
-
-    return date
-        .toLocaleString(
-            "th-TH",
-            {
-
-                day:
-                    "2-digit",
-
-                month:
-                    "2-digit",
-
-                hour:
-                    "2-digit",
-
-                minute:
-                    "2-digit"
-            }
-        );
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function showToast(
-    text,
-    type = "success"
-) {
-
-    const toast =
-        document.getElementById(
-            "toast"
-        );
-
-
-    toast.className =
-        `toast ${type}`;
-
-
-    toast.innerText =
-        text;
-
-
-    requestAnimationFrame(
-        () => {
-
-            toast
-                .classList
-                .add(
-                    "show"
-                );
-        }
-    );
-
-
-    if (
-        toastTimer
-    ) {
-
-        clearTimeout(
-            toastTimer
-        );
-    }
-
-
-    toastTimer =
-        setTimeout(
-            () => {
-
-                toast
-                    .classList
-                    .remove(
-                        "show"
-                    );
-            },
-
-            3000
-        );
-}
-
-
-/* =========================================================
-   LOGIN ENTER
-========================================================= */
-
+async function login(){
+const key =
 document
-    .getElementById(
-        "admin-key-input"
-    )
-    .addEventListener(
-        "keydown",
-
-        event => {
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                login();
-            }
-        }
-    );
-
-
-/* =========================================================
-   START
-========================================================= */
-
-async function start() {
-
-    renderTierMatrix();
-
-
-    bindInputs();
-
-
-    updateTestUI();
-
-
-    refreshAlertPreview();
-
-
-    if (
-        !adminKey
-    ) {
-
-        return;
-    }
-
-
-    try {
-
-        await loadDashboard();
-
-
-        document
-            .getElementById(
-                "login-screen"
-            )
-            .style
-            .display =
-            "none";
-
-
-        document
-            .getElementById(
-                "dashboard"
-            )
-            .style
-            .display =
-            "block";
-
-
-        refreshAlertPreview();
-
-
-    } catch {
-
-        sessionStorage.removeItem(
-            "amr29_admin_key"
-        );
-
-
-        adminKey =
-            "";
-    }
+.getElementById(
+"admin-key-input"
+)
+.value
+.trim();
+if(
+!key
+){
+showLoginError(
+"กรุณาใส่ Admin Key"
+);
+return;
 }
-
-
-start();
-
+adminKey =
+key;
+try{
+await Promise.all([
+loadDashboard(),
+loadAlertSettings()
+]);
+sessionStorage.setItem(
+"amr29_admin_key",
+adminKey
+);
+showApp();
+}catch(error){
+adminKey =
+"";
+showLoginError(
+error.message ===
+"UNAUTHORIZED"
+?
+"Admin Key ไม่ถูกต้อง"
+:
+"เข้า Dashboard ไม่สำเร็จ: "
++
+error.message
+);
+}
+}
+function showLoginError(
+message
+){
+const element =
+document.getElementById(
+"login-error"
+);
+element.style.display =
+"block";
+element.innerText =
+message;
+}
+function showApp(){
+document
+.getElementById(
+"login-screen"
+)
+.style
+.display =
+"none";
+document
+.getElementById(
+"app"
+)
+.style
+.display =
+"block";
+}
+function logout(){
+sessionStorage.removeItem(
+"amr29_admin_key"
+);
+location.reload();
+}
+/* =========================================================
+LOAD
+========================================================= */
+async function loadDashboard(){
+const data =
+await api(
+"/api/dashboard"
+);
+recentDonations =
+data.recent
+||
+[];
+renderStats(
+data.stats
+);
+renderRecent(
+recentDonations
+);
+renderTop(
+data.topDonors
+||
+[]
+);
+renderGoal(
+data.goal
+);
+return data;
+}
+async function loadAlertSettings(){
+const data =
+await api(
+"/api/admin/alert-settings"
+);
+alertSettings = {
+...alertSettings,
+...(
+data.settings
+||
+{}
+)
+};
+renderAlertSettings(
+alertSettings
+);
+return alertSettings;
+}
+async function refreshAll(){
+try{
+await Promise.all([
+loadDashboard(),
+loadAlertSettings()
+]);
+toast(
+"อัปเดตข้อมูลล่าสุดแล้ว",
+"success"
+);
+}catch(error){
+toast(
+error.message,
+"error"
+);
+}
+}
+/* =========================================================
+STATS
+========================================================= */
+function renderStats(
+stats
+){
+animateMoney(
+"today-total",
+stats
+?.today
+?.total
+||
+0
+);
+document
+.getElementById(
+"today-count"
+)
+.innerText =
+`${
+stats
+?.today
+?.count
+||
+0
+} Donations`;
+animateMoney(
+"month-total",
+stats
+?.month
+?.total
+||
+0
+);
+document
+.getElementById(
+"month-count"
+)
+.innerText =
+`${
+stats
+?.month
+?.count
+||
+0
+} Donations`;
+animateMoney(
+"all-total",
+stats
+?.all
+?.total
+||
+0
+);
+document
+.getElementById(
+"all-count"
+)
+.innerText =
+`${
+stats
+?.all
+?.count
+||
+0
+} Donations`;
+}
+function animateMoney(
+id,
+target
+){
+const element =
+document.getElementById(
+id
+);
+target =
+Number(
+target
+)
+||
+0;
+const start =
+performance.now();
+const duration =
+380;
+function step(
+now
+){
+const progress =
+Math.min(
+1,
+(
+now -
+start
+)
+/
+duration
+);
+const easing =
+1
+-
+Math.pow(
+1 -
+progress,
+3
+);
+element.innerText =
+"฿"
++
+Math.round(
+target *
+easing
+)
+.toLocaleString();
+if(
+progress <
+1
+){
+requestAnimationFrame(
+step
+);
+}
+}
+requestAnimationFrame(
+step
+);
+}
+/* =========================================================
+RECENT DONATIONS
+========================================================= */
+function renderRecent(
+items
+){
+const body =
+document.getElementById(
+"recent-body"
+);
+if(
+!items.length
+){
+body.innerHTML =
+`
+<tr>
+<td
+colspan="5"
+class="empty"
+>
+ยังไม่มี Donation
+</td>
+</tr>
+`;
+return;
+}
+body.innerHTML =
+items
+.map(
+donation => {
+const hasVideo =
+Boolean(
+donation.videoId
+||
+donation.video_id
+||
+donation.videoUrl
+||
+donation.video_url
+);
+return `
+<tr>
+<td>
+<div class="donor-user">
+<div class="avatar">
+${escapeHTML(
+firstChar(
+donation.name
+)
+)}
+</div>
+<div>
+<div class="donor-name">
+${escapeHTML(
+donation.name
+||
+"Anonymous"
+)}
+</div>
+${
+hasVideo
+?
+`
+<span class="video-mini">
+🎬 VIDEO
+</span>
+`
+:
+""
+}
+</div>
+</div>
+</td>
+<td class="amount">
+${money(
+donation.amount
+)}
+</td>
+<td>
+<div
+class="message"
+title="${escapeHTML(
+donation.message
+||
+""
+)}"
+>
+${
+donation.message
+?
+escapeHTML(
+donation.message
+)
+:
+"-"
+}
+</div>
+</td>
+<td class="time">
+${formatDate(
+donation.created_at
+)}
+</td>
+<td>
+<button
+class="replay"
+onclick="replayDonation(${Number(
+donation.id
+)})"
+>
+▶ Replay
+</button>
+</td>
+</tr>
+`;
+}
+)
+.join("");
+}
+/* =========================================================
+SEARCH
+========================================================= */
+document
+.getElementById(
+"donation-search"
+)
+.addEventListener(
+"input",
+event => {
+const query =
+event.target
+.value
+.trim()
+.toLowerCase();
+renderRecent(
+!query
+?
+recentDonations
+:
+recentDonations
+.filter(
+donation =>
+String(
+donation.name
+||
+""
+)
+.toLowerCase()
+.includes(
+query
+)
+||
+String(
+donation.message
+||
+""
+)
+.toLowerCase()
+.includes(
+query
+)
+)
+);
+}
+);
+/* =========================================================
+REPLAY
+========================================================= */
+async function replayDonation(
+id
+){
+try{
+await api(
+REPLAY_ENDPOINT(
+id
+),
+{
+method:
+"POST"
+}
+);
+toast(
+"▶ เล่น Alert ซ้ำแล้ว",
+"success"
+);
+}catch(error){
+toast(
+"Replay ไม่สำเร็จ: "
++
+error.message,
+"error"
+);
+}
+}
+/* =========================================================
+TOP DONORS
+========================================================= */
+function renderTop(
+donors
+){
+const box =
+document.getElementById(
+"top-donors"
+);
+if(
+!donors.length
+){
+box.innerHTML =
+'<div class="empty">ยังไม่มีผู้สนับสนุน</div>';
+return;
+}
+const medals = [
+"🥇",
+"🥈",
+"🥉"
+];
+box.innerHTML =
+donors
+.slice(
+0,
+3
+)
+.map(
+(
+donor,
+index
+) => `
+<div class="supporter">
+<div class="rank">
+${medals[index]}
+</div>
+<div class="supporter-info">
+<div class="supporter-name">
+${escapeHTML(
+donor.name
+)}
+</div>
+<div class="supporter-money">
+${money(
+donor.amount
+)}
+</div>
+</div>
+</div>
+`
+)
+.join("");
+}
+/* =========================================================
+GOAL
+========================================================= */
+function renderGoal(
+goal
+){
+if(
+!goal
+){
+return;
+}
+const total =
+Number(
+goal.total
+)
+||
+0;
+const target =
+Number(
+goal.target
+)
+||
+0;
+const percent =
+target >
+0
+?
+Math.min(
+100,
+Math.max(
+0,
+total
+/
+target
+*
+100
+)
+)
+:
+0;
+document
+.getElementById(
+"goal-name"
+)
+.innerText =
+goal.title
+||
+"Donation Goal";
+document
+.getElementById(
+"goal-percent"
+)
+.innerText =
+Math.round(
+percent
+)
++
+"%";
+document
+.getElementById(
+"goal-current"
+)
+.innerText =
+money(
+total
+);
+document
+.getElementById(
+"goal-target-text"
+)
+.innerText =
+"/ "
++
+money(
+target
+);
+document
+.getElementById(
+"goal-fill"
+)
+.style
+.width =
+percent
++
+"%";
+document
+.getElementById(
+"goal-title-input"
+)
+.value =
+goal.title
+||
+"";
+document
+.getElementById(
+"goal-target-input"
+)
+.value =
+target;
+document
+.getElementById(
+"goal-enabled-input"
+)
+.checked =
+goal.enabled ===
+true
+||
+goal.enabled ===
+1
+||
+goal.enabled ===
+"1";
+}
+/* =========================================================
+SAVE GOAL
+========================================================= */
+async function saveGoal(){
+const title =
+document
+.getElementById(
+"goal-title-input"
+)
+.value
+.trim();
+const target =
+Number(
+document
+.getElementById(
+"goal-target-input"
+)
+.value
+);
+const enabled =
+document
+.getElementById(
+"goal-enabled-input"
+)
+.checked;
+if(
+!Number.isFinite(
+target
+)
+||
+target <=
+0
+){
+toast(
+"เป้าหมายต้องมากกว่า 0 บาท",
+"error"
+);
+return;
+}
+try{
+await api(
+"/api/admin/goal",
+{
+method:
+"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:
+JSON.stringify({
+title,
+target,
+enabled
+})
+}
+);
+await loadDashboard();
+toast(
+"บันทึก Donation Goal แล้ว",
+"success"
+);
+}catch(error){
+toast(
+error.message,
+"error"
+);
+}
+}
+/* =========================================================
+RESET GOAL
+========================================================= */
+async function resetGoal(){
+if(
+!confirm(
+"ต้องการ Reset Donation Goal เป็น 0 ใช่ไหม?\n\n"
++
+"ประวัติ Donation จะไม่ถูกลบ"
+)
+){
+return;
+}
+try{
+await api(
+"/api/admin/goal/reset",
+{
+method:
+"POST"
+}
+);
+await loadDashboard();
+toast(
+"Reset Donation Goal แล้ว",
+"success"
+);
+}catch(error){
+toast(
+error.message,
+"error"
+);
+}
+}
+/* =========================================================
+ALERT SETTINGS
+========================================================= */
+function renderAlertSettings(
+settings
+){
+document
+.getElementById(
+"tts-enabled"
+)
+.checked =
+Boolean(
+settings.ttsEnabled
+);
+document
+.getElementById(
+"read-message"
+)
+.checked =
+Boolean(
+settings.readMessage
+);
+document
+.getElementById(
+"tts-rate"
+)
+.value =
+Number(
+settings.ttsRate
+||
+1
+);
+document
+.getElementById(
+"big-amount"
+)
+.value =
+Number(
+settings.bigAmount
+||
+500
+);
+document
+.getElementById(
+"mega-amount"
+)
+.value =
+Number(
+settings.megaAmount
+||
+1000
+);
+document
+.getElementById(
+"after-tts"
+)
+.value =
+(
+Number(
+settings.afterTtsDelay
+||
+0
+)
+/
+1000
+)
+.toFixed(
+1
+);
+document
+.getElementById(
+"no-tts-time"
+)
+.value =
+(
+Number(
+settings.noTtsDisplayTime
+||
+4500
+)
+/
+1000
+)
+.toFixed(
+1
+);
+}
+/* =========================================================
+SAVE ALERT SETTINGS
+========================================================= */
+async function saveAlertSettings(){
+const button =
+document.getElementById(
+"save-alert-btn"
+);
+const payload = {
+ttsEnabled:
+document
+.getElementById(
+"tts-enabled"
+)
+.checked,
+readMessage:
+document
+.getElementById(
+"read-message"
+)
+.checked,
+ttsRate:
+Number(
+document
+.getElementById(
+"tts-rate"
+)
+.value
+),
+bigAmount:
+Number(
+document
+.getElementById(
+"big-amount"
+)
+.value
+),
+megaAmount:
+Number(
+document
+.getElementById(
+"mega-amount"
+)
+.value
+),
+afterTtsDelay:
+Math.round(
+Number(
+document
+.getElementById(
+"after-tts"
+)
+.value
+)
+*
+1000
+),
+noTtsDisplayTime:
+Math.round(
+Number(
+document
+.getElementById(
+"no-tts-time"
+)
+.value
+)
+*
+1000
+)
+};
+button.disabled =
+true;
+button.innerText =
+"กำลังบันทึก...";
+try{
+const data =
+await api(
+"/api/admin/alert-settings",
+{
+method:
+"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:
+JSON.stringify(
+payload
+)
+}
+);
+alertSettings = {
+...alertSettings,
+...data.settings
+};
+renderAlertSettings(
+alertSettings
+);
+toast(
+"🔔 บันทึก Alert Settings แล้ว และส่งไป OBS แล้ว",
+"success"
+);
+}catch(error){
+toast(
+error.message,
+"error"
+);
+}finally{
+button.disabled =
+false;
+button.innerText =
+"บันทึก Alert Settings";
+}
+}
+/* =========================================================
+TEST MODAL
+========================================================= */
+function openTest(){
+document
+.getElementById(
+"test-modal"
+)
+.classList
+.add(
+"show"
+);
+updateTestVideoUI();
+setTimeout(
+() => {
+document
+.getElementById(
+"test-name"
+)
+.focus();
+},
+100
+);
+}
+function closeTest(){
+document
+.getElementById(
+"test-modal"
+)
+.classList
+.remove(
+"show"
+);
+/*
+หยุด Preview
+*/
+document
+.getElementById(
+"test-video-frame"
+)
+.src =
+"";
+}
+/* =========================================================
+TEST AMOUNT
+========================================================= */
+function setTestAmount(
+value
+){
+document
+.getElementById(
+"test-amount"
+)
+.value =
+Math.round(
+value
+);
+updateTestVideoUI();
+}
+function setTestBig(){
+setTestAmount(
+alertSettings.bigAmount
+||
+500
+);
+}
+function setTestMega(){
+setTestAmount(
+alertSettings.megaAmount
+||
+1000
+);
+}
+/* =========================================================
+YOUTUBE PARSER
+========================================================= */
+function parseYouTubeTestUrl(
+value
+){
+let raw =
+String(
+value
+||
+""
+)
+.trim();
+if(
+!raw
+){
+return null;
+}
+if(
+!/^https?:\/\//i
+.test(
+raw
+)
+){
+raw =
+"https://"
++
+raw;
+}
+let url;
+try{
+url =
+new URL(
+raw
+);
+}catch{
+throw new Error(
+"ลิงก์ YouTube ไม่ถูกต้อง"
+);
+}
+const hostname =
+url.hostname
+.toLowerCase()
+.replace(
+/^www\./,
+""
+);
+let videoId =
+null;
+/* youtu.be */
+if(
+hostname ===
+"youtu.be"
+){
+videoId =
+url.pathname
+.split("/")
+.filter(
+Boolean
+)[0]
+||
+null;
+}
+/* youtube.com */
+if(
+hostname ===
+"youtube.com"
+||
+hostname ===
+"m.youtube.com"
+||
+hostname ===
+"music.youtube.com"
+){
+if(
+url.pathname ===
+"/watch"
+){
+videoId =
+url.searchParams
+.get(
+"v"
+);
+}
+else if(
+/^\/(shorts|live|embed)\//
+.test(
+url.pathname
+)
+){
+videoId =
+url.pathname
+.split("/")
+.filter(
+Boolean
+)[1]
+||
+null;
+}
+}
+if(
+!videoId
+||
+!/^[A-Za-z0-9_-]{11}$/
+.test(
+videoId
+)
+){
+throw new Error(
+"รองรับเฉพาะ YouTube / youtu.be"
+);
+}
+return {
+videoId,
+videoUrl:
+`https://www.youtube.com/watch?v=${videoId}`
+};
+}
+/* =========================================================
+PARSE VIDEO START
+========================================================= */
+function parseTestVideoStart(
+value
+){
+const raw =
+String(
+value
+??
+""
+)
+.trim();
+if(
+!raw
+){
+return 0;
+}
+if(
+/^\d+$/
+.test(
+raw
+)
+){
+return Math.max(
+0,
+Number(
+raw
+)
+);
+}
+const pieces =
+raw.split(
+":"
+);
+if(
+![
+2,
+3
+]
+.includes(
+pieces.length
+)
+||
+!pieces.every(
+piece =>
+/^\d+$/
+.test(
+piece
+)
+)
+){
+throw new Error(
+"เวลาเริ่มใช้รูปแบบ 00:00 หรือ 01:25"
+);
+}
+const values =
+pieces.map(
+Number
+);
+if(
+pieces.length ===
+2
+){
+if(
+values[1] >
+59
+){
+throw new Error(
+"วินาทีต้องไม่เกิน 59"
+);
+}
+return (
+values[0]
+*
+60
++
+values[1]
+);
+}
+if(
+values[1] >
+59
+||
+values[2] >
+59
+){
+throw new Error(
+"นาทีหรือวินาทีไม่ถูกต้อง"
+);
+}
+return (
+values[0]
+*
+3600
++
+values[1]
+*
+60
++
+values[2]
+);
+}
+/* =========================================================
+FORMAT VIDEO START
+========================================================= */
+function formatVideoStart(
+seconds
+){
+seconds =
+Math.max(
+0,
+Math.floor(
+Number(
+seconds
+)
+||
+0
+)
+);
+const hours =
+Math.floor(
+seconds /
+3600
+);
+const minutes =
+Math.floor(
+(
+seconds %
+3600
+)
+/
+60
+);
+const secs =
+seconds
+%
+60;
+if(
+hours
+){
+return (
+`${hours}:${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}`
+);
+}
+return (
+`${minutes}:${String(secs).padStart(2,"0")}`
+);
+}
+/* =========================================================
+TEST VIDEO DATA
+========================================================= */
+function getTestVideoData(){
+const amount =
+Number(
+document
+.getElementById(
+"test-amount"
+)
+.value
+)
+||
+0;
+const rawUrl =
+document
+.getElementById(
+"test-video-url"
+)
+.value
+.trim();
+if(
+!rawUrl
+){
+return {
+videoUrl:
+null,
+videoId:
+null,
+videoStart:
+null,
+videoDuration:
+null
+};
+}
+if(
+amount <
+VIDEO_TEST_MIN_AMOUNT
+){
+throw new Error(
+`Video Donation ใช้ได้ตั้งแต่ ${VIDEO_TEST_MIN_AMOUNT} บาทขึ้นไป`
+);
+}
+const video =
+parseYouTubeTestUrl(
+rawUrl
+);
+const start =
+parseTestVideoStart(
+document
+.getElementById(
+"test-video-start"
+)
+.value
+);
+let duration =
+Number(
+document
+.getElementById(
+"test-video-duration"
+)
+.value
+);
+if(
+!Number.isFinite(
+duration
+)
+){
+duration =
+VIDEO_TEST_MAX_DURATION;
+}
+duration =
+Math.min(
+VIDEO_TEST_MAX_DURATION,
+Math.max(
+1,
+Math.round(
+duration
+)
+)
+);
+return {
+videoUrl:
+video.videoUrl,
+videoId:
+video.videoId,
+videoStart:
+start,
+videoDuration:
+duration
+};
+}
+/* =========================================================
+TEST VIDEO UI
+========================================================= */
+function updateTestVideoUI(){
+const amount =
+Number(
+document
+.getElementById(
+"test-amount"
+)
+.value
+)
+||
+0;
+const unlocked =
+amount >=
+VIDEO_TEST_MIN_AMOUNT;
+const urlInput =
+document
+.getElementById(
+"test-video-url"
+);
+const startInput =
+document
+.getElementById(
+"test-video-start"
+);
+const durationInput =
+document
+.getElementById(
+"test-video-duration"
+);
+const badge =
+document
+.getElementById(
+"test-video-badge"
+);
+const status =
+document
+.getElementById(
+"test-video-status"
+);
+const preview =
+document
+.getElementById(
+"test-video-preview"
+);
+const frame =
+document
+.getElementById(
+"test-video-frame"
+);
+urlInput.disabled =
+!unlocked;
+startInput.disabled =
+!unlocked;
+durationInput.disabled =
+!unlocked;
+badge
+.classList
+.toggle(
+"locked",
+!unlocked
+);
+badge.textContent =
+unlocked
+?
+"VIDEO READY"
+:
+"10+ บาท";
+status.className =
+"test-video-status";
+if(
+!unlocked
+){
+status.textContent =
+"🔒 เพิ่มยอด Test เป็น 10 บาทขึ้นไปเพื่อทดสอบ Video";
+preview
+.classList
+.remove(
+"show"
+);
+frame.src =
+"";
+return;
+}
+const raw =
+urlInput
+.value
+.trim();
+if(
+!raw
+){
+status.textContent =
+"ไม่บังคับ • ใส่ YouTube URL เพื่อทดสอบ Video บน OBS";
+preview
+.classList
+.remove(
+"show"
+);
+frame.src =
+"";
+return;
+}
+try{
+const data =
+getTestVideoData();
+status
+.classList
+.add(
+"ok"
+);
+status.textContent =
+"✓ YouTube พร้อมทดสอบ";
+const embedUrl =
+`https://www.youtube-nocookie.com/embed/${encodeURIComponent(
+data.videoId
+)}?start=${Math.floor(
+data.videoStart
+||
+0
+)}&rel=0&playsinline=1`;
+if(
+frame.getAttribute(
+"src"
+)
+!==
+embedUrl
+){
+frame.src =
+embedUrl;
+}
+document
+.getElementById(
+"test-video-preview-meta"
+)
+.textContent =
+`เริ่ม ${formatVideoStart(
+data.videoStart
+)} • ${data.videoDuration} วินาที`;
+preview
+.classList
+.add(
+"show"
+);
+}catch(error){
+status
+.classList
+.add(
+"error"
+);
+status.textContent =
+"❌ "
++
+error.message;
+preview
+.classList
+.remove(
+"show"
+);
+frame.src =
+"";
+}
+}
+/* =========================================================
+SEND TEST DONATION
+========================================================= */
+async function sendTestDonation(){
+const button =
+document.getElementById(
+"test-button"
+);
+const name =
+document
+.getElementById(
+"test-name"
+)
+.value
+.trim()
+||
+"AMR29 Test";
+const amount =
+Number(
+document
+.getElementById(
+"test-amount"
+)
+.value
+);
+const message =
+document
+.getElementById(
+"test-message"
+)
+.value
+.trim();
+if(
+!Number.isFinite(
+amount
+)
+||
+amount <
+10
+){
+toast(
+"จำนวนเงิน Test ต้องตั้งแต่ 10 บาทขึ้นไป",
+"error"
+);
+return;
+}
+let video;
+try{
+video =
+getTestVideoData();
+}catch(error){
+toast(
+error.message,
+"error"
+);
+return;
+}
+button.disabled =
+true;
+button.innerText =
+"กำลังส่ง Test...";
+try{
+const payload = {
+name,
+message,
+amount
+};
+if(
+video.videoId
+){
+payload.videoUrl =
+video.videoUrl;
+payload.videoStart =
+video.videoStart;
+payload.videoDuration =
+video.videoDuration;
+}
+await api(
+"/test-donation",
+{
+method:
+"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:
+JSON.stringify(
+payload
+)
+}
+);
+toast(
+`🧪 Test ${money(amount)}${video.videoId ? " + 🎬 Video" : ""} ส่งไป OBS แล้ว`,
+"success"
+);
+closeTest();
+}catch(error){
+toast(
+error.message,
+"error"
+);
+}finally{
+button.disabled =
+false;
+button.innerText =
+"🧪 ส่ง Test Donation เข้า OBS";
+}
+}
+/* =========================================================
+TEST VIDEO LISTENERS
+========================================================= */
+document
+.getElementById(
+"test-amount"
+)
+.addEventListener(
+"input",
+updateTestVideoUI
+);
+document
+.getElementById(
+"test-video-url"
+)
+.addEventListener(
+"input",
+updateTestVideoUI
+);
+document
+.getElementById(
+"test-video-start"
+)
+.addEventListener(
+"input",
+updateTestVideoUI
+);
+document
+.getElementById(
+"test-video-duration"
+)
+.addEventListener(
+"change",
+updateTestVideoUI
+);
+/* =========================================================
+SOCKET
+========================================================= */
+socket.on(
+"connect",
+() =>
+setServer(
+true
+)
+);
+socket.on(
+"disconnect",
+() =>
+setServer(
+false
+)
+);
+socket.on(
+"donation",
+donation => {
+if(
+donation?.isTest
+||
+donation?.test
+||
+donation?.isReplay
+||
+donation?.replay
+){
+return;
+}
+if(
+adminKey
+){
+loadDashboard()
+.catch(
+() => {}
+);
+}
+}
+);
+socket.on(
+"ranking-update",
+donors =>
+renderTop(
+donors
+||
+[]
+)
+);
+socket.on(
+"goal-update",
+goal =>
+renderGoal(
+goal
+)
+);
+socket.on(
+"alert-settings-update",
+settings => {
+if(
+!settings
+){
+return;
+}
+alertSettings = {
+...alertSettings,
+...settings
+};
+renderAlertSettings(
+alertSettings
+);
+}
+);
+/* =========================================================
+SERVER STATUS
+========================================================= */
+function setServer(
+online
+){
+const element =
+document
+.getElementById(
+"server-state"
+);
+element
+.classList
+.toggle(
+"online",
+online
+);
+element.innerHTML =
+`
+<span class="server-dot"></span>
+<span>
+${online ? "ONLINE" : "OFFLINE"}
+</span>
+`;
+}
+/* =========================================================
+SIDEBAR
+========================================================= */
+function openSidebar(){
+document
+.getElementById(
+"sidebar"
+)
+.classList
+.add(
+"open"
+);
+document
+.getElementById(
+"mobile-overlay"
+)
+.classList
+.add(
+"show"
+);
+}
+function closeSidebar(){
+document
+.getElementById(
+"sidebar"
+)
+.classList
+.remove(
+"open"
+);
+document
+.getElementById(
+"mobile-overlay"
+)
+.classList
+.remove(
+"show"
+);
+}
+function go(
+id
+){
+document
+.getElementById(
+id
+)
+?.scrollIntoView({
+behavior:
+"smooth",
+block:
+"start"
+});
+closeSidebar();
+}
+/* =========================================================
+HELPERS
+========================================================= */
+function money(
+value
+){
+return (
+"฿"
++
+Number(
+value
+||
+0
+)
+.toLocaleString(
+"th-TH"
+)
+);
+}
+function firstChar(
+value
+){
+const characters =
+Array.from(
+String(
+value
+||
+"A"
+)
+.trim()
+);
+return (
+characters[0]
+||
+"A"
+)
+.toUpperCase();
+}
+function escapeHTML(
+value
+){
+const div =
+document
+.createElement(
+"div"
+);
+div.textContent =
+String(
+value
+||
+""
+);
+return div.innerHTML;
+}
+function formatDate(
+value
+){
+if(
+!value
+){
+return "-";
+}
+let string =
+String(
+value
+);
+if(
+!/[zZ]|[+-]\d\d:?\d\d$/
+.test(
+string
+)
+){
+string =
+string
+.replace(
+" ",
+"T"
+)
++
+"Z";
+}
+const date =
+new Date(
+string
+);
+if(
+Number.isNaN(
+date.getTime()
+)
+){
+return String(
+value
+);
+}
+return date
+.toLocaleString(
+"th-TH",
+{
+day:
+"2-digit",
+month:
+"2-digit",
+hour:
+"2-digit",
+minute:
+"2-digit"
+}
+);
+}
+/* =========================================================
+TOAST
+========================================================= */
+function toast(
+message,
+type = "success"
+){
+const element =
+document
+.getElementById(
+"toast"
+);
+element.className =
+`toast ${type}`;
+element.innerText =
+message;
+requestAnimationFrame(
+() =>
+element
+.classList
+.add(
+"show"
+)
+);
+if(
+toastTimer
+){
+clearTimeout(
+toastTimer
+);
+}
+toastTimer =
+setTimeout(
+() =>
+element
+.classList
+.remove(
+"show"
+),
+3000
+);
+}
+/* =========================================================
+KEYBOARD
+========================================================= */
+document
+.getElementById(
+"admin-key-input"
+)
+.addEventListener(
+"keydown",
+event => {
+if(
+event.key ===
+"Enter"
+){
+login();
+}
+}
+);
+document
+.addEventListener(
+"keydown",
+event => {
+if(
+event.key ===
+"Escape"
+){
+closeTest();
+closeSidebar();
+}
+}
+);
+/* =========================================================
+START
+========================================================= */
+(async function start(){
+if(
+!adminKey
+){
+return;
+}
+try{
+await Promise.all([
+loadDashboard(),
+loadAlertSettings()
+]);
+showApp();
+}catch(error){
+sessionStorage.removeItem(
+"amr29_admin_key"
+);
+adminKey =
+"";
+}
+})();
 </script>
-
-
 </body>
 </html>

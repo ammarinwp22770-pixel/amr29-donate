@@ -1,118 +1,216 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AMR29 Donation Alert</title>
 
-
 <style>
-
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
 }
 
-
-:root {
-
-    --accent:
-        #ff5b7f;
-
-    --accent-light:
-        #ff9ab0;
-
-    --gold:
-        #ffd36e;
-
-    --gold-light:
-        #ffe7a4;
-
-    --text:
-        #ffffff;
-
-    --text-soft:
-        #f3f3f6;
-
-    --muted:
-        #b7b7c1;
-
-    --panel:
-        rgba(8,8,13,.97);
-
-    --border:
-        rgba(255,255,255,.20);
+:root{
+    --accent:#ff5b7f;
+    --accent-light:#ff9ab0;
+    --gold:#ffd36e;
+    --success:#63df9b;
+    --text:#ffffff;
+    --text-soft:#f3f3f6;
+    --text-muted:#b7b7c1;
+    --panel:rgba(8,8,13,.97);
+    --border:rgba(255,255,255,.20);
 }
-
 
 html,
-body {
+body{
+    width:100%;
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    background:transparent;
+    font-family:"Segoe UI","Noto Sans Thai",Arial,sans-serif;
+}
+
+body{
+    user-select:none;
+}
+
+.stage{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   VIDEO ONLY
+========================================================= */
+
+.video-wrap{
+    position:absolute;
+
+    left:50%;
+    bottom:70px;
 
     width:
-        100%;
+        min(
+            760px,
+            calc(100vw - 70px)
+        );
 
-    height:
-        100%;
+    transform:
+        translateX(-50%)
+        translateY(24px)
+        scale(.97);
 
-    margin:
-        0;
+    opacity:0;
+    visibility:hidden;
 
-    overflow:
-        hidden;
+    transition:
+        opacity .24s ease,
+        transform .42s cubic-bezier(.16,1,.3,1),
+        visibility .24s ease;
+}
+
+.video-wrap.show{
+    opacity:1;
+    visibility:visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+}
+
+.video-wrap.hiding{
+    opacity:0;
+
+    transform:
+        translateX(-50%)
+        translateY(18px)
+        scale(.98);
+}
+
+.video-shell{
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    aspect-ratio:
+        16 / 9;
+
+    border:
+        2px solid
+        rgba(255,255,255,.16);
+
+    border-radius:22px;
+
+    background:#000;
+
+    box-shadow:
+        0 28px 90px
+        rgba(0,0,0,.78),
+
+        0 0 45px
+        rgba(120,202,255,.10);
+}
+
+.video-shell::before{
+    content:"";
+
+    position:absolute;
+
+    z-index:5;
+
+    left:26px;
+    right:26px;
+    top:0;
+
+    height:3px;
+
+    border-radius:
+        0 0 999px 999px;
 
     background:
-        transparent;
-
-    font-family:
-        "Segoe UI",
-        "Noto Sans Thai",
-        Arial,
-        sans-serif;
+        linear-gradient(
+            90deg,
+            transparent,
+            #58bfff,
+            #aee6ff,
+            transparent
+        );
 }
 
+#video-player{
+    position:absolute;
 
-body {
-    user-select: none;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    background:#000;
+}
+
+#video-player iframe{
+    display:block;
+
+    width:100% !important;
+    height:100% !important;
+
+    border:0;
+}
+
+.video-progress{
+    position:absolute;
+
+    z-index:8;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:5px;
+
+    overflow:hidden;
+
+    background:
+        rgba(255,255,255,.16);
+}
+
+.video-progress-fill{
+    width:100%;
+    height:100%;
+
+    transform-origin:
+        left center;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4eb8ff,
+            #8ad9ff,
+            #d4f4ff
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(120,202,255,.70);
 }
 
 
 /* =========================================================
-   STAGE
+   NORMAL DONATION ALERT
 ========================================================= */
 
-.stage {
+.alert-wrap{
+    position:absolute;
 
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    pointer-events:
-        none;
-}
-
-
-/* =========================================================
-   ALERT
-========================================================= */
-
-.alert-wrap {
-
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    bottom:
-        95px;
+    left:50%;
+    bottom:95px;
 
     width:
         min(
@@ -123,55 +221,35 @@ body {
     transform:
         translateX(-50%);
 
-    opacity:
-        0;
-
-    visibility:
-        hidden;
+    opacity:0;
+    visibility:hidden;
 
     transition:
         opacity .22s ease;
 }
 
-
-.alert-wrap.show {
-
-    opacity:
-        1;
-
-    visibility:
-        visible;
+.alert-wrap.show{
+    opacity:1;
+    visibility:visible;
 }
 
+.alert-card{
+    position:relative;
 
-/* =========================================================
-   CARD
-========================================================= */
+    overflow:hidden;
 
-.alert-card {
-
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    display:
-        grid;
+    display:grid;
 
     grid-template-columns:
         96px
         minmax(0,1fr)
         auto;
 
-    align-items:
-        center;
+    align-items:center;
 
-    gap:
-        22px;
+    gap:22px;
 
-    min-height:
-        148px;
+    min-height:148px;
 
     padding:
         22px 27px;
@@ -180,21 +258,17 @@ body {
         2px solid
         var(--border);
 
-    border-radius:
-        25px;
+    border-radius:25px;
 
     background:
-
         linear-gradient(
             135deg,
             rgba(255,91,127,.055),
             rgba(255,255,255,.015)
         ),
-
         var(--panel);
 
     box-shadow:
-
         0 25px 80px
         rgba(0,0,0,.72),
 
@@ -206,68 +280,49 @@ body {
         translateY(32px)
         scale(.95);
 
-    opacity:
-        0;
+    opacity:0;
 
     transition:
-
-        transform .5s
+        transform
+        .5s
         cubic-bezier(.16,1,.3,1),
 
-        opacity .3s ease;
+        opacity
+        .3s
+        ease;
 }
 
-
 .alert-wrap.show
-.alert-card {
-
+.alert-card{
     transform:
         translateY(0)
         scale(1);
 
-    opacity:
-        1;
+    opacity:1;
 }
 
-
 .alert-wrap.hiding
-.alert-card {
-
+.alert-card{
     transform:
         translateY(22px)
         scale(.97);
 
-    opacity:
-        0;
+    opacity:0;
 }
 
+.top-accent{
+    position:absolute;
 
-/* =========================================================
-   TOP LINE
-========================================================= */
+    left:26px;
+    right:26px;
+    top:0;
 
-.top-accent {
-
-    position:
-        absolute;
-
-    left:
-        26px;
-
-    right:
-        26px;
-
-    top:
-        0;
-
-    height:
-        3px;
+    height:3px;
 
     border-radius:
         0 0 999px 999px;
 
     background:
-
         linear-gradient(
             90deg,
             transparent,
@@ -277,30 +332,16 @@ body {
         );
 }
 
+.alert-glow{
+    position:absolute;
 
-/* =========================================================
-   GLOW
-========================================================= */
+    width:300px;
+    height:300px;
 
-.alert-glow {
+    left:-130px;
+    top:-130px;
 
-    position:
-        absolute;
-
-    width:
-        300px;
-
-    height:
-        300px;
-
-    left:
-        -130px;
-
-    top:
-        -130px;
-
-    border-radius:
-        50%;
+    border-radius:50%;
 
     background:
         rgba(255,91,127,.17);
@@ -308,71 +349,47 @@ body {
     filter:
         blur(65px);
 
-    pointer-events:
-        none;
+    pointer-events:none;
 }
 
+.avatar{
+    position:relative;
 
-/* =========================================================
-   AVATAR
-========================================================= */
+    z-index:2;
 
-.avatar {
+    width:86px;
+    height:86px;
 
-    position:
-        relative;
+    display:flex;
 
-    z-index:
-        2;
+    justify-content:center;
+    align-items:center;
 
-    width:
-        86px;
-
-    height:
-        86px;
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-    flex-shrink:
-        0;
+    flex-shrink:0;
 
     border:
         2px solid
         rgba(255,91,127,.38);
 
-    border-radius:
-        23px;
+    border-radius:23px;
 
-    color:
-        #ffffff;
+    color:#fff;
 
     background:
-
         linear-gradient(
             145deg,
             rgba(255,91,127,.32),
             rgba(255,91,127,.13)
         );
 
-    font-size:
-        34px;
-
-    font-weight:
-        900;
+    font-size:34px;
+    font-weight:900;
 
     text-shadow:
         0 2px 8px
         rgba(0,0,0,.8);
 
     box-shadow:
-
         0 12px 30px
         rgba(255,91,127,.17),
 
@@ -381,102 +398,56 @@ body {
         inset;
 }
 
+.content{
+    position:relative;
 
-/* =========================================================
-   CONTENT
-========================================================= */
+    z-index:2;
 
-.content {
-
-    position:
-        relative;
-
-    z-index:
-        2;
-
-    min-width:
-        0;
+    min-width:0;
 }
 
+.label-row{
+    display:flex;
 
-.label-row {
+    align-items:center;
 
-    display:
-        flex;
+    gap:8px;
 
-    align-items:
-        center;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        7px;
-
-    margin-bottom:
-        5px;
+    margin-bottom:5px;
 }
 
-
-.donation-label {
-
+.donation-label{
     color:
         var(--accent-light);
 
-    font-size:
-        13px;
+    font-size:13px;
+    font-weight:900;
 
-    font-weight:
-        900;
-
-    letter-spacing:
-        1.5px;
+    letter-spacing:1.5px;
 
     text-shadow:
         0 2px 6px
         rgba(0,0,0,.9);
 }
 
-
-/* =========================================================
-   BADGES
-========================================================= */
-
-.badge {
-
-    display:
-        none;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
+.badge{
+    display:none;
 
     padding:
         4px 8px;
 
-    border-radius:
-        999px;
+    border-radius:999px;
 
-    font-size:
-        9px;
+    font-size:9px;
+    font-weight:900;
 
-    font-weight:
-        900;
-
-    letter-spacing:
-        .8px;
+    letter-spacing:.8px;
 }
 
+.badge.test{
+    display:inline-flex;
 
-.badge.test {
-
-    display:
-        inline-flex;
-
-    color:
-        #ffd08a;
+    color:#ffd08a;
 
     background:
         rgba(255,191,105,.14);
@@ -486,14 +457,10 @@ body {
         rgba(255,191,105,.28);
 }
 
+.badge.replay{
+    display:inline-flex;
 
-.badge.replay {
-
-    display:
-        inline-flex;
-
-    color:
-        #c2c2ff;
+    color:#c2c2ff;
 
     background:
         rgba(155,155,255,.14);
@@ -503,161 +470,89 @@ body {
         rgba(155,155,255,.27);
 }
 
+.donor-name{
+    max-width:100%;
 
-.badge.custom {
+    overflow:hidden;
 
-    display:
-        inline-flex;
+    white-space:nowrap;
 
-    color:
-        #a8e8ff;
+    text-overflow:ellipsis;
 
-    background:
-        rgba(86,200,255,.12);
+    color:#fff;
 
-    border:
-        1px solid
-        rgba(86,200,255,.27);
-}
+    font-size:32px;
+    line-height:1.15;
 
+    font-weight:900;
 
-/* =========================================================
-   NAME
-========================================================= */
-
-.donor-name {
-
-    max-width:
-        100%;
-
-    overflow:
-        hidden;
-
-    white-space:
-        nowrap;
-
-    text-overflow:
-        ellipsis;
-
-    color:
-        #ffffff;
-
-    font-size:
-        32px;
-
-    line-height:
-        1.15;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        -.5px;
+    letter-spacing:-.5px;
 
     text-shadow:
-
         0 3px 8px
         rgba(0,0,0,.95),
 
         0 1px 2px
-        rgba(0,0,0,1);
+        #000;
 }
 
+.message{
+    max-width:100%;
 
-/* =========================================================
-   MESSAGE
-========================================================= */
+    margin-top:8px;
 
-.message {
+    overflow:hidden;
 
-    max-width:
-        100%;
-
-    margin-top:
-        8px;
-
-    overflow:
-        hidden;
-
-    display:
-        -webkit-box;
+    display:-webkit-box;
 
     -webkit-box-orient:
         vertical;
 
-    -webkit-line-clamp:
-        2;
+    -webkit-line-clamp:2;
 
-    line-clamp:
-        2;
+    line-clamp:2;
 
-    color:
-        #f7f7f9;
+    color:#f7f7f9;
 
-    font-size:
-        18px;
+    font-size:18px;
+    font-weight:650;
 
-    font-weight:
-        650;
-
-    line-height:
-        1.4;
+    line-height:1.4;
 
     text-shadow:
-
         0 3px 7px
         rgba(0,0,0,.95),
 
         0 1px 2px
-        rgba(0,0,0,1);
+        #000;
 }
 
+.amount-box{
+    position:relative;
 
-/* =========================================================
-   AMOUNT
-========================================================= */
+    z-index:2;
 
-.amount-box {
+    min-width:170px;
 
-    position:
-        relative;
+    padding-left:15px;
 
-    z-index:
-        2;
-
-    min-width:
-        170px;
-
-    padding-left:
-        15px;
-
-    text-align:
-        right;
+    text-align:right;
 }
 
+.amount{
+    color:#ff9eb3;
 
-.amount {
+    font-size:43px;
 
-    color:
-        #ff9eb3;
+    line-height:1;
 
-    font-size:
-        43px;
+    font-weight:900;
 
-    line-height:
-        1;
+    letter-spacing:-1.2px;
 
-    font-weight:
-        900;
-
-    letter-spacing:
-        -1.2px;
-
-    white-space:
-        nowrap;
+    white-space:nowrap;
 
     text-shadow:
-
         0 4px 12px
         rgba(0,0,0,.95),
 
@@ -665,68 +560,44 @@ body {
         rgba(255,91,127,.26);
 }
 
+.currency{
+    margin-top:7px;
 
-.currency {
+    color:#d0d0d7;
 
-    margin-top:
-        7px;
+    font-size:11px;
+    font-weight:900;
 
-    color:
-        #d0d0d7;
+    letter-spacing:2px;
 
-    font-size:
-        11px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        2px;
+    text-shadow:
+        0 2px 5px
+        rgba(0,0,0,.9);
 }
 
+.progress{
+    position:absolute;
 
-/* =========================================================
-   PROGRESS
-========================================================= */
+    left:0;
+    right:0;
+    bottom:0;
 
-.progress {
+    height:5px;
 
-    position:
-        absolute;
-
-    left:
-        0;
-
-    right:
-        0;
-
-    bottom:
-        0;
-
-    height:
-        5px;
-
-    overflow:
-        hidden;
+    overflow:hidden;
 
     background:
         rgba(255,255,255,.09);
 }
 
-
-.progress-fill {
-
-    width:
-        100%;
-
-    height:
-        100%;
+.progress-fill{
+    width:100%;
+    height:100%;
 
     transform-origin:
         left center;
 
     background:
-
         linear-gradient(
             90deg,
             #ff3e69,
@@ -741,27 +612,23 @@ body {
 
 
 /* =========================================================
-   BIG
+   BIG / MEGA
 ========================================================= */
 
 .alert-wrap.big
-.alert-card {
-
+.alert-card{
     border-color:
         rgba(255,211,110,.42);
 
     background:
-
         linear-gradient(
             135deg,
             rgba(255,196,78,.10),
             rgba(255,255,255,.015)
         ),
-
         rgba(8,8,12,.98);
 
     box-shadow:
-
         0 28px 90px
         rgba(0,0,0,.72),
 
@@ -769,12 +636,9 @@ body {
         rgba(255,195,80,.15);
 }
 
-
 .alert-wrap.big
-.top-accent {
-
+.top-accent{
     background:
-
         linear-gradient(
             90deg,
             transparent,
@@ -784,103 +648,79 @@ body {
         );
 }
 
-
 .alert-wrap.big
-.alert-glow {
-
+.alert-glow{
     background:
         rgba(255,190,70,.24);
 }
 
-
 .alert-wrap.big
-.avatar {
-
-    color:
-        #fff6d8;
+.avatar{
+    color:#fff6d8;
 
     border-color:
         rgba(255,211,110,.52);
 
     background:
-
         linear-gradient(
             145deg,
             rgba(255,197,75,.32),
             rgba(255,170,50,.12)
         );
+
+    box-shadow:
+        0 12px 36px
+        rgba(255,190,70,.18);
 }
 
-
 .alert-wrap.big
-.donation-label {
-
+.donation-label{
     color:
         var(--gold);
 }
 
-
 .alert-wrap.big
-.amount {
-
+.amount{
     color:
         var(--gold);
+
+    text-shadow:
+        0 4px 12px
+        rgba(0,0,0,.95),
+
+        0 0 22px
+        rgba(255,200,80,.28);
 }
 
-
 .alert-wrap.big
-.progress-fill {
-
+.progress-fill{
     background:
-
         linear-gradient(
             90deg,
             #ffa833,
             #ffd36e,
             #fff0bb
         );
-}
-
-
-/* =========================================================
-   CUSTOM SOUND VISUAL
-========================================================= */
-
-.alert-wrap.custom-sound
-.avatar {
 
     box-shadow:
-
-        0 12px 30px
-        rgba(86,200,255,.15),
-
-        0 0 0 1px
-        rgba(255,255,255,.045)
-        inset;
+        0 0 12px
+        rgba(255,205,90,.60);
 }
 
-
-/* =========================================================
-   MEGA
-========================================================= */
-
 .alert-wrap.mega
-.alert-card {
-
+.alert-card{
     animation:
         megaPulse
         1.25s
         ease-in-out
-        infinite alternate;
+        infinite
+        alternate;
 }
 
+@keyframes megaPulse{
 
-@keyframes megaPulse {
-
-    from {
-
+    from{
         box-shadow:
-
             0 28px 90px
             rgba(0,0,0,.72),
 
@@ -888,10 +728,8 @@ body {
             rgba(255,195,75,.13);
     }
 
-    to {
-
+    to{
         box-shadow:
-
             0 28px 90px
             rgba(0,0,0,.72),
 
@@ -900,54 +738,35 @@ body {
     }
 }
 
+.mega-text{
+    position:absolute;
 
-/* =========================================================
-   MEGA TEXT
-========================================================= */
-
-.mega-text {
-
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    bottom:
-        200px;
+    left:50%;
+    bottom:200px;
 
     transform:
         translateX(-50%)
         translateY(18px)
         scale(.90);
 
-    color:
-        #ffe190;
+    color:#ffe190;
 
-    text-align:
-        center;
+    text-align:center;
 
-    font-size:
-        30px;
+    font-size:30px;
+    font-weight:900;
 
-    font-weight:
-        900;
+    letter-spacing:4px;
 
-    letter-spacing:
-        4px;
+    white-space:nowrap;
 
-    white-space:
-        nowrap;
-
-    opacity:
-        0;
+    opacity:0;
 
     transition:
         .45s
         cubic-bezier(.16,1,.3,1);
 
     text-shadow:
-
         0 4px 15px
         rgba(0,0,0,.9),
 
@@ -955,12 +774,9 @@ body {
         rgba(255,195,80,.42);
 }
 
-
 .alert-wrap.mega.show
-.mega-text {
-
-    opacity:
-        1;
+.mega-text{
+    opacity:1;
 
     transform:
         translateX(-50%)
@@ -973,45 +789,31 @@ body {
    PARTICLES
 ========================================================= */
 
-.particles {
+.particles{
+    position:fixed;
 
-    position:
-        fixed;
+    inset:0;
 
-    inset:
-        0;
+    overflow:hidden;
 
-    overflow:
-        hidden;
-
-    pointer-events:
-        none;
+    pointer-events:none;
 }
 
+.particle{
+    position:absolute;
 
-.particle {
+    width:7px;
+    height:7px;
 
-    position:
-        absolute;
+    border-radius:50%;
 
-    width:
-        7px;
-
-    height:
-        7px;
-
-    border-radius:
-        50%;
-
-    background:
-        #ffd675;
+    background:#ffd675;
 
     box-shadow:
         0 0 10px
         rgba(255,214,117,.7);
 
-    opacity:
-        0;
+    opacity:0;
 
     animation:
         particleFly
@@ -1020,80 +822,22 @@ body {
         forwards;
 }
 
-/* =========================================================
-   PARTICLE THEMES
-========================================================= */
+@keyframes particleFly{
 
-.particle.pink {
-
-    background:
-        #ff6f91;
-
-    box-shadow:
-        0 0 12px
-        rgba(255,91,127,.85);
-}
-
-
-.particle.pink-soft {
-
-    background:
-        #ff9eb5;
-
-    box-shadow:
-        0 0 14px
-        rgba(255,120,150,.8);
-}
-
-
-.particle.gold {
-
-    background:
-        #ffd675;
-
-    box-shadow:
-        0 0 13px
-        rgba(255,214,117,.9);
-}
-
-
-.particle.mega {
-
-    background:
-        #ffe9a8;
-
-    box-shadow:
-
-        0 0 12px
-        rgba(255,220,120,1),
-
-        0 0 24px
-        rgba(255,180,60,.75);
-}
-
-
-@keyframes particleFly {
-
-    0% {
-
-        opacity:
-            0;
+    0%{
+        opacity:0;
 
         transform:
             translateY(25px)
             scale(.3);
     }
 
-    15% {
-
-        opacity:
-            1;
+    15%{
+        opacity:1;
     }
 
-    100% {
-
-        opacity:
-            0;
+    100%{
+        opacity:0;
 
         transform:
             translateY(-190px)
@@ -1103,117 +847,90 @@ body {
 
 
 /* =========================================================
-   MOBILE / SMALL CANVAS
+   RESPONSIVE
 ========================================================= */
 
-@media (max-width:750px) {
+@media(max-width:750px){
 
-    .alert-wrap {
-
-        bottom:
-            40px;
+    .video-wrap{
+        bottom:40px;
 
         width:
             calc(100vw - 24px);
     }
 
+    .video-shell{
+        border-radius:16px;
+    }
 
-    .alert-card {
+    .alert-wrap{
+        bottom:40px;
 
+        width:
+            calc(100vw - 24px);
+    }
+
+    .alert-card{
         grid-template-columns:
             70px
             minmax(0,1fr);
 
-        gap:
-            14px;
+        gap:14px;
 
-        min-height:
-            125px;
+        min-height:125px;
 
-        padding:
-            17px;
+        padding:17px;
     }
 
+    .avatar{
+        width:64px;
+        height:64px;
 
-    .avatar {
+        border-radius:18px;
 
-        width:
-            64px;
-
-        height:
-            64px;
-
-        border-radius:
-            18px;
-
-        font-size:
-            25px;
+        font-size:25px;
     }
 
-
-    .donation-label {
-
-        font-size:
-            10px;
+    .donation-label{
+        font-size:10px;
     }
 
-
-    .donor-name {
-
-        font-size:
-            23px;
+    .donor-name{
+        font-size:23px;
     }
 
-
-    .message {
-
-        font-size:
-            14px;
+    .message{
+        font-size:14px;
     }
 
+    .amount-box{
+        grid-column:2;
 
-    .amount-box {
+        min-width:0;
 
-        grid-column:
-            2;
+        padding-left:0;
 
-        min-width:
-            0;
+        margin-top:1px;
 
-        padding-left:
-            0;
-
-        text-align:
-            left;
+        text-align:left;
     }
 
-
-    .amount {
-
-        font-size:
-            29px;
+    .amount{
+        font-size:29px;
     }
 
-
-    .currency {
-
-        display:
-            none;
+    .currency{
+        display:none;
     }
 
+    .mega-text{
+        bottom:175px;
 
-    .mega-text {
-
-        bottom:
-            175px;
-
-        font-size:
-            22px;
+        font-size:22px;
     }
 }
 
 </style>
-
 </head>
 
 
@@ -1229,6 +946,47 @@ body {
     ></div>
 
 
+
+    <!-- =====================================================
+         VIDEO DONATION
+
+         ถ้ามี Video
+         จะแสดงเฉพาะส่วนนี้เท่านั้น
+    ====================================================== -->
+
+    <div
+        class="video-wrap"
+        id="video-wrap"
+    >
+
+        <div class="video-shell">
+
+
+            <div
+                id="video-player"
+            ></div>
+
+
+            <div class="video-progress">
+
+                <div
+                    class="video-progress-fill"
+                    id="video-progress-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         NORMAL DONATION
+
+         ใช้เมื่อไม่มี Video เท่านั้น
+    ====================================================== -->
 
     <div
         class="alert-wrap"
@@ -1283,13 +1041,6 @@ body {
                         id="alert-badge"
                     ></div>
 
-
-                    <div
-                        class="badge"
-                        id="sound-badge"
-                    ></div>
-
-
                 </div>
 
 
@@ -1307,7 +1058,6 @@ body {
                     class="message"
                     id="message"
                 ></div>
-
 
             </div>
 
@@ -1328,7 +1078,6 @@ body {
                     THB
                 </div>
 
-
             </div>
 
 
@@ -1342,7 +1091,6 @@ body {
 
             </div>
 
-
         </div>
 
     </div>
@@ -1351,19 +1099,16 @@ body {
 
 
 
-<!--
-ไม่มี src ตายตัวแล้ว
-JS จะกำหนดตาม Donation
--->
-
 <audio
     id="alert-sound"
     preload="auto"
+    src="/sounds/alert.mp3"
 ></audio>
 
 
-
 <script src="/socket.io/socket.io.js"></script>
+
+<script src="https://www.youtube.com/iframe_api"></script>
 
 
 <script>
@@ -1372,37 +1117,44 @@ JS จะกำหนดตาม Donation
    CONFIG
 ========================================================= */
 
+const VIDEO_MAX_DURATION =
+    20;
+
+
+const VIDEO_MAX_START =
+    12 *
+    60 *
+    60;
+
+
+const VIDEO_SHOW_DELAY =
+    180;
+
+
+const VIDEO_HIDE_DELAY =
+    220;
+
+
 /*
-Custom Sound
-เล่นสูงสุด 10 วินาที
+YouTube ต้องเริ่มเล่นภายใน 10 วินาที
+ไม่งั้นข้ามเพื่อไม่ให้ Queue ค้าง
 */
 
-const CUSTOM_SOUND_MAX_TIME =
+const VIDEO_LOAD_TIMEOUT =
     10000;
 
 
 /*
-เสียง Default
-กันกรณีไฟล์ยาวผิดปกติ
+Hard timeout ป้องกัน Player ค้าง
 */
 
-const DEFAULT_SOUND_MAX_TIME =
-    20000;
+const VIDEO_HARD_GRACE =
+    8000;
 
-
-/*
-ระหว่าง Alert A → Alert B
-*/
-
-const QUEUE_GAP =
-    500;
 
 
 /* =========================================================
-   ALERT SETTINGS DEFAULT
-
-   Server โหลดไม่ได้
-   จะใช้ชุดนี้แทน
+   ALERT SETTINGS
 ========================================================= */
 
 let alertSettings = {
@@ -1428,6 +1180,16 @@ let alertSettings = {
     noTtsDisplayTime:
         4500
 };
+
+
+
+/* =========================================================
+   SOCKET
+========================================================= */
+
+const socket =
+    io();
+
 
 
 /* =========================================================
@@ -1476,12 +1238,6 @@ const alertBadge =
     );
 
 
-const soundBadge =
-    document.getElementById(
-        "sound-badge"
-    );
-
-
 const progressFill =
     document.getElementById(
         "progress-fill"
@@ -1506,6 +1262,19 @@ const alertSound =
     );
 
 
+const videoWrap =
+    document.getElementById(
+        "video-wrap"
+    );
+
+
+const videoProgressFill =
+    document.getElementById(
+        "video-progress-fill"
+    );
+
+
+
 /* =========================================================
    QUEUE
 ========================================================= */
@@ -1522,91 +1291,106 @@ let currentDonation =
     null;
 
 
+
+/* =========================================================
+   ANIMATION STATE
+========================================================= */
+
 let progressAnimation =
     null;
 
 
-/* =========================================================
-   SOCKET
-========================================================= */
+let videoProgressAnimation =
+    null;
 
-const socket =
-    io();
-
-
-socket.on(
-    "connect",
-
-    () => {
-
-        console.log(
-            "✅ AMR29 Overlay connected"
-        );
-
-
-        /*
-        reconnect เมื่อไร
-        โหลด Settings ใหม่
-        */
-
-        loadAlertSettings();
-    }
-);
-
-
-socket.on(
-    "disconnect",
-
-    () => {
-
-        console.log(
-            "❌ AMR29 Overlay disconnected"
-        );
-    }
-);
 
 
 /* =========================================================
-   ALERT SETTINGS REALTIME
+   YOUTUBE PLAYER STATE
 ========================================================= */
 
-socket.on(
-    "alert-settings-update",
+let youtubePlayer =
+    null;
 
-    settings => {
 
-        if (
-            !settings
-        ) {
+let youtubeApiReady =
+    false;
 
-            return;
+
+let resolveYouTubeReady =
+    null;
+
+
+
+const youtubeReadyPromise =
+    new Promise(
+        resolve => {
+
+            resolveYouTubeReady =
+                resolve;
         }
+    );
 
 
-        applyAlertSettings(
-            settings
-        );
+
+/* =========================================================
+   YOUTUBE API READY
+========================================================= */
+
+window.onYouTubeIframeAPIReady =
+    function(){
+
+        youtubeApiReady =
+            true;
 
 
-        console.log(
-            "🔔 Alert Settings updated:",
-            alertSettings
-        );
+        if(
+            resolveYouTubeReady
+        ){
+
+            resolveYouTubeReady();
+        }
+    };
+
+
+
+/*
+กรณี API โหลดเสร็จเร็วมาก
+*/
+
+if(
+    window.YT
+    &&
+    window.YT.Player
+){
+
+    youtubeApiReady =
+        true;
+
+
+    if(
+        resolveYouTubeReady
+    ){
+
+        resolveYouTubeReady();
     }
-);
+}
+
 
 
 /* =========================================================
    LOAD ALERT SETTINGS
 ========================================================= */
 
-async function loadAlertSettings() {
+async function loadAlertSettings(){
 
-    try {
+    try{
 
         const response =
             await fetch(
+
                 "/api/alert-settings",
+
                 {
                     cache:
                         "no-store"
@@ -1615,393 +1399,80 @@ async function loadAlertSettings() {
 
 
         const data =
-            await response.json();
+            await response
+                .json();
 
 
-        if (
+        if(
             !response.ok
-
             ||
-
             !data.success
-
             ||
-
             !data.settings
-        ) {
+        ){
 
-            throw new Error(
-                data.message
-                ||
-                "โหลด Alert Settings ไม่สำเร็จ"
-            );
+            return;
         }
 
 
-        applyAlertSettings(
-            data.settings
-        );
+        alertSettings = {
+
+            ...alertSettings,
+
+            ...data.settings
+        };
 
 
         console.log(
-            "🔔 Alert Settings loaded:",
+            "Alert Settings:",
             alertSettings
         );
 
+    }
+    catch(error){
 
-    } catch (error) {
-
-        console.warn(
-            "Alert Settings:",
+        console.error(
+            "Load Alert Settings:",
             error
         );
+    }
+}
 
 
-        console.warn(
-            "ใช้ Default Settings:",
+
+/* =========================================================
+   REALTIME ALERT SETTINGS
+========================================================= */
+
+socket.on(
+
+    "alert-settings-update",
+
+    settings => {
+
+        if(
+            !settings
+        ){
+
+            return;
+        }
+
+
+        alertSettings = {
+
+            ...alertSettings,
+
+            ...settings
+        };
+
+
+        console.log(
+            "Alert Settings updated:",
             alertSettings
         );
     }
-}
+);
 
-
-/* =========================================================
-   APPLY SETTINGS
-========================================================= */
-
-function applyAlertSettings(
-    settings = {}
-) {
-
-    const ttsRate =
-        Number(
-            settings.ttsRate
-        );
-
-
-    const bigAmount =
-        Number(
-            settings.bigAmount
-        );
-
-
-    const megaAmount =
-        Number(
-            settings.megaAmount
-        );
-
-
-    const afterTtsDelay =
-        Number(
-            settings.afterTtsDelay
-        );
-
-
-    const noTtsDisplayTime =
-        Number(
-            settings.noTtsDisplayTime
-        );
-
-
-    alertSettings = {
-
-        ttsEnabled:
-
-            typeof settings.ttsEnabled ===
-            "boolean"
-
-                ?
-
-                settings.ttsEnabled
-
-                :
-
-                alertSettings.ttsEnabled,
-
-
-        readMessage:
-
-            typeof settings.readMessage ===
-            "boolean"
-
-                ?
-
-                settings.readMessage
-
-                :
-
-                alertSettings.readMessage,
-
-
-        ttsRate:
-
-            Number.isFinite(
-                ttsRate
-            )
-
-            &&
-
-            ttsRate >= .5
-
-            &&
-
-            ttsRate <= 2
-
-                ?
-
-                ttsRate
-
-                :
-
-                alertSettings.ttsRate,
-
-
-        bigAmount:
-
-            Number.isFinite(
-                bigAmount
-            )
-
-            &&
-
-            bigAmount > 0
-
-                ?
-
-                bigAmount
-
-                :
-
-                alertSettings.bigAmount,
-
-
-        megaAmount:
-
-            Number.isFinite(
-                megaAmount
-            )
-
-            &&
-
-            megaAmount > 0
-
-                ?
-
-                megaAmount
-
-                :
-
-                alertSettings.megaAmount,
-
-
-        afterTtsDelay:
-
-            Number.isFinite(
-                afterTtsDelay
-            )
-
-            &&
-
-            afterTtsDelay >= 0
-
-                ?
-
-                afterTtsDelay
-
-                :
-
-                alertSettings.afterTtsDelay,
-
-
-        noTtsDisplayTime:
-
-            Number.isFinite(
-                noTtsDisplayTime
-            )
-
-            &&
-
-            noTtsDisplayTime >= 1000
-
-                ?
-
-                noTtsDisplayTime
-
-                :
-
-                alertSettings.noTtsDisplayTime
-    };
-
-
-    /*
-    Mega ต้องมากกว่า Big
-    */
-
-    if (
-        alertSettings.megaAmount <=
-        alertSettings.bigAmount
-    ) {
-
-        alertSettings.megaAmount =
-            alertSettings.bigAmount +
-            1;
-    }
-}
-
-
-/* =========================================================
-   SOUND TIER FALLBACK
-
-   ต้องตรง server.js
-========================================================= */
-
-function getTierSoundUrl(
-    amount
-) {
-
-    const value =
-        Number(
-            amount
-        )
-        ||
-        0;
-
-
-    if (
-        value >=
-        1000
-    ) {
-
-        return "/sounds/alert5.mp3";
-    }
-
-
-    if (
-        value >=
-        500
-    ) {
-
-        return "/sounds/alert5.mp3";
-    }
-
-
-    if (
-        value >=
-        300
-    ) {
-
-        return "/sounds/alert4.mp3";
-    }
-
-
-    if (
-        value >=
-        100
-    ) {
-
-        return "/sounds/alert3.mp3";
-    }
-
-
-    if (
-        value >=
-        50
-    ) {
-
-        return "/sounds/alert2.mp3";
-    }
-
-
-    return "/sounds/alert.mp3";
-}
-
-
-/* =========================================================
-   VALIDATE SOUND URL
-
-   ป้องกัน Overlay เล่น URL แปลก ๆ
-========================================================= */
-
-function sanitizeSoundUrl(
-    soundUrl,
-    amount
-) {
-
-    const fallback =
-        getTierSoundUrl(
-            amount
-        );
-
-
-    if (
-        typeof soundUrl !==
-        "string"
-    ) {
-
-        return fallback;
-    }
-
-
-    const value =
-        soundUrl.trim();
-
-
-    /*
-    Default sound files
-    */
-
-    const allowedTierSounds = [
-
-        "/sounds/alert.mp3",
-
-        "/sounds/alert2.mp3",
-
-        "/sounds/alert3.mp3",
-
-        "/sounds/alert4.mp3",
-
-        "/sounds/alert5.mp3",
-
-        "/sounds/alert6.mp3"
-    ];
-
-
-    if (
-        allowedTierSounds.includes(
-            value
-        )
-    ) {
-
-        return value;
-    }
-
-
-    /*
-    Custom Sound Endpoint
-
-    /api/custom-sound/
-    snd_xxxxx/audio
-    */
-
-    if (
-        /^\/api\/custom-sound\/snd_[a-f0-9]{48}\/audio$/
-        .test(
-            value
-        )
-    ) {
-
-        return value;
-    }
-
-
-    console.warn(
-        "Blocked invalid soundUrl:",
-        value
-    );
-
-
-    return fallback;
-}
 
 
 /* =========================================================
@@ -2009,16 +1480,19 @@ function sanitizeSoundUrl(
 ========================================================= */
 
 socket.on(
+
     "donation",
 
     donation => {
 
-        if (
+
+        if(
             !donation
-        ) {
+        ){
 
             return;
         }
+
 
 
         const amount =
@@ -2027,30 +1501,29 @@ socket.on(
             );
 
 
-        if (
+
+        if(
             !Number.isFinite(
                 amount
             )
-
             ||
-
             amount <= 0
-        ) {
+        ){
 
             return;
         }
 
 
-        const soundUrl =
-            sanitizeSoundUrl(
 
-                donation.soundUrl,
-
-                amount
+        const video =
+            normalizeVideoDonation(
+                donation
             );
 
 
+
         donationQueue.push({
+
 
             name:
 
@@ -2064,6 +1537,7 @@ socket.on(
                     0,
                     30
                 ),
+
 
 
             message:
@@ -2080,30 +1554,9 @@ socket.on(
                 ),
 
 
+
             amount,
 
-
-            soundUrl,
-
-
-            soundTier:
-
-                String(
-                    donation.soundTier
-                    ||
-                    ""
-                )
-                .slice(
-                    0,
-                    30
-                ),
-
-
-            customSound:
-
-                Boolean(
-                    donation.customSound
-                ),
 
 
             isTest:
@@ -2115,29 +1568,46 @@ socket.on(
                 ),
 
 
+
             isReplay:
 
                 Boolean(
                     donation.isReplay
                     ||
                     donation.replay
-                )
+                ),
+
+
+
+            soundUrl:
+
+                sanitizeSoundUrl(
+                    donation.soundUrl
+                ),
+
+
+
+            customSound:
+
+                Boolean(
+                    donation.customSound
+                ),
+
+
+
+            soundTier:
+
+                String(
+                    donation.soundTier
+                    ||
+                    ""
+                ),
+
+
+
+            ...video
         });
 
-
-        console.log(
-            "💸 Donation queued:",
-            {
-                amount,
-                soundUrl,
-                customSound:
-                    Boolean(
-                        donation.customSound
-                    ),
-                queue:
-                    donationQueue.length
-            }
-        );
 
 
         playNextDonation();
@@ -2145,64 +1615,107 @@ socket.on(
 );
 
 
+
 /* =========================================================
    QUEUE PLAYER
 ========================================================= */
 
-async function playNextDonation() {
+async function playNextDonation(){
 
-    if (
+
+    if(
         playing
-
         ||
-
         donationQueue.length ===
         0
-    ) {
+    ){
 
         return;
     }
+
 
 
     playing =
         true;
 
 
+
     currentDonation =
         donationQueue.shift();
 
 
-    try {
 
-        await showDonation(
-            currentDonation
-        );
+    try{
 
 
-    } catch (error) {
+        /*
+        =====================================================
+        VIDEO DONATION
+        =====================================================
+
+        มี Video:
+        - ไม่แสดง Alert ปกติ
+        - ไม่เล่น Donation Sound
+        - ไม่เล่น Custom Sound
+        - ไม่อ่าน TTS
+        - ไม่แสดงชื่อ/ยอด/ข้อความ
+        - เปิด YouTube อย่างเดียว
+        */
+
+
+        if(
+            currentDonation.videoId
+        ){
+
+            await playVideoDonation(
+                currentDonation
+            );
+        }
+
+
+        /*
+        =====================================================
+        NORMAL DONATION
+        =====================================================
+        */
+
+        else{
+
+            await showNormalDonation(
+                currentDonation
+            );
+        }
+
+    }
+    catch(error){
 
         console.error(
-            "Alert Error:",
+            "Donation Overlay Error:",
             error
         );
 
+    }
+    finally{
 
-    } finally {
 
-        hideAlert();
+        cleanupEverything();
+
 
 
         await delay(
-            QUEUE_GAP
+            450
         );
+
 
 
         playing =
             false;
 
 
+
         currentDonation =
             null;
+
 
 
         playNextDonation();
@@ -2210,29 +1723,21 @@ async function playNextDonation() {
 }
 
 
+
 /* =========================================================
-   SHOW DONATION
+   NORMAL DONATION
 ========================================================= */
 
-async function showDonation(
+async function showNormalDonation(
     donation
-) {
+){
+
+
+    hideVideo();
+
 
     resetAlertClasses();
 
-
-    /*
-    Snapshot Settings
-
-    ถ้า Admin เปลี่ยน Settings
-    ตอน Alert กำลังเล่น
-    จะมีผลกับ Alert ถัดไป
-    */
-
-    const settings = {
-
-        ...alertSettings
-    };
 
 
     const amount =
@@ -2241,114 +1746,95 @@ async function showDonation(
         );
 
 
-    /* =====================================================
-   NORMAL / PARTICLE / BIG / MEGA
-===================================================== */
 
-if (
-    amount >=
-    settings.megaAmount
-) {
-
-    /* =========================
-       1000+
-    ========================= */
-
-    alertWrap.classList.add(
-        "big",
-        "mega"
-    );
+    const bigAmount =
+        Number(
+            alertSettings.bigAmount
+        )
+        ||
+        500;
 
 
-    donationLabel.innerText =
-        "MEGA DONATION";
 
+    const megaAmount =
+        Math.max(
 
-    megaText.innerText =
-        "BIG SUPPORT ❤️";
+            bigAmount
+            +
+            1,
 
+            Number(
+                alertSettings.megaAmount
+            )
+            ||
+            1000
+        );
 
-    createParticles(
-        48,
-        "mega"
-    );
-
-
-} else if (
-    amount >=
-    settings.bigAmount
-) {
-
-    /* =========================
-       500+
-    ========================= */
-
-    alertWrap.classList.add(
-        "big"
-    );
-
-
-    donationLabel.innerText =
-        "BIG DONATION";
-
-
-    createParticles(
-        30,
-        "gold"
-    );
-
-
-} else if (
-    amount >=
-    300
-) {
-
-    /* =========================
-       300 - 499
-    ========================= */
-
-    donationLabel.innerText =
-        "NEW DONATION";
-
-
-    createParticles(
-        20,
-        "pink"
-    );
-
-
-} else if (
-    amount >=
-    100
-) {
-
-    /* =========================
-       100 - 299
-    ========================= */
-
-    donationLabel.innerText =
-        "NEW DONATION";
-
-
-    createParticles(
-        12,
-        "pink-soft"
-    );
-
-
-} else {
-
-    /* =========================
-       ต่ำกว่า 100
-    ========================= */
-
-    donationLabel.innerText =
-        "NEW DONATION";
-}
 
 
     /* =====================================================
-       TEST / REPLAY
+       BIG / MEGA
+    ====================================================== */
+
+    if(
+        amount >=
+        megaAmount
+    ){
+
+        alertWrap
+            .classList
+            .add(
+                "big",
+                "mega"
+            );
+
+
+        donationLabel.innerText =
+            "MEGA DONATION";
+
+
+        megaText.innerText =
+            "BIG SUPPORT ❤️";
+
+
+        createParticles(
+            42
+        );
+    }
+
+
+    else if(
+        amount >=
+        bigAmount
+    ){
+
+        alertWrap
+            .classList
+            .add(
+                "big"
+            );
+
+
+        donationLabel.innerText =
+            "BIG DONATION";
+
+
+        createParticles(
+            24
+        );
+    }
+
+
+    else{
+
+        donationLabel.innerText =
+            "NEW DONATION";
+    }
+
+
+
+    /* =====================================================
+       TEST / REPLAY BADGE
     ====================================================== */
 
     alertBadge.className =
@@ -2359,26 +1845,32 @@ if (
         "";
 
 
-    if (
-        donation.isTest
-    ) {
 
-        alertBadge.classList.add(
-            "test"
-        );
+    if(
+        donation.isTest
+    ){
+
+        alertBadge
+            .classList
+            .add(
+                "test"
+            );
 
 
         alertBadge.innerText =
             "TEST";
+    }
 
 
-    } else if (
+    else if(
         donation.isReplay
-    ) {
+    ){
 
-        alertBadge.classList.add(
-            "replay"
-        );
+        alertBadge
+            .classList
+            .add(
+                "replay"
+            );
 
 
         alertBadge.innerText =
@@ -2386,52 +1878,21 @@ if (
     }
 
 
-    /* =====================================================
-       CUSTOM SOUND BADGE
-    ====================================================== */
-
-    soundBadge.className =
-        "badge";
-
-
-    soundBadge.innerText =
-        "";
-
-
-    if (
-        donation.customSound
-    ) {
-
-        alertWrap.classList.add(
-            "custom-sound"
-        );
-
-
-        soundBadge.classList.add(
-            "custom"
-        );
-
-
-        soundBadge.innerText =
-            "🎧 CUSTOM SOUND";
-    }
-
 
     /* =====================================================
-       DATA
+       CONTENT
     ====================================================== */
 
     const name =
-
         donation.name
-
         ||
-
         "Anonymous";
+
 
 
     donorName.innerText =
         name;
+
 
 
     avatar.innerText =
@@ -2440,40 +1901,40 @@ if (
         );
 
 
+
     amountElement.innerText =
 
         "฿"
 
         +
 
-        amount.toLocaleString(
-            "th-TH",
-            {
-                maximumFractionDigits:
-                    2
-            }
-        );
+        amount
+            .toLocaleString(
+                "th-TH"
+            );
 
 
-    /* =====================================================
-       MESSAGE
-    ====================================================== */
 
-    if (
+    if(
         donation.message
-    ) {
+    ){
 
-        messageElement.style.display =
+        messageElement
+            .style
+            .display =
             "-webkit-box";
 
 
         messageElement.innerText =
             donation.message;
+    }
 
 
-    } else {
+    else{
 
-        messageElement.style.display =
+        messageElement
+            .style
+            .display =
             "none";
 
 
@@ -2482,45 +1943,45 @@ if (
     }
 
 
+
     /* =====================================================
        SHOW
     ====================================================== */
 
-    alertWrap.classList.remove(
-        "hiding"
-    );
+    alertWrap
+        .classList
+        .remove(
+            "hiding"
+        );
+
 
 
     void alertWrap.offsetWidth;
 
 
-    alertWrap.classList.add(
-        "show"
-    );
+
+    alertWrap
+        .classList
+        .add(
+            "show"
+        );
 
 
-    /*
-    ให้ Animation ขึ้นก่อนเสียงนิดนึง
-    */
 
     await delay(
         180
     );
 
 
-    /* =====================================================
-       SOUND
 
-       donation.soundUrl
-       ↓
-       Custom / Tier
-       ↓
-       ถ้าพัง fallback Tier
+    /* =====================================================
+       ALERT SOUND
     ====================================================== */
 
-    await playDonationSound(
-        donation
+    await playAlertSound(
+        donation.soundUrl
     );
+
 
 
     /* =====================================================
@@ -2529,26 +1990,72 @@ if (
 
     const speechText =
         createSpeechText(
-            donation,
-            settings
+            donation
         );
 
 
-    if (
-        settings.ttsEnabled
+
+    const hasTTS =
+
+        Boolean(
+            alertSettings.ttsEnabled
+        )
 
         &&
 
-        speechText
-    ) {
+        Boolean(
+            speechText
+        );
+
+
+
+    const afterDelay =
+
+        clamp(
+
+            Number(
+                alertSettings.afterTtsDelay
+            )
+            ||
+            0,
+
+            0,
+
+            10000
+        );
+
+
+
+    const noTtsDisplayTime =
+
+        clamp(
+
+            Number(
+                alertSettings.noTtsDisplayTime
+            )
+            ||
+            4500,
+
+            1000,
+
+            30000
+        );
+
+
+
+    /* =====================================================
+       TTS ON
+    ====================================================== */
+
+    if(
+        hasTTS
+    ){
 
         const estimatedTime =
             estimateSpeechDuration(
-
-                speechText,
-
-                settings.ttsRate
+                speechText
             );
+
 
 
         startProgress(
@@ -2557,270 +2064,378 @@ if (
 
             +
 
-            settings.afterTtsDelay
+            afterDelay
         );
+
 
 
         await speak(
-
-            speechText,
-
-            settings.ttsRate
+            speechText
         );
 
 
-        await delay(
-            settings.afterTtsDelay
-        );
 
+        if(
+            afterDelay >
+            0
+        ){
 
-    } else {
-
-        startProgress(
-            settings.noTtsDisplayTime
-        );
-
-
-        await delay(
-            settings.noTtsDisplayTime
-        );
-    }
-}
-
-
-/* =========================================================
-   PLAY DONATION SOUND
-========================================================= */
-
-async function playDonationSound(
-    donation
-) {
-
-    const fallbackUrl =
-        getTierSoundUrl(
-            donation.amount
-        );
-
-
-    const primaryUrl =
-        sanitizeSoundUrl(
-
-            donation.soundUrl,
-
-            donation.amount
-        );
-
-
-    const isCustom =
-        Boolean(
-            donation.customSound
-        );
-
-
-    const maxTime =
-
-        isCustom
-
-            ?
-
-            CUSTOM_SOUND_MAX_TIME
-
-            :
-
-            DEFAULT_SOUND_MAX_TIME;
-
-
-    console.log(
-        "🔊 Alert Sound:",
-        {
-            primaryUrl,
-            fallbackUrl,
-            custom:
-                isCustom
+            await delay(
+                afterDelay
+            );
         }
-    );
-
-
-    try {
-
-        await playAudioSource(
-
-            primaryUrl,
-
-            maxTime
-        );
-
-
-        return;
-
-
-    } catch (error) {
-
-        console.warn(
-            "Primary Alert Sound failed:",
-            primaryUrl,
-            error
-        );
     }
+
 
 
     /* =====================================================
-       FALLBACK
-
-       Custom เสีย / 404 / เล่นไม่ได้
-       → เสียงตามยอด
+       TTS OFF
     ====================================================== */
 
-    if (
-        primaryUrl !==
-        fallbackUrl
-    ) {
+    else{
 
-        console.log(
-            "🔄 Fallback Sound:",
-            fallbackUrl
+        startProgress(
+            noTtsDisplayTime
         );
 
 
-        try {
-
-            await playAudioSource(
-
-                fallbackUrl,
-
-                DEFAULT_SOUND_MAX_TIME
-            );
-
-
-        } catch (error) {
-
-            console.warn(
-                "Fallback Sound failed:",
-                error
-            );
-        }
+        await delay(
+            noTtsDisplayTime
+        );
     }
 }
 
 
+
 /* =========================================================
-   PLAY AUDIO SOURCE
+   VIDEO DONATION
+
+   VIDEO = VIDEO ONLY
 ========================================================= */
 
-async function playAudioSource(
-    source,
-    maxPlaybackTime
-) {
+async function playVideoDonation(
+    donation
+){
+
+
+    /*
+    =========================================================
+    STOP NORMAL DONATION SYSTEM
+    =========================================================
+    */
+
+
+    hideAlert();
+
 
     stopAlertAudio();
 
 
-    alertSound.src =
-        source;
+    cancelTTS();
 
 
-    alertSound.currentTime =
-        0;
+    particles.innerHTML =
+        "";
 
 
-    alertSound.load();
+
+    /*
+    Player จาก Donation ก่อนหน้า
+    */
 
 
-    try {
-
-        const playPromise =
-            alertSound.play();
+    await destroyYouTubePlayer();
 
 
-        if (
-            playPromise
 
-            &&
-
-            typeof playPromise.then ===
-            "function"
-        ) {
-
-            await playPromise;
-        }
+    /*
+    Reset progress
+    */
 
 
-    } catch (error) {
+    videoProgressFill
+        .style
+        .transform =
+        "scaleX(1)";
 
-        throw new Error(
-            "เปิดไฟล์เสียงไม่ได้: "
-            +
-            source
+
+
+    if(
+        videoProgressAnimation
+    ){
+
+        videoProgressAnimation
+            .cancel();
+
+
+        videoProgressAnimation =
+            null;
+    }
+
+
+
+    /*
+    =========================================================
+    SHOW VIDEO FRAME
+    =========================================================
+    */
+
+
+    videoWrap
+        .classList
+        .remove(
+            "hiding"
+        );
+
+
+
+    void videoWrap.offsetWidth;
+
+
+
+    videoWrap
+        .classList
+        .add(
+            "show"
+        );
+
+
+
+    await delay(
+        VIDEO_SHOW_DELAY
+    );
+
+
+
+    /*
+    =========================================================
+    PLAY YOUTUBE
+    =========================================================
+    */
+
+
+    const result =
+        await playYouTubeClip(
+
+            donation.videoId,
+
+            donation.videoStart,
+
+            donation.videoDuration
+        );
+
+
+
+    /*
+    Video Private / Embed disabled / Removed
+    หรือ Player Error
+    จะข้ามไป Queue ถัดไป
+    */
+
+
+    if(
+        result ===
+        "error"
+    ){
+
+        console.warn(
+            "Video Donation skipped because YouTube player failed"
         );
     }
 
 
-    await waitForAudioEnd(
 
-        alertSound,
+    /*
+    =========================================================
+    HIDE
+    =========================================================
+    */
 
-        maxPlaybackTime
+
+    hideVideo();
+
+
+
+    await delay(
+        VIDEO_HIDE_DELAY
     );
 }
 
 
-/* =========================================================
-   WAIT AUDIO END
 
-   หมดเวลา = หยุดเสียงแล้วไป TTS ต่อ
+/* =========================================================
+   WAIT YOUTUBE API
 ========================================================= */
 
-function waitForAudioEnd(
-    audio,
-    maxPlaybackTime
-) {
+async function waitForYouTubeAPI(){
+
+
+    if(
+        youtubeApiReady
+
+        &&
+
+        window.YT
+
+        &&
+
+        window.YT.Player
+    ){
+
+        return;
+    }
+
+
+
+    await Promise.race([
+
+
+        youtubeReadyPromise,
+
+
+        delay(
+            VIDEO_LOAD_TIMEOUT
+        )
+        .then(
+            () => {
+
+                throw new Error(
+                    "YouTube IFrame API timeout"
+                );
+            }
+        )
+    ]);
+
+
+
+    if(
+        !window.YT
+
+        ||
+
+        !window.YT.Player
+    ){
+
+        throw new Error(
+            "YouTube IFrame API unavailable"
+        );
+    }
+}
+
+
+
+/* =========================================================
+   PLAY YOUTUBE CLIP
+========================================================= */
+
+async function playYouTubeClip(
+    videoId,
+    start,
+    duration
+){
+
+
+    try{
+
+        await waitForYouTubeAPI();
+
+    }
+    catch(error){
+
+        console.error(
+            "YouTube API:",
+            error
+        );
+
+
+        return "error";
+    }
+
+
+
+    const safeStart =
+
+        clamp(
+
+            Math.floor(
+
+                Number(
+                    start
+                )
+
+                ||
+
+                0
+            ),
+
+            0,
+
+            VIDEO_MAX_START
+        );
+
+
+
+    const safeDuration =
+
+        clamp(
+
+            Math.floor(
+
+                Number(
+                    duration
+                )
+
+                ||
+
+                VIDEO_MAX_DURATION
+            ),
+
+            1,
+
+            VIDEO_MAX_DURATION
+        );
+
+
 
     return new Promise(
-        (
-            resolve,
-            reject
-        ) => {
+        resolve => {
+
 
             let finished =
                 false;
 
 
-            let timer =
+            let playbackStarted =
+                false;
+
+
+            let loadTimeout =
                 null;
 
 
-            const cleanup =
-                () => {
-
-                    audio.removeEventListener(
-                        "ended",
-                        onEnded
-                    );
+            let durationTimeout =
+                null;
 
 
-                    audio.removeEventListener(
-                        "error",
-                        onError
-                    );
+            let hardTimeout =
+                null;
 
 
-                    if (
-                        timer
-                    ) {
 
-                        clearTimeout(
-                            timer
-                        );
-                    }
-                };
+            /*
+            =====================================================
+            FINISH
+            =====================================================
+            */
 
 
             const finish =
-                () => {
+                async status => {
 
-                    if (
+
+                    if(
                         finished
-                    ) {
+                    ){
 
                         return;
                     }
@@ -2830,68 +2445,1319 @@ function waitForAudioEnd(
                         true;
 
 
-                    cleanup();
+
+                    clearTimeout(
+                        loadTimeout
+                    );
+
+
+                    clearTimeout(
+                        durationTimeout
+                    );
+
+
+                    clearTimeout(
+                        hardTimeout
+                    );
+
+
+
+                    if(
+                        videoProgressAnimation
+                    ){
+
+                        videoProgressAnimation
+                            .cancel();
+
+
+                        videoProgressAnimation =
+                            null;
+                    }
+
+
+
+                    await destroyYouTubePlayer();
+
+
+
+                    resolve(
+                        status
+                    );
+                };
+
+
+
+            /*
+            =====================================================
+            START DURATION TIMER
+            =====================================================
+
+            เริ่มนับเวลาจริง
+            หลัง YouTube เริ่ม PLAYING แล้วเท่านั้น
+            */
+
+
+            const startDurationTimer =
+                () => {
+
+
+                    if(
+                        playbackStarted
+                    ){
+
+                        return;
+                    }
+
+
+                    playbackStarted =
+                        true;
+
+
+
+                    clearTimeout(
+                        loadTimeout
+                    );
+
+
+
+                    /*
+                    Progress
+                    */
+
+
+                    videoProgressAnimation =
+
+                        videoProgressFill
+                            .animate(
+
+                                [
+                                    {
+                                        transform:
+                                            "scaleX(1)"
+                                    },
+
+                                    {
+                                        transform:
+                                            "scaleX(0)"
+                                    }
+                                ],
+
+                                {
+
+                                    duration:
+
+                                        safeDuration
+
+                                        *
+
+                                        1000,
+
+
+                                    easing:
+                                        "linear",
+
+
+                                    fill:
+                                        "forwards"
+                                }
+                            );
+
+
+
+                    /*
+                    Stop ตามเวลาที่คนโดเนทเลือก
+                    */
+
+
+                    durationTimeout =
+
+                        setTimeout(
+
+                            () => {
+
+                                finish(
+                                    "complete"
+                                );
+                            },
+
+                            safeDuration
+
+                            *
+
+                            1000
+                        );
+                };
+
+
+
+            /*
+            =====================================================
+            LOAD TIMEOUT
+            =====================================================
+            */
+
+
+            loadTimeout =
+
+                setTimeout(
+
+                    () => {
+
+                        finish(
+                            "error"
+                        );
+                    },
+
+                    VIDEO_LOAD_TIMEOUT
+                );
+
+
+
+            /*
+            =====================================================
+            HARD TIMEOUT
+            =====================================================
+            */
+
+
+            hardTimeout =
+
+                setTimeout(
+
+                    () => {
+
+                        finish(
+                            "error"
+                        );
+                    },
+
+                    (
+                        safeDuration
+
+                        *
+
+                        1000
+                    )
+
+                    +
+
+                    VIDEO_HARD_GRACE
+                );
+
+
+
+            /*
+            =====================================================
+            CREATE PLAYER
+            =====================================================
+            */
+
+
+            try{
+
+
+                ensureVideoPlayerHost();
+
+
+
+                youtubePlayer =
+
+                    new YT.Player(
+
+                        "video-player",
+
+                        {
+
+
+                            width:
+                                "100%",
+
+
+                            height:
+                                "100%",
+
+
+                            videoId,
+
+
+
+                            playerVars: {
+
+
+                                autoplay:
+                                    1,
+
+
+                                controls:
+                                    0,
+
+
+                                disablekb:
+                                    1,
+
+
+                                fs:
+                                    0,
+
+
+                                iv_load_policy:
+                                    3,
+
+
+                                modestbranding:
+                                    1,
+
+
+                                playsinline:
+                                    1,
+
+
+                                rel:
+                                    0,
+
+
+                                start:
+                                    safeStart
+                            },
+
+
+
+                            events: {
+
+
+                                /* =============================
+                                   READY
+                                ============================= */
+
+
+                                onReady:
+                                    event => {
+
+
+                                        try{
+
+
+                                            /*
+                                            บังคับไปจุดที่เลือก
+                                            */
+
+
+                                            event.target.seekTo(
+
+                                                safeStart,
+
+                                                true
+                                            );
+
+
+
+                                            /*
+                                            เสียงคลิปต้องเปิด
+                                            */
+
+
+                                            event.target.unMute();
+
+
+
+                                            event.target.setVolume(
+                                                100
+                                            );
+
+
+
+                                            /*
+                                            Play
+                                            */
+
+
+                                            event.target.playVideo();
+
+                                        }
+                                        catch(error){
+
+                                            console.warn(
+                                                "YouTube onReady:",
+                                                error
+                                            );
+                                        }
+                                    },
+
+
+
+                                /* =============================
+                                   STATE
+                                ============================= */
+
+
+                                onStateChange:
+                                    event => {
+
+
+                                        /*
+                                        เริ่มเล่นจริงแล้ว
+                                        */
+
+
+                                        if(
+                                            event.data
+
+                                            ===
+
+                                            YT.PlayerState.PLAYING
+                                        ){
+
+                                            startDurationTimer();
+                                        }
+
+
+
+                                        /*
+                                        คลิปจบก่อนเวลาที่เลือก
+                                        */
+
+
+                                        if(
+                                            event.data
+
+                                            ===
+
+                                            YT.PlayerState.ENDED
+                                        ){
+
+                                            finish(
+                                                "ended"
+                                            );
+                                        }
+                                    },
+
+
+
+                                /* =============================
+                                   ERROR
+                                ============================= */
+
+
+                                onError:
+                                    event => {
+
+
+                                        console.warn(
+                                            "YouTube Player Error:",
+                                            event.data
+                                        );
+
+
+                                        finish(
+                                            "error"
+                                        );
+                                    }
+                            }
+                        }
+                    );
+
+            }
+            catch(error){
+
+                console.error(
+                    "Create YouTube Player:",
+                    error
+                );
+
+
+                finish(
+                    "error"
+                );
+            }
+        }
+    );
+}
+
+
+
+/* =========================================================
+   ENSURE PLAYER HOST
+========================================================= */
+
+function ensureVideoPlayerHost(){
+
+
+    let host =
+        document.getElementById(
+            "video-player"
+        );
+
+
+
+    /*
+    Div อยู่แล้ว
+    */
+
+
+    if(
+        host
+
+        &&
+
+        host.tagName
+            .toLowerCase()
+
+        ===
+
+        "div"
+    ){
+
+        return host;
+    }
+
+
+
+    /*
+    มี iframe เก่าค้าง
+    */
+
+
+    if(
+        host
+    ){
+
+        host.remove();
+    }
+
+
+
+    /*
+    สร้าง Div ใหม่
+    */
+
+
+    host =
+        document.createElement(
+            "div"
+        );
+
+
+    host.id =
+        "video-player";
+
+
+
+    const shell =
+
+        videoWrap.querySelector(
+            ".video-shell"
+        );
+
+
+
+    const progress =
+
+        shell.querySelector(
+            ".video-progress"
+        );
+
+
+
+    shell.insertBefore(
+
+        host,
+
+        progress
+    );
+
+
+
+    return host;
+}
+
+
+
+/* =========================================================
+   DESTROY YOUTUBE PLAYER
+========================================================= */
+
+async function destroyYouTubePlayer(){
+
+
+    if(
+        youtubePlayer
+    ){
+
+
+        try{
+
+            youtubePlayer.stopVideo();
+
+        }catch{}
+
+
+
+        try{
+
+            youtubePlayer.destroy();
+
+        }catch{}
+
+
+
+        youtubePlayer =
+            null;
+    }
+
+
+
+    /*
+    YT.Player destroy()
+    อาจลบ Element ออกไป
+    เลยสร้าง Host กลับไว้สำหรับ Donation ถัดไป
+    */
+
+
+    ensureVideoPlayerHost();
+}
+
+
+
+/* =========================================================
+   HIDE VIDEO
+========================================================= */
+
+function hideVideo(){
+
+
+    if(
+        videoProgressAnimation
+    ){
+
+        videoProgressAnimation
+            .cancel();
+
+
+        videoProgressAnimation =
+            null;
+    }
+
+
+
+    videoProgressFill
+        .style
+        .transform =
+        "scaleX(1)";
+
+
+
+    videoWrap
+        .classList
+        .add(
+            "hiding"
+        );
+
+
+
+    videoWrap
+        .classList
+        .remove(
+            "show"
+        );
+
+
+
+    destroyYouTubePlayer()
+        .catch(
+            () => {}
+        );
+}
+
+
+
+/* =========================================================
+   NORMALIZE VIDEO DONATION
+========================================================= */
+
+function normalizeVideoDonation(
+    donation
+){
+
+
+    const rawVideoId =
+
+        String(
+
+            donation.videoId
+
+            ||
+
+            donation.video_id
+
+            ||
+
+            ""
+        )
+        .trim();
+
+
+
+    let videoId =
+
+        /^[A-Za-z0-9_-]{11}$/
+            .test(
+                rawVideoId
+            )
+
+            ?
+
+            rawVideoId
+
+            :
+
+            null;
+
+
+
+    /*
+    ถ้า Server ส่งแค่ URL
+    */
+
+
+    if(
+        !videoId
+
+        &&
+
+        (
+            donation.videoUrl
+
+            ||
+
+            donation.video_url
+        )
+    ){
+
+        videoId =
+
+            extractYouTubeId(
+
+                donation.videoUrl
+
+                ||
+
+                donation.video_url
+            );
+    }
+
+
+
+    /*
+    ไม่มี Video
+    */
+
+
+    if(
+        !videoId
+    ){
+
+        return {
+
+            videoUrl:
+                null,
+
+            videoId:
+                null,
+
+            videoStart:
+                null,
+
+            videoDuration:
+                null
+        };
+    }
+
+
+
+    /*
+    Start
+    */
+
+
+    const videoStart =
+
+        clamp(
+
+            Math.floor(
+
+                Number(
+
+                    donation.videoStart
+
+                    ??
+
+                    donation.video_start
+
+                    ??
+
+                    0
+                )
+
+                ||
+
+                0
+            ),
+
+            0,
+
+            VIDEO_MAX_START
+        );
+
+
+
+    /*
+    Duration
+    */
+
+
+    const videoDuration =
+
+        clamp(
+
+            Math.floor(
+
+                Number(
+
+                    donation.videoDuration
+
+                    ??
+
+                    donation.video_duration
+
+                    ??
+
+                    VIDEO_MAX_DURATION
+                )
+
+                ||
+
+                VIDEO_MAX_DURATION
+            ),
+
+            1,
+
+            VIDEO_MAX_DURATION
+        );
+
+
+
+    return {
+
+
+        videoUrl:
+
+            `https://www.youtube.com/watch?v=${videoId}`,
+
+
+        videoId,
+
+
+        videoStart,
+
+
+        videoDuration
+    };
+}
+
+
+
+/* =========================================================
+   EXTRACT YOUTUBE ID
+========================================================= */
+
+function extractYouTubeId(
+    value
+){
+
+
+    let raw =
+
+        String(
+            value
+            ||
+            ""
+        )
+        .trim();
+
+
+
+    if(
+        !raw
+    ){
+
+        return null;
+    }
+
+
+
+    /*
+    URL ไม่มี https://
+    */
+
+
+    if(
+        !/^https?:\/\//i
+            .test(
+                raw
+            )
+    ){
+
+        raw =
+
+            "https://"
+
+            +
+
+            raw;
+    }
+
+
+
+    let url;
+
+
+
+    try{
+
+        url =
+            new URL(
+                raw
+            );
+
+    }
+    catch{
+
+        return null;
+    }
+
+
+
+    const host =
+
+        url.hostname
+            .toLowerCase()
+            .replace(
+                /^www\./,
+                ""
+            );
+
+
+
+    let id =
+        null;
+
+
+
+    /* =====================================================
+       youtu.be
+    ====================================================== */
+
+    if(
+        host ===
+        "youtu.be"
+    ){
+
+        id =
+
+            url.pathname
+                .split("/")
+                .filter(
+                    Boolean
+                )[0]
+
+            ||
+
+            null;
+    }
+
+
+
+    /* =====================================================
+       youtube.com
+    ====================================================== */
+
+    if(
+        host ===
+            "youtube.com"
+
+        ||
+
+        host ===
+            "m.youtube.com"
+
+        ||
+
+        host ===
+            "music.youtube.com"
+    ){
+
+
+        /*
+        watch?v=
+        */
+
+
+        if(
+            url.pathname ===
+            "/watch"
+        ){
+
+            id =
+
+                url.searchParams
+                    .get(
+                        "v"
+                    );
+        }
+
+
+
+        /*
+        shorts / live / embed
+        */
+
+
+        else if(
+
+            /^\/(shorts|live|embed)\//
+                .test(
+                    url.pathname
+                )
+        ){
+
+            id =
+
+                url.pathname
+                    .split("/")
+                    .filter(
+                        Boolean
+                    )[1]
+
+                ||
+
+                null;
+        }
+    }
+
+
+
+    if(
+        id
+
+        &&
+
+        /^[A-Za-z0-9_-]{11}$/
+            .test(
+                id
+            )
+    ){
+
+        return id;
+    }
+
+
+
+    return null;
+}
+
+
+
+/* =========================================================
+   ALERT SOUND
+
+   ใช้เฉพาะ Donation ปกติ
+========================================================= */
+
+async function playAlertSound(
+    soundUrl
+){
+
+
+    try{
+
+
+        stopAlertAudio();
+
+
+
+        const nextSource =
+
+            soundUrl
+
+            ||
+
+            "/sounds/alert.mp3";
+
+
+
+        if(
+            alertSound
+                .getAttribute(
+                    "src"
+                )
+
+            !==
+
+            nextSource
+        ){
+
+            alertSound.src =
+                nextSource;
+
+
+            alertSound.load();
+        }
+
+
+
+        const playPromise =
+            alertSound.play();
+
+
+
+        if(
+            playPromise
+
+            &&
+
+            typeof playPromise.then
+
+            ===
+
+            "function"
+        ){
+
+            await playPromise;
+        }
+
+
+
+        await waitForAudioEnd(
+            alertSound
+        );
+
+    }
+    catch(error){
+
+        /*
+        เสียงผิดพลาด
+        อย่าให้ Queue พัง
+        */
+
+        console.warn(
+            "Alert Audio:",
+            error
+        );
+    }
+}
+
+
+
+/* =========================================================
+   STOP ALERT AUDIO
+========================================================= */
+
+function stopAlertAudio(){
+
+
+    try{
+
+        alertSound.pause();
+
+    }catch{}
+
+
+
+    try{
+
+        alertSound.currentTime =
+            0;
+
+    }catch{}
+}
+
+
+
+/* =========================================================
+   SAFE SOUND URL
+========================================================= */
+
+function sanitizeSoundUrl(
+    value
+){
+
+
+    const raw =
+
+        String(
+            value
+            ||
+            ""
+        )
+        .trim();
+
+
+
+    if(
+        !raw
+    ){
+
+        return "/sounds/alert.mp3";
+    }
+
+
+
+    /*
+    Default Tier Sound
+    */
+
+
+    if(
+        raw.startsWith(
+            "/sounds/"
+        )
+    ){
+
+        return raw;
+    }
+
+
+
+    /*
+    Custom Sound
+    */
+
+
+    if(
+        raw.startsWith(
+            "/api/custom-sound/"
+        )
+    ){
+
+        return raw;
+    }
+
+
+
+    /*
+    ไม่อนุญาต URL ภายนอก
+    */
+
+
+    return "/sounds/alert.mp3";
+}
+
+
+
+/* =========================================================
+   WAIT AUDIO
+========================================================= */
+
+function waitForAudioEnd(
+    audio
+){
+
+
+    return new Promise(
+        resolve => {
+
+
+            if(
+                audio.paused
+
+                ||
+
+                audio.ended
+            ){
+
+                resolve();
+
+                return;
+            }
+
+
+
+            let done =
+                false;
+
+
+
+            let timeoutId =
+                null;
+
+
+
+            const finish =
+                () => {
+
+
+                    if(
+                        done
+                    ){
+
+                        return;
+                    }
+
+
+                    done =
+                        true;
+
+
+
+                    audio.removeEventListener(
+
+                        "ended",
+
+                        finish
+                    );
+
+
+
+                    audio.removeEventListener(
+
+                        "error",
+
+                        finish
+                    );
+
+
+
+                    clearTimeout(
+                        timeoutId
+                    );
+
 
 
                     resolve();
                 };
 
 
-            const fail =
-                error => {
-
-                    if (
-                        finished
-                    ) {
-
-                        return;
-                    }
-
-
-                    finished =
-                        true;
-
-
-                    cleanup();
-
-
-                    reject(
-                        error
-                    );
-                };
-
-
-            const onEnded =
-                () => {
-
-                    finish();
-                };
-
-
-            const onError =
-                () => {
-
-                    fail(
-                        new Error(
-                            "Audio playback error"
-                        )
-                    );
-                };
-
 
             audio.addEventListener(
+
                 "ended",
-                onEnded,
+
+                finish,
+
                 {
                     once:
                         true
                 }
             );
+
 
 
             audio.addEventListener(
+
                 "error",
-                onError,
+
+                finish,
+
                 {
                     once:
                         true
@@ -2899,70 +3765,37 @@ function waitForAudioEnd(
             );
 
 
-            timer =
+
+            /*
+            Custom Sound จำกัดไม่เกิน 10 วิ
+            แต่เผื่อเวลาโหลด
+            */
+
+
+            timeoutId =
+
                 setTimeout(
-                    () => {
 
-                        /*
-                        ไฟล์ยาวเกินกำหนด
-                        ตัดตรงนี้
-                        */
+                    finish,
 
-                        try {
-
-                            audio.pause();
-
-                            audio.currentTime =
-                                0;
-
-                        } catch {}
-
-
-                        finish();
-
-                    },
-
-                    Math.max(
-                        1000,
-                        Number(
-                            maxPlaybackTime
-                        )
-                        ||
-                        10000
-                    )
+                    12000
                 );
         }
     );
 }
 
 
-/* =========================================================
-   STOP AUDIO
-========================================================= */
-
-function stopAlertAudio() {
-
-    try {
-
-        alertSound.pause();
-
-
-        alertSound.currentTime =
-            0;
-
-
-    } catch {}
-}
-
 
 /* =========================================================
-   TTS TEXT
+   CREATE TTS TEXT
+
+   ใช้เฉพาะ Donation ปกติ
 ========================================================= */
 
 function createSpeechText(
-    donation,
-    settings
-) {
+    donation
+){
+
 
     const name =
 
@@ -2971,6 +3804,7 @@ function createSpeechText(
         ||
 
         "Anonymous";
+
 
 
     let text =
@@ -2980,13 +3814,16 @@ function createSpeechText(
         )} บาท`;
 
 
-    if (
-        settings.readMessage
+
+    if(
+        Boolean(
+            alertSettings.readMessage
+        )
 
         &&
 
         donation.message
-    ) {
+    ){
 
         text +=
 
@@ -2994,8 +3831,10 @@ function createSpeechText(
     }
 
 
+
     return text;
 }
+
 
 
 /* =========================================================
@@ -3003,20 +3842,21 @@ function createSpeechText(
 ========================================================= */
 
 function speak(
-    text,
-    rate = 1
-) {
+    text
+){
+
 
     return new Promise(
         resolve => {
 
-            if (
+
+            if(
                 !window.speechSynthesis
 
                 ||
 
                 !text
-            ) {
+            ){
 
                 resolve();
 
@@ -3024,59 +3864,70 @@ function speak(
             }
 
 
-            window
-                .speechSynthesis
-                .cancel();
+
+            cancelTTS();
+
 
 
             const utterance =
+
                 new SpeechSynthesisUtterance(
                     text
                 );
+
 
 
             utterance.lang =
                 "th-TH";
 
 
+
             utterance.rate =
-                Math.max(
+
+                clamp(
+
+                    Number(
+                        alertSettings.ttsRate
+                    )
+
+                    ||
+
+                    1,
 
                     .5,
 
-                    Math.min(
-                        2,
-                        Number(
-                            rate
-                        )
-                        ||
-                        1
-                    )
+                    2
                 );
+
 
 
             utterance.pitch =
                 1;
 
 
+
             utterance.volume =
                 1;
+
 
 
             let finished =
                 false;
 
 
+
             let timeoutId =
                 null;
+
 
 
             const finish =
                 () => {
 
-                    if (
+
+                    if(
                         finished
-                    ) {
+                    ){
 
                         return;
                     }
@@ -3086,26 +3937,26 @@ function speak(
                         true;
 
 
-                    if (
-                        timeoutId
-                    ) {
 
-                        clearTimeout(
-                            timeoutId
-                        );
-                    }
+                    clearTimeout(
+                        timeoutId
+                    );
+
 
 
                     resolve();
                 };
 
 
+
             utterance.onend =
                 finish;
 
 
+
             utterance.onerror =
                 finish;
+
 
 
             window
@@ -3115,12 +3966,9 @@ function speak(
                 );
 
 
-            /*
-            กัน OBS/Chrome บางเครื่อง
-            ไม่ยิง onend
-            */
 
             timeoutId =
+
                 setTimeout(
 
                     finish,
@@ -3130,8 +3978,7 @@ function speak(
                         5000,
 
                         estimateSpeechDuration(
-                            text,
-                            utterance.rate
+                            text
                         )
 
                         +
@@ -3144,16 +3991,41 @@ function speak(
 }
 
 
+
 /* =========================================================
-   ESTIMATE SPEECH
+   CANCEL TTS
+========================================================= */
+
+function cancelTTS(){
+
+
+    if(
+        window.speechSynthesis
+    ){
+
+        try{
+
+            window
+                .speechSynthesis
+                .cancel();
+
+        }catch{}
+    }
+}
+
+
+
+/* =========================================================
+   ESTIMATE TTS
 ========================================================= */
 
 function estimateSpeechDuration(
-    text,
-    rate = 1
-) {
+    text
+){
+
 
     const characters =
+
         String(
             text
             ||
@@ -3162,57 +4034,70 @@ function estimateSpeechDuration(
         .length;
 
 
-    const safeRate =
-        Math.max(
+
+    const rate =
+
+        clamp(
+
+            Number(
+                alertSettings.ttsRate
+            )
+
+            ||
+
+            1,
 
             .5,
 
-            Number(
-                rate
-            )
-            ||
-            1
+            2
         );
 
-
-    const duration =
-
-        (
-            characters /
-            11 *
-            1000
-        )
-
-        /
-
-        safeRate;
 
 
     return Math.max(
 
-        2200,
+        2800,
 
         Math.min(
+
             20000,
-            duration
+
+            (
+                characters
+
+                /
+
+                11
+
+                *
+
+                1000
+            )
+
+            /
+
+            rate
         )
     );
 }
 
 
+
 /* =========================================================
-   PROGRESS
+   ALERT PROGRESS
 ========================================================= */
 
 function startProgress(
     duration
-) {
+){
 
-    if (
+
+    if(
         progressAnimation
-    ) {
+    ){
 
-        progressAnimation.cancel();
+        progressAnimation
+            .cancel();
 
 
         progressAnimation =
@@ -3220,57 +4105,68 @@ function startProgress(
     }
 
 
-    progressFill.style.transform =
+
+    progressFill
+        .style
+        .transform =
         "scaleX(1)";
 
 
+
     progressAnimation =
-        progressFill.animate(
 
-            [
+        progressFill
+            .animate(
+
+                [
+
+                    {
+                        transform:
+                            "scaleX(1)"
+                    },
+
+
+                    {
+                        transform:
+                            "scaleX(0)"
+                    }
+                ],
 
                 {
-                    transform:
-                        "scaleX(1)"
-                },
 
-                {
-                    transform:
-                        "scaleX(0)"
+                    duration:
+
+                        Math.max(
+                            500,
+                            duration
+                        ),
+
+
+                    easing:
+                        "linear",
+
+
+                    fill:
+                        "forwards"
                 }
-
-            ],
-
-            {
-
-                duration:
-
-                    Math.max(
-                        500,
-                        duration
-                    ),
-
-                easing:
-                    "linear",
-
-                fill:
-                    "forwards"
-            }
-        );
+            );
 }
 
 
+
 /* =========================================================
-   HIDE ALERT
+   HIDE NORMAL ALERT
 ========================================================= */
 
-function hideAlert() {
+function hideAlert(){
 
-    if (
+
+    if(
         progressAnimation
-    ) {
+    ){
 
-        progressAnimation.cancel();
+        progressAnimation
+            .cancel();
 
 
         progressAnimation =
@@ -3278,85 +4174,98 @@ function hideAlert() {
     }
 
 
-    alertWrap.classList.add(
-        "hiding"
-    );
+
+    alertWrap
+        .classList
+        .add(
+            "hiding"
+        );
 
 
-    alertWrap.classList.remove(
-        "show"
-    );
 
+    alertWrap
+        .classList
+        .remove(
+            "show"
+        );
 
-    if (
-        window.speechSynthesis
-    ) {
-
-        window
-            .speechSynthesis
-            .cancel();
-    }
 
 
     stopAlertAudio();
+
+
+
+    cancelTTS();
 }
 
 
+
 /* =========================================================
-   RESET
+   RESET NORMAL ALERT
 ========================================================= */
 
-function resetAlertClasses() {
+function resetAlertClasses(){
 
-    alertWrap.classList.remove(
 
-        "big",
+    hideAlert();
 
-        "mega",
 
-        "custom-sound",
 
-        "show",
+    alertWrap
+        .classList
+        .remove(
 
-        "hiding"
-    );
+            "big",
+
+            "mega",
+
+            "show",
+
+            "hiding"
+        );
+
 
 
     particles.innerHTML =
         "";
 
 
-    alertBadge.className =
-        "badge";
 
-
-    alertBadge.innerText =
-        "";
-
-
-    soundBadge.className =
-        "badge";
-
-
-    soundBadge.innerText =
-        "";
-
-
-    if (
-        progressAnimation
-    ) {
-
-        progressAnimation.cancel();
-
-
-        progressAnimation =
-            null;
-    }
-
-
-    progressFill.style.transform =
+    progressFill
+        .style
+        .transform =
         "scaleX(1)";
 }
+
+
+
+/* =========================================================
+   CLEANUP EVERYTHING
+========================================================= */
+
+function cleanupEverything(){
+
+
+    hideAlert();
+
+
+
+    hideVideo();
+
+
+
+    stopAlertAudio();
+
+
+
+    cancelTTS();
+
+
+
+    particles.innerHTML =
+        "";
+}
+
 
 
 /* =========================================================
@@ -3364,45 +4273,52 @@ function resetAlertClasses() {
 ========================================================= */
 
 function createParticles(
-    amount,
-    theme = "pink"
-) {
+    amount
+){
+
 
     particles.innerHTML =
         "";
 
 
-    for (
-        let index = 0;
-        index < amount;
+
+    for(
+        let index =
+            0;
+
+        index <
+        amount;
+
         index++
-    ) {
+    ){
+
 
         const particle =
-            document.createElement(
-                "div"
-            );
+
+            document
+                .createElement(
+                    "div"
+                );
+
 
 
         particle.className =
-            `particle ${theme}`;
+            "particle";
 
 
-        /* =================================================
-           ตำแหน่งแนวนอน
-
-           กระจายรอบ Alert
-        ================================================= */
 
         particle.style.left =
 
             (
-                18
+                22
 
                 +
 
-                Math.random() *
-                64
+                Math.random()
+
+                *
+
+                56
             )
 
             +
@@ -3410,19 +4326,19 @@ function createParticles(
             "%";
 
 
-        /* =================================================
-           เริ่มจากบริเวณล่าง Alert
-        ================================================= */
 
         particle.style.bottom =
 
             (
-                70
+                80
 
                 +
 
-                Math.random() *
-                115
+                Math.random()
+
+                *
+
+                95
             )
 
             +
@@ -3430,15 +4346,15 @@ function createParticles(
             "px";
 
 
-        /* =================================================
-           DELAY
-        ================================================= */
 
         particle.style.animationDelay =
 
             (
-                Math.random() *
-                .65
+                Math.random()
+
+                *
+
+                .7
             )
 
             +
@@ -3446,19 +4362,19 @@ function createParticles(
             "s";
 
 
-        /* =================================================
-           SPEED
-        ================================================= */
 
         particle.style.animationDuration =
 
             (
-                1.15
+                1.3
 
                 +
 
-                Math.random() *
-                1.25
+                Math.random()
+
+                *
+
+                1.2
             )
 
             +
@@ -3466,56 +4382,19 @@ function createParticles(
             "s";
 
 
-        /* =================================================
-           SIZE
-
-           MEGA ใหญ่ขึ้น
-        ================================================= */
-
-        let minSize =
-            4;
-
-
-        let randomSize =
-            6;
-
-
-        if (
-            theme ===
-            "gold"
-        ) {
-
-            minSize =
-                5;
-
-
-            randomSize =
-                7;
-        }
-
-
-        if (
-            theme ===
-            "mega"
-        ) {
-
-            minSize =
-                6;
-
-
-            randomSize =
-                9;
-        }
-
 
         const size =
 
-            minSize
+            4
 
             +
 
-            Math.random() *
-            randomSize;
+            Math.random()
+
+            *
+
+            7;
+
 
 
         particle.style.width =
@@ -3527,6 +4406,7 @@ function createParticles(
             "px";
 
 
+
         particle.style.height =
 
             size
@@ -3536,40 +4416,15 @@ function createParticles(
             "px";
 
 
-        /* =================================================
-           RANDOM ROUNDNESS
 
-           บางเม็ดกลม
-           บางเม็ดคล้าย Confetti
-        ================================================= */
-
-        if (
-            Math.random() >
-            .55
-        ) {
-
-            particle.style
-                .borderRadius =
-                "2px";
-
-
-            particle.style
-                .transform =
-                `rotate(${Math.random() * 360}deg)`;
-
-        } else {
-
-            particle.style
-                .borderRadius =
-                "50%";
-        }
-
-
-        particles.appendChild(
-            particle
-        );
+        particles
+            .appendChild(
+                particle
+            );
     }
 }
+
+
 
 /* =========================================================
    FIRST CHARACTER
@@ -3577,9 +4432,11 @@ function createParticles(
 
 function getFirstCharacter(
     value
-) {
+){
+
 
     const text =
+
         String(
             value
             ||
@@ -3588,28 +4445,33 @@ function getFirstCharacter(
         .trim();
 
 
-    if (
+
+    if(
         !text
-    ) {
+    ){
 
         return "A";
     }
 
 
-    return Array.from(
-        text
-    )[0]
-    .toUpperCase();
+
+    return Array
+        .from(
+            text
+        )[0]
+        .toUpperCase();
 }
 
 
+
 /* =========================================================
-   SPEECH AMOUNT
+   FORMAT AMOUNT FOR SPEECH
 ========================================================= */
 
 function formatAmountForSpeech(
     amount
-) {
+){
+
 
     return Number(
         amount
@@ -3622,13 +4484,39 @@ function formatAmountForSpeech(
 }
 
 
+
+/* =========================================================
+   CLAMP
+========================================================= */
+
+function clamp(
+    value,
+    min,
+    max
+){
+
+
+    return Math.min(
+
+        max,
+
+        Math.max(
+            min,
+            value
+        )
+    );
+}
+
+
+
 /* =========================================================
    DELAY
 ========================================================= */
 
 function delay(
     milliseconds
-) {
+){
+
 
     return new Promise(
 
@@ -3642,6 +4530,7 @@ function delay(
 }
 
 
+
 /* =========================================================
    START
 ========================================================= */
@@ -3651,5 +4540,4 @@ loadAlertSettings();
 </script>
 
 </body>
-
 </html>
