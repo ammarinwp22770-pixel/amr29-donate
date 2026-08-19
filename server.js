@@ -30,42 +30,124 @@ const APP_ENV = String(
     process.env.APP_ENV ||
     process.env.NODE_ENV ||
     "development"
-).trim().toLowerCase();
+)
+.trim()
+.toLowerCase();
 
-if (!ALLOWED_ENVIRONMENTS.includes(APP_ENV)) {
+
+if (
+    !ALLOWED_ENVIRONMENTS.includes(
+        APP_ENV
+    )
+) {
+
     throw new Error(
         `APP_ENV ไม่ถูกต้อง: ${APP_ENV} (ใช้ development, staging หรือ production)`
     );
 }
 
-const IS_DEVELOPMENT = APP_ENV === "development";
-const IS_STAGING = APP_ENV === "staging";
-const IS_PRODUCTION = APP_ENV === "production";
-const IS_DEPLOYED = IS_STAGING || IS_PRODUCTION;
 
-const PORT = Number(process.env.PORT) || 3000;
-const APP_VERSION = String(process.env.APP_VERSION || "dev").trim();
-const PUBLIC_BASE_URL = String(process.env.PUBLIC_BASE_URL || "")
+const IS_DEVELOPMENT =
+    APP_ENV ===
+    "development";
+
+
+const IS_STAGING =
+    APP_ENV ===
+    "staging";
+
+
+const IS_PRODUCTION =
+    APP_ENV ===
+    "production";
+
+
+const IS_DEPLOYED =
+    IS_STAGING ||
+    IS_PRODUCTION;
+
+
+const PORT =
+    Number(
+        process.env.PORT
+    )
+    ||
+    3000;
+
+
+const APP_VERSION =
+    String(
+        process.env.APP_VERSION ||
+        "dev"
+    )
+    .trim();
+
+
+const PUBLIC_BASE_URL =
+    String(
+        process.env.PUBLIC_BASE_URL ||
+        ""
+    )
     .trim()
-    .replace(/\/+$/, "");
+    .replace(
+        /\/+$/,
+        ""
+    );
 
-const DATA_DIR = path.resolve(
-    __dirname,
-    String(process.env.DATA_DIR || path.join("data", APP_ENV))
-);
 
-const DB_PATH = path.join(DATA_DIR, "donations.db");
+const DATA_DIR =
+    path.resolve(
+        __dirname,
+        String(
+            process.env.DATA_DIR ||
+            path.join(
+                "data",
+                APP_ENV
+            )
+        )
+    );
 
-const PUBLIC_DIR_CANDIDATE = path.resolve(
-    __dirname,
-    String(process.env.PUBLIC_DIR || "public")
-);
 
-const PUBLIC_DIR = fs.existsSync(PUBLIC_DIR_CANDIDATE)
-    ? PUBLIC_DIR_CANDIDATE
-    : (IS_DEVELOPMENT ? __dirname : PUBLIC_DIR_CANDIDATE);
+const DB_PATH =
+    path.join(
+        DATA_DIR,
+        "donations.db"
+    );
 
-const LEGACY_STATIC_MODE = PUBLIC_DIR === __dirname;
+
+const PUBLIC_DIR_CANDIDATE =
+    path.resolve(
+        __dirname,
+        String(
+            process.env.PUBLIC_DIR ||
+            "public"
+        )
+    );
+
+
+const PUBLIC_DIR =
+    fs.existsSync(
+        PUBLIC_DIR_CANDIDATE
+    )
+
+        ?
+
+        PUBLIC_DIR_CANDIDATE
+
+        :
+
+        (
+            IS_DEVELOPMENT
+                ?
+                __dirname
+                :
+                PUBLIC_DIR_CANDIDATE
+        );
+
+
+const LEGACY_STATIC_MODE =
+    PUBLIC_DIR ===
+    __dirname;
 
 
 /* =========================================================
@@ -73,97 +155,187 @@ const LEGACY_STATIC_MODE = PUBLIC_DIR === __dirname;
 ========================================================= */
 
 const MOBILE_SESSION_TTL_MS =
-    15 * 60 * 1000;
+    15 *
+    60 *
+    1000;
 
 
 /* =========================================================
    CUSTOM SOUND CONFIG
 ========================================================= */
 
-const CUSTOM_SOUND_MIN_AMOUNT = 100;
-const CUSTOM_SOUND_MAX_BYTES = 3 * 1024 * 1024;
-const CUSTOM_SOUND_TTL_MS = 30 * 60 * 1000;
-const CUSTOM_SOUND_AFTER_USE_TTL_MS = 15 * 60 * 1000;
+const CUSTOM_SOUND_MIN_AMOUNT =
+    100;
 
-const CUSTOM_SOUND_DIR = path.join(
-    DATA_DIR,
-    "custom-audio"
-);
+
+const CUSTOM_SOUND_MAX_BYTES =
+    3 *
+    1024 *
+    1024;
+
+
+const CUSTOM_SOUND_TTL_MS =
+    30 *
+    60 *
+    1000;
+
+
+const CUSTOM_SOUND_AFTER_USE_TTL_MS =
+    15 *
+    60 *
+    1000;
+
+
+const CUSTOM_SOUND_DIR =
+    path.join(
+        DATA_DIR,
+        "custom-audio"
+    );
 
 
 /* =========================================================
    VIDEO DONATION CONFIG
 ========================================================= */
 
-// แนบวิดีโอ YouTube ได้เมื่อโดเนทตั้งแต่ 10 บาท
-const VIDEO_DONATION_MIN_AMOUNT = 10;
+const VIDEO_DONATION_MIN_AMOUNT =
+    10;
 
-// Server บังคับสูงสุด 20 วินาทีเสมอ
-const VIDEO_DONATION_MAX_DURATION = 20;
 
-// ป้องกันค่าจุดเริ่มต้นผิดปกติ (12 ชั่วโมง)
-const VIDEO_DONATION_MAX_START = 12 * 60 * 60;
+const VIDEO_DONATION_MAX_DURATION =
+    20;
+
+
+const VIDEO_DONATION_MAX_START =
+    12 *
+    60 *
+    60;
 
 
 /* =========================================================
-   RUNTIME DIRECTORIES / LOCAL MIGRATION
+   RUNTIME DIRECTORIES
 ========================================================= */
 
-fs.mkdirSync(DATA_DIR, {
-    recursive: true
-});
+fs.mkdirSync(
+    DATA_DIR,
+    {
+        recursive:
+            true
+    }
+);
 
-fs.mkdirSync(CUSTOM_SOUND_DIR, {
-    recursive: true
-});
 
-/*
-Development migration:
-ถ้าเคยใช้ donations.db ที่ root มาก่อน
-และ data/development/donations.db ยังไม่มี
-ให้ copy มา 1 ครั้ง
-*/
-if (IS_DEVELOPMENT) {
-    const legacyDbPath = path.join(__dirname, "donations.db");
+fs.mkdirSync(
+    CUSTOM_SOUND_DIR,
+    {
+        recursive:
+            true
+    }
+);
+
+
+/* =========================================================
+   DEVELOPMENT MIGRATION
+========================================================= */
+
+if (
+    IS_DEVELOPMENT
+) {
+
+    const legacyDbPath =
+        path.join(
+            __dirname,
+            "donations.db"
+        );
+
 
     if (
-        fs.existsSync(legacyDbPath) &&
-        !fs.existsSync(DB_PATH) &&
-        path.resolve(legacyDbPath) !== path.resolve(DB_PATH)
+        fs.existsSync(
+            legacyDbPath
+        )
+
+        &&
+
+        !fs.existsSync(
+            DB_PATH
+        )
+
+        &&
+
+        path.resolve(
+            legacyDbPath
+        )
+        !==
+        path.resolve(
+            DB_PATH
+        )
     ) {
+
         try {
-            fs.copyFileSync(legacyDbPath, DB_PATH);
-            console.log("Local DB migrated to:", DB_PATH);
+
+            fs.copyFileSync(
+                legacyDbPath,
+                DB_PATH
+            );
+
+
+            console.log(
+                "Local DB migrated to:",
+                DB_PATH
+            );
+
         } catch (error) {
-            console.error("Local DB migration failed:", error);
+
+            console.error(
+                "Local DB migration failed:",
+                error
+            );
         }
     }
 
-    const legacySoundDir = path.join(
-        __dirname,
-        ".amr29-private",
-        "custom-audio"
-    );
+
+    const legacySoundDir =
+        path.join(
+            __dirname,
+            ".amr29-private",
+            "custom-audio"
+        );
+
 
     if (
-        fs.existsSync(legacySoundDir) &&
-        fs.readdirSync(CUSTOM_SOUND_DIR).length === 0
+        fs.existsSync(
+            legacySoundDir
+        )
+
+        &&
+
+        fs.readdirSync(
+            CUSTOM_SOUND_DIR
+        ).length ===
+        0
     ) {
+
         try {
+
             fs.cpSync(
                 legacySoundDir,
                 CUSTOM_SOUND_DIR,
                 {
-                    recursive: true,
-                    force: false
+                    recursive:
+                        true,
+
+                    force:
+                        false
                 }
             );
+
 
             console.log(
                 "Local custom sounds migrated to:",
                 CUSTOM_SOUND_DIR
             );
+
         } catch (error) {
+
             console.error(
                 "Local custom sound migration failed:",
                 error
@@ -178,34 +350,66 @@ if (IS_DEVELOPMENT) {
 ========================================================= */
 
 function validateRuntimeConfig() {
-    if (!IS_DEPLOYED) {
+
+    if (
+        !IS_DEPLOYED
+    ) {
+
         return;
     }
 
+
     const required = [
+
         "ADMIN_KEY",
+
         "PROMPTPAY_ID",
+
         "EASYSLIP_API_KEY",
+
         "PUBLIC_BASE_URL"
     ];
 
-    const missing = required.filter(
-        key => !String(process.env[key] || "").trim()
-    );
 
-    if (missing.length) {
+    const missing =
+        required.filter(
+            key =>
+                !String(
+                    process.env[key] ||
+                    ""
+                )
+                .trim()
+        );
+
+
+    if (
+        missing.length
+    ) {
+
         throw new Error(
             `Environment variables ไม่ครบ: ${missing.join(", ")}`
         );
     }
 
-    if (!PUBLIC_BASE_URL.startsWith("https://")) {
+
+    if (
+        !PUBLIC_BASE_URL.startsWith(
+            "https://"
+        )
+    ) {
+
         throw new Error(
             "PUBLIC_BASE_URL ของ staging/production ต้องเป็น HTTPS"
         );
     }
 
-    if (!fs.existsSync(PUBLIC_DIR_CANDIDATE)) {
+
+    if (
+        !fs.existsSync(
+            PUBLIC_DIR_CANDIDATE
+        )
+    ) {
+
         throw new Error(
             `ไม่พบ public directory: ${PUBLIC_DIR_CANDIDATE}`
         );
@@ -217,133 +421,315 @@ function validateRuntimeConfig() {
    EXPRESS
 ========================================================= */
 
-app.disable("x-powered-by");
+app.disable(
+    "x-powered-by"
+);
 
-if (IS_DEPLOYED) {
-    app.set("trust proxy", 1);
+
+if (
+    IS_DEPLOYED
+) {
+
+    app.set(
+        "trust proxy",
+        1
+    );
 }
 
+
 app.use(
-    (req, res, next) => {
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    (
+        req,
+        res,
+        next
+    ) => {
+
+        res.setHeader(
+            "X-Content-Type-Options",
+            "nosniff"
+        );
+
+
+        res.setHeader(
+            "Referrer-Policy",
+            "strict-origin-when-cross-origin"
+        );
+
+
         res.setHeader(
             "Permissions-Policy",
             "camera=(), microphone=(), geolocation=()"
         );
-        res.setHeader("X-AMR29-Environment", APP_ENV);
-        res.setHeader("X-AMR29-Version", APP_VERSION);
+
+
+        res.setHeader(
+            "X-AMR29-Environment",
+            APP_ENV
+        );
+
+
+        res.setHeader(
+            "X-AMR29-Version",
+            APP_VERSION
+        );
+
+
         next();
     }
 );
 
+
 app.use(
     express.json({
-        limit: "1mb"
+        limit:
+            "1mb"
     })
 );
+
 
 app.use(
     express.urlencoded({
-        extended: true,
-        limit: "1mb"
+        extended:
+            true,
+
+        limit:
+            "1mb"
     })
 );
 
-/*
-ถ้า local ยังไม่มี /public และ fallback ไปเสิร์ฟ root
-ต้องกันไฟล์ private ไม่ให้อ่านผ่าน HTTP
-*/
-if (LEGACY_STATIC_MODE) {
-    const blockedExact = new Set([
-        "/server.js",
-        "/package.json",
-        "/package-lock.json",
-        "/donations.db",
-        "/.env"
-    ]);
+
+/* =========================================================
+   LEGACY STATIC PROTECTION
+========================================================= */
+
+if (
+    LEGACY_STATIC_MODE
+) {
+
+    const blockedExact =
+        new Set([
+
+            "/server.js",
+
+            "/package.json",
+
+            "/package-lock.json",
+
+            "/donations.db",
+
+            "/.env"
+        ]);
+
 
     const blockedPrefixes = [
+
         "/data/",
+
         "/.amr29-private/",
+
         "/.git/",
+
         "/node_modules/"
     ];
 
-    app.use(
-        (req, res, next) => {
-            const pathname = decodeURIComponent(
-                String(req.path || "")
-            );
 
-            const lower = pathname.toLowerCase();
+    app.use(
+        (
+            req,
+            res,
+            next
+        ) => {
+
+            const pathname =
+                decodeURIComponent(
+                    String(
+                        req.path ||
+                        ""
+                    )
+                );
+
+
+            const lower =
+                pathname
+                    .toLowerCase();
+
 
             if (
-                blockedExact.has(lower) ||
-                blockedPrefixes.some(prefix => lower.startsWith(prefix)) ||
-                lower.endsWith(".db") ||
-                lower.endsWith(".db-journal") ||
-                lower.endsWith(".sqlite") ||
-                lower.endsWith(".sqlite3")
+                blockedExact.has(
+                    lower
+                )
+
+                ||
+
+                blockedPrefixes.some(
+                    prefix =>
+                        lower.startsWith(
+                            prefix
+                        )
+                )
+
+                ||
+
+                lower.endsWith(
+                    ".db"
+                )
+
+                ||
+
+                lower.endsWith(
+                    ".db-journal"
+                )
+
+                ||
+
+                lower.endsWith(
+                    ".sqlite"
+                )
+
+                ||
+
+                lower.endsWith(
+                    ".sqlite3"
+                )
             ) {
-                return res.status(404).send("Not Found");
+
+                return res
+                    .status(
+                        404
+                    )
+                    .send(
+                        "Not Found"
+                    );
             }
+
 
             next();
         }
     );
 }
 
+
+/* =========================================================
+   STATIC
+========================================================= */
+
 app.use(
     express.static(
         PUBLIC_DIR,
         {
-            dotfiles: "ignore",
-            etag: true,
-            maxAge: IS_PRODUCTION ? "1h" : 0,
-            setHeaders: (res, filePath) => {
-                if (filePath.toLowerCase().endsWith(".html")) {
-                    res.setHeader(
-                        "Cache-Control",
-                        "no-store, no-cache, must-revalidate"
-                    );
-                    return;
-                }
 
-                if (!IS_PRODUCTION) {
-                    res.setHeader("Cache-Control", "no-store");
+            dotfiles:
+                "ignore",
+
+            etag:
+                true,
+
+            maxAge:
+                IS_PRODUCTION
+                    ?
+                    "1h"
+                    :
+                    0,
+
+
+            setHeaders:
+                (
+                    res,
+                    filePath
+                ) => {
+
+                    if (
+                        filePath
+                            .toLowerCase()
+                            .endsWith(
+                                ".html"
+                            )
+                    ) {
+
+                        res.setHeader(
+                            "Cache-Control",
+                            "no-store, no-cache, must-revalidate"
+                        );
+
+
+                        return;
+                    }
+
+
+                    if (
+                        !IS_PRODUCTION
+                    ) {
+
+                        res.setHeader(
+                            "Cache-Control",
+                            "no-store"
+                        );
+                    }
                 }
-            }
         }
     )
 );
 
 
 /* =========================================================
-   HEALTH / VERSION
+   HEALTH
 ========================================================= */
 
 app.get(
     "/health",
-    (req, res) => {
+    (
+        req,
+        res
+    ) => {
+
         return res.json({
-            success: true,
-            service: "amr29-donate",
-            environment: APP_ENV,
-            version: APP_VERSION,
-            uptime: Math.floor(process.uptime()),
-            timestamp: new Date().toISOString()
+
+            success:
+                true,
+
+            service:
+                "amr29-donate",
+
+            environment:
+                APP_ENV,
+
+            version:
+                APP_VERSION,
+
+            uptime:
+                Math.floor(
+                    process.uptime()
+                ),
+
+            timestamp:
+                new Date()
+                    .toISOString()
         });
     }
 );
 
+
+/* =========================================================
+   VERSION
+========================================================= */
+
 app.get(
     "/api/version",
-    (req, res) => {
+    (
+        req,
+        res
+    ) => {
+
         return res.json({
-            success: true,
-            environment: APP_ENV,
-            version: APP_VERSION
+
+            success:
+                true,
+
+            environment:
+                APP_ENV,
+
+            version:
+                APP_VERSION
         });
     }
 );
@@ -353,19 +739,37 @@ app.get(
    SQLITE
 ========================================================= */
 
-const db = new sqlite3.Database(
-    DB_PATH,
-    error => {
-        if (error) {
-            console.error("Database error:", error);
-            return;
+const db =
+    new sqlite3.Database(
+        DB_PATH,
+        error => {
+
+            if (
+                error
+            ) {
+
+                console.error(
+                    "Database error:",
+                    error
+                );
+
+
+                return;
+            }
+
+
+            console.log(
+                "SQLite connected:",
+                DB_PATH
+            );
         }
+    );
 
-        console.log("SQLite connected:", DB_PATH);
-    }
+
+db.configure(
+    "busyTimeout",
+    5000
 );
-
-db.configure("busyTimeout", 5000);
 
 
 /* =========================================================
@@ -386,7 +790,6 @@ function dbRun(
             db.run(
                 sql,
                 params,
-
                 function (
                     error
                 ) {
@@ -430,7 +833,6 @@ function dbGet(
             db.get(
                 sql,
                 params,
-
                 (
                     error,
                     row
@@ -470,7 +872,6 @@ function dbAll(
             db.all(
                 sql,
                 params,
-
                 (
                     error,
                     rows
@@ -538,7 +939,26 @@ const defaultSettings = {
         "1000",
 
     alert_no_tts_display_time:
-        "4500"
+        "4500",
+
+
+    /* =====================================================
+       VOLUME MIXER
+
+       เก็บเป็น 0 - 100
+    ====================================================== */
+
+    alert_sound_volume:
+        "70",
+
+    alert_custom_sound_volume:
+        "70",
+
+    alert_tts_volume:
+        "100",
+
+    alert_video_volume:
+        "80"
 };
 
 
@@ -595,10 +1015,6 @@ async function ensureColumn(
 
 async function initDatabase() {
 
-    /*
-    สร้างโฟลเดอร์ Custom Sound
-    */
-
     await fs.promises.mkdir(
         CUSTOM_SOUND_DIR,
         {
@@ -631,16 +1047,12 @@ async function initDatabase() {
     `);
 
 
-    /*
-    รองรับ donations.db รุ่นก่อน
-    ที่ยังไม่มีข้อมูล Video Donation
-    */
-
     await ensureColumn(
         "donations",
         "video_url",
         "TEXT"
     );
+
 
     await ensureColumn(
         "donations",
@@ -648,11 +1060,13 @@ async function initDatabase() {
         "TEXT"
     );
 
+
     await ensureColumn(
         "donations",
         "video_start",
         "INTEGER"
     );
+
 
     await ensureColumn(
         "donations",
@@ -676,7 +1090,7 @@ async function initDatabase() {
 
 
     /* =====================================================
-       MOBILE SESSION
+       MOBILE SESSIONS
     ====================================================== */
 
     await dbRun(`
@@ -706,16 +1120,12 @@ async function initDatabase() {
     `);
 
 
-    /*
-    รองรับ donations.db รุ่นก่อน
-    ที่ยังไม่มี custom_sound_token
-    */
-
     await ensureColumn(
         "mobile_sessions",
         "custom_sound_token",
         "TEXT"
     );
+
 
     await ensureColumn(
         "mobile_sessions",
@@ -723,17 +1133,20 @@ async function initDatabase() {
         "TEXT"
     );
 
+
     await ensureColumn(
         "mobile_sessions",
         "video_id",
         "TEXT"
     );
 
+
     await ensureColumn(
         "mobile_sessions",
         "video_start",
         "INTEGER"
     );
+
 
     await ensureColumn(
         "mobile_sessions",
@@ -879,7 +1292,6 @@ const upload =
                 ) {
 
                     return callback(
-
                         new Error(
                             "รองรับสลิปเฉพาะ JPG, PNG และ WEBP"
                         )
@@ -943,7 +1355,6 @@ const audioUpload =
                 ) {
 
                     return callback(
-
                         new Error(
                             "รองรับเสียงเฉพาะ MP3, WAV และ OGG"
                         )
@@ -997,7 +1408,6 @@ async function getSettings() {
 
         return settings;
 
-
     } catch (error) {
 
         console.error(
@@ -1013,6 +1423,10 @@ async function getSettings() {
     }
 }
 
+
+/* =========================================================
+   SET SETTING
+========================================================= */
 
 async function setSetting(
     key,
@@ -1057,19 +1471,118 @@ function toBoolean(
 
     return (
 
-        value === true
+        value ===
+        true
 
         ||
 
-        value === 1
+        value ===
+        1
 
         ||
 
-        value === "1"
+        value ===
+        "1"
 
         ||
 
-        value === "true"
+        value ===
+        "true"
+    );
+}
+
+
+/* =========================================================
+   CLAMP
+========================================================= */
+
+function clamp(
+    value,
+    min,
+    max
+) {
+
+    return Math.min(
+        max,
+        Math.max(
+            min,
+            value
+        )
+    );
+}
+
+
+/* =========================================================
+   NORMALIZE VOLUME
+========================================================= */
+
+function normalizeVolumeValue(
+    value,
+    fallback
+) {
+
+    if (
+        value ===
+        undefined
+
+        ||
+
+        value ===
+        null
+
+        ||
+
+        value ===
+        ""
+    ) {
+
+        return clamp(
+
+            Math.round(
+                Number(
+                    fallback
+                )
+                ||
+                0
+            ),
+
+            0,
+
+            100
+        );
+    }
+
+
+    const number =
+        Number(
+            value
+        );
+
+
+    if (
+        !Number.isFinite(
+            number
+        )
+
+        ||
+
+        number <
+        0
+
+        ||
+
+        number >
+        100
+    ) {
+
+        throw new Error(
+            "Volume ต้องอยู่ระหว่าง 0 - 100"
+        );
+    }
+
+
+    return Math.round(
+        number
     );
 }
 
@@ -1111,6 +1624,10 @@ async function getAlertSettings() {
 
 
     return {
+
+        /* ===============================
+           TTS / ALERT
+        =============================== */
 
         ttsEnabled:
 
@@ -1174,10 +1691,71 @@ async function getAlertSettings() {
                 settings
                     .alert_no_tts_display_time,
                 4500
+            ),
+
+
+        /* ===============================
+           VOLUME MIXER
+           0 - 100
+        =============================== */
+
+        alertVolume:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_sound_volume,
+                    70
+                ),
+                0,
+                100
+            ),
+
+
+        customSoundVolume:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_custom_sound_volume,
+                    70
+                ),
+                0,
+                100
+            ),
+
+
+        ttsVolume:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_tts_volume,
+                    100
+                ),
+                0,
+                100
+            ),
+
+
+        videoVolume:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_video_volume,
+                    80
+                ),
+                0,
+                100
             )
     };
 }
 
+
+/* =========================================================
+   EMIT ALERT SETTINGS
+========================================================= */
 
 async function emitAlertSettingsUpdate() {
 
@@ -1191,7 +1769,6 @@ async function emitAlertSettingsUpdate() {
             "alert-settings-update",
             settings
         );
-
 
     } catch (error) {
 
@@ -1227,10 +1804,10 @@ async function getAllDonationTotal() {
 
 
         return Number(
-            row?.total ||
+            row?.total
+            ||
             0
         );
-
 
     } catch (error) {
 
@@ -1287,7 +1864,6 @@ async function getTopDonorsFromDB() {
                     )
             })
         );
-
 
     } catch (error) {
 
@@ -1405,6 +1981,10 @@ async function getDonationGoal() {
 }
 
 
+/* =========================================================
+   EMIT GOAL
+========================================================= */
+
 async function emitGoalUpdate() {
 
     const goal =
@@ -1497,7 +2077,6 @@ function requireAdminKey(
 
 io.on(
     "connection",
-
     socket => {
 
         console.log(
@@ -1508,7 +2087,6 @@ io.on(
 
         socket.on(
             "disconnect",
-
             () => {
 
                 console.log(
@@ -1627,7 +2205,6 @@ async function verifySlipWithEasySlip(
             await response
                 .json();
 
-
     } catch {
 
         throw new Error(
@@ -1712,168 +2289,443 @@ async function verifySlipWithEasySlip(
 
 
 /* =========================================================
-   VIDEO DONATION HELPERS
+   YOUTUBE PARSER
 ========================================================= */
 
-function parseYouTubeVideoUrl(value) {
-    const rawUrl = String(value || "").trim();
+function parseYouTubeVideoUrl(
+    value
+) {
 
-    if (!rawUrl) {
+    let rawUrl =
+        String(
+            value
+            ||
+            ""
+        )
+        .trim();
+
+
+    if (
+        !rawUrl
+    ) {
+
         return null;
     }
 
-    let url;
-
-    try {
-        url = new URL(rawUrl);
-    } catch {
-        throw new Error("ลิงก์วิดีโอไม่ถูกต้อง");
-    }
-
-    const hostname = url.hostname
-        .toLowerCase()
-        .replace(/^www\./, "");
-
-    let videoId = null;
-
-    if (hostname === "youtu.be") {
-        videoId = url.pathname
-            .split("/")
-            .filter(Boolean)[0] || null;
-    }
 
     if (
-        hostname === "youtube.com" ||
-        hostname === "m.youtube.com" ||
-        hostname === "music.youtube.com"
+        !/^https?:\/\//i
+            .test(
+                rawUrl
+            )
     ) {
-        if (url.pathname === "/watch") {
-            videoId = url.searchParams.get("v");
-        } else if (url.pathname.startsWith("/shorts/")) {
-            videoId = url.pathname
+
+        rawUrl =
+            "https://"
+            +
+            rawUrl;
+    }
+
+
+    let url;
+
+
+    try {
+
+        url =
+            new URL(
+                rawUrl
+            );
+
+    } catch {
+
+        throw new Error(
+            "ลิงก์วิดีโอไม่ถูกต้อง"
+        );
+    }
+
+
+    const hostname =
+        url.hostname
+            .toLowerCase()
+            .replace(
+                /^www\./,
+                ""
+            );
+
+
+    let videoId =
+        null;
+
+
+    if (
+        hostname ===
+        "youtu.be"
+    ) {
+
+        videoId =
+            url.pathname
                 .split("/")
-                .filter(Boolean)[1] || null;
-        } else if (url.pathname.startsWith("/embed/")) {
-            videoId = url.pathname
-                .split("/")
-                .filter(Boolean)[1] || null;
-        } else if (url.pathname.startsWith("/live/")) {
-            videoId = url.pathname
-                .split("/")
-                .filter(Boolean)[1] || null;
+                .filter(
+                    Boolean
+                )[0]
+
+            ||
+
+            null;
+    }
+
+
+    if (
+        [
+            "youtube.com",
+            "m.youtube.com",
+            "music.youtube.com"
+        ]
+        .includes(
+            hostname
+        )
+    ) {
+
+        if (
+            url.pathname ===
+            "/watch"
+        ) {
+
+            videoId =
+                url.searchParams
+                    .get(
+                        "v"
+                    );
+        }
+
+        else if (
+            /^\/(shorts|embed|live)\//
+                .test(
+                    url.pathname
+                )
+        ) {
+
+            videoId =
+                url.pathname
+                    .split("/")
+                    .filter(
+                        Boolean
+                    )[1]
+
+            ||
+
+            null;
         }
     }
 
+
     if (
-        !videoId ||
-        !/^[A-Za-z0-9_-]{11}$/.test(videoId)
+        !videoId
+
+        ||
+
+        !/^[A-Za-z0-9_-]{11}$/
+            .test(
+                videoId
+            )
     ) {
+
         throw new Error(
             "รองรับเฉพาะลิงก์ YouTube / youtu.be ที่ถูกต้อง"
         );
     }
 
+
     return {
+
         videoId,
-        videoUrl: `https://www.youtube.com/watch?v=${videoId}`
+
+        videoUrl:
+
+            `https://www.youtube.com/watch?v=${videoId}`
     };
 }
 
 
-function parseVideoStart(value) {
-    const raw = String(value ?? "").trim();
+/* =========================================================
+   VIDEO START
+========================================================= */
 
-    if (!raw) {
+function parseVideoStart(
+    value
+) {
+
+    const raw =
+        String(
+            value
+            ??
+            ""
+        )
+        .trim();
+
+
+    if (
+        !raw
+    ) {
+
         return 0;
     }
 
-    if (/^\d+$/.test(raw)) {
+
+    if (
+        /^\d+$/
+            .test(
+                raw
+            )
+    ) {
+
         return Math.min(
-            Math.max(0, Number(raw)),
+
+            Math.max(
+                0,
+                Number(
+                    raw
+                )
+            ),
+
             VIDEO_DONATION_MAX_START
         );
     }
 
-    // รองรับ 01:25 หรือ 1:02:03
-    if (/^\d{1,2}:\d{1,2}(:\d{1,2})?$/.test(raw)) {
-        const parts = raw
-            .split(":")
-            .map(Number);
 
-        let seconds = 0;
+    if (
+        /^\d{1,2}:\d{1,2}(:\d{1,2})?$/
+            .test(
+                raw
+            )
+    ) {
 
-        if (parts.length === 2) {
-            seconds = (parts[0] * 60) + parts[1];
-        } else {
+        const parts =
+            raw.split(
+                ":"
+            )
+            .map(
+                Number
+            );
+
+
+        let seconds =
+            0;
+
+
+        if (
+            parts.length ===
+            2
+        ) {
+
+            if (
+                parts[1] >
+                59
+            ) {
+
+                throw new Error(
+                    "วินาทีต้องไม่เกิน 59"
+                );
+            }
+
+
             seconds =
-                (parts[0] * 3600) +
-                (parts[1] * 60) +
+                (
+                    parts[0] *
+                    60
+                )
+
+                +
+
+                parts[1];
+
+        } else {
+
+            if (
+                parts[1] >
+                59
+
+                ||
+
+                parts[2] >
+                59
+            ) {
+
+                throw new Error(
+                    "นาทีหรือวินาทีไม่ถูกต้อง"
+                );
+            }
+
+
+            seconds =
+                (
+                    parts[0] *
+                    3600
+                )
+
+                +
+
+                (
+                    parts[1] *
+                    60
+                )
+
+                +
+
                 parts[2];
         }
 
+
         return Math.min(
-            Math.max(0, seconds),
+
+            Math.max(
+                0,
+                seconds
+            ),
+
             VIDEO_DONATION_MAX_START
         );
     }
 
-    return 0;
+
+    throw new Error(
+        "เวลาเริ่มใช้รูปแบบ 00:00 หรือ 01:25"
+    );
 }
 
+
+/* =========================================================
+   NORMALIZE VIDEO
+========================================================= */
 
 function normalizeVideoDonation(
     body = {},
     amount = 0
 ) {
-    const rawUrl = String(
-        body.videoUrl ||
-        body.video_url ||
-        ""
-    ).trim();
 
-    if (!rawUrl) {
+    const rawUrl =
+        String(
+            body.videoUrl
+            ||
+            body.video_url
+            ||
+            ""
+        )
+        .trim();
+
+
+    if (
+        !rawUrl
+    ) {
+
         return {
-            videoUrl: null,
-            videoId: null,
-            videoStart: null,
-            videoDuration: null
+
+            videoUrl:
+                null,
+
+            videoId:
+                null,
+
+            videoStart:
+                null,
+
+            videoDuration:
+                null
         };
     }
 
-    if (Number(amount) < VIDEO_DONATION_MIN_AMOUNT) {
+
+    if (
+        Number(
+            amount
+        )
+        <
+        VIDEO_DONATION_MIN_AMOUNT
+    ) {
+
         throw new Error(
             `แนบวิดีโอได้เมื่อสนับสนุนตั้งแต่ ${VIDEO_DONATION_MIN_AMOUNT} บาท`
         );
     }
 
-    const video = parseYouTubeVideoUrl(rawUrl);
 
-    const videoStart = parseVideoStart(
-        body.videoStart ??
-        body.video_start ??
+    const video =
+        parseYouTubeVideoUrl(
+            rawUrl
+        );
+
+
+    const videoStart =
+        parseVideoStart(
+
+            body.videoStart
+
+            ??
+
+            body.video_start
+
+            ??
+
+            0
+        );
+
+
+    let videoDuration =
+        Number.parseInt(
+
+            body.videoDuration
+
+            ??
+
+            body.video_duration
+
+            ??
+
+            VIDEO_DONATION_MAX_DURATION,
+
+            10
+        );
+
+
+    if (
+        !Number.isFinite(
+            videoDuration
+        )
+
+        ||
+
+        videoDuration <=
         0
-    );
+    ) {
 
-    let videoDuration = Number.parseInt(
-        body.videoDuration ??
-        body.video_duration ??
-        VIDEO_DONATION_MAX_DURATION,
-        10
-    );
-
-    if (!Number.isFinite(videoDuration) || videoDuration <= 0) {
-        videoDuration = VIDEO_DONATION_MAX_DURATION;
+        videoDuration =
+            VIDEO_DONATION_MAX_DURATION;
     }
 
-    videoDuration = Math.min(
-        Math.max(1, videoDuration),
-        VIDEO_DONATION_MAX_DURATION
-    );
+
+    videoDuration =
+        Math.min(
+
+            Math.max(
+                1,
+                videoDuration
+            ),
+
+            VIDEO_DONATION_MAX_DURATION
+        );
+
 
     return {
-        videoUrl: video.videoUrl,
-        videoId: video.videoId,
+
+        videoUrl:
+            video.videoUrl,
+
+        videoId:
+            video.videoId,
+
         videoStart,
+
         videoDuration
     };
 }
@@ -1883,53 +2735,97 @@ function normalizeVideoDonation(
    VALIDATE DONATION
 ========================================================= */
 
-function validateDonationInput(body = {}) {
-    const amount = Number(body.amount);
+function validateDonationInput(
+    body = {}
+) {
 
-    let name = String(
-        body.name ||
-        "Anonymous"
-    ).trim();
+    const amount =
+        Number(
+            body.amount
+        );
 
-    const message = String(
-        body.message ||
-        ""
-    ).trim();
 
-    if (!name) {
-        name = "Anonymous";
-    }
+    let name =
+        String(
+            body.name
+            ||
+            "Anonymous"
+        )
+        .trim();
+
+
+    const message =
+        String(
+            body.message
+            ||
+            ""
+        )
+        .trim();
+
 
     if (
-        !Number.isFinite(amount) ||
-        amount < 10
+        !name
     ) {
+
+        name =
+            "Anonymous";
+    }
+
+
+    if (
+        !Number.isFinite(
+            amount
+        )
+
+        ||
+
+        amount <
+        10
+    ) {
+
         throw new Error(
             "สนับสนุนขั้นต่ำ 10 บาท"
         );
     }
 
-    if (name.length > 30) {
+
+    if (
+        name.length >
+        30
+    ) {
+
         throw new Error(
             "ชื่อต้องไม่เกิน 30 ตัวอักษร"
         );
     }
 
-    if (message.length > 200) {
+
+    if (
+        message.length >
+        200
+    ) {
+
         throw new Error(
             "ข้อความต้องไม่เกิน 200 ตัวอักษร"
         );
     }
 
-    const video = normalizeVideoDonation(
-        body,
-        amount
-    );
+
+    const video =
+        normalizeVideoDonation(
+            body,
+            amount
+        );
+
 
     return {
+
         amount,
+
         name,
+
         message,
+
         ...video
     };
 }
@@ -1943,73 +2839,142 @@ function normalizeDonationFromEasySlip(
     input,
     data
 ) {
-    const amountInSlip = Number(
-        data.data?.amountInSlip
-    );
 
-    if (!Number.isFinite(amountInSlip)) {
+    const amountInSlip =
+        Number(
+            data.data
+                ?.amountInSlip
+        );
+
+
+    if (
+        !Number.isFinite(
+            amountInSlip
+        )
+    ) {
+
         throw new Error(
             "ไม่พบยอดเงินในสลิป"
         );
     }
 
-    /*
-    สำคัญ: สิทธิ์ Video ใช้ยอดเงินจริงจาก EasySlip
-    ไม่เชื่อยอดที่ Client ส่งมา
-    */
+
     if (
-        input.videoId &&
-        amountInSlip < VIDEO_DONATION_MIN_AMOUNT
+        input.videoId
+
+        &&
+
+        amountInSlip <
+        VIDEO_DONATION_MIN_AMOUNT
     ) {
+
         throw new Error(
             `แนบวิดีโอได้เมื่อสนับสนุนตั้งแต่ ${VIDEO_DONATION_MIN_AMOUNT} บาท`
         );
     }
 
+
     return {
-        name: input.name,
-        message: input.message,
-        amount: amountInSlip,
+
+        name:
+            input.name,
+
+        message:
+            input.message,
+
+        amount:
+            amountInSlip,
+
         transRef:
-            data.data?.rawSlip?.transRef ||
-            data.data?.transRef ||
+
+            data.data
+                ?.rawSlip
+                ?.transRef
+
+            ||
+
+            data.data
+                ?.transRef
+
+            ||
+
             null,
-        videoUrl: input.videoUrl || null,
-        videoId: input.videoId || null,
-        videoStart: input.videoId
-            ? Math.min(
-                Math.max(0, Number(input.videoStart || 0)),
-                VIDEO_DONATION_MAX_START
-            )
-            : null,
-        videoDuration: input.videoId
-            ? Math.min(
-                Math.max(
-                    1,
-                    Number(
-                        input.videoDuration ||
-                        VIDEO_DONATION_MAX_DURATION
-                    )
-                ),
-                VIDEO_DONATION_MAX_DURATION
-            )
-            : null
+
+
+        videoUrl:
+
+            input.videoUrl
+
+            ||
+
+            null,
+
+
+        videoId:
+
+            input.videoId
+
+            ||
+
+            null,
+
+
+        videoStart:
+
+            input.videoId
+
+                ?
+
+                Math.min(
+
+                    Math.max(
+                        0,
+                        Number(
+                            input.videoStart
+                            ||
+                            0
+                        )
+                    ),
+
+                    VIDEO_DONATION_MAX_START
+                )
+
+                :
+
+                null,
+
+
+        videoDuration:
+
+            input.videoId
+
+                ?
+
+                Math.min(
+
+                    Math.max(
+
+                        1,
+
+                        Number(
+                            input.videoDuration
+                            ||
+                            VIDEO_DONATION_MAX_DURATION
+                        )
+                    ),
+
+                    VIDEO_DONATION_MAX_DURATION
+                )
+
+                :
+
+                null
     };
 }
 
 
 /* =========================================================
    SOUND TIERS
-
-   10 - 49     alert.mp3
-   50 - 99     alert2.mp3
-   100 - 299   alert3.mp3
-   300 - 499   alert4.mp3
-   500 - 999   alert5.mp3
-   1000+       alert5.mp3
-
-   หมายเหตุ:
-   ระบบปัจจุบันขั้นต่ำ 10 บาท
 ========================================================= */
 
 function getDonationTierSound(
@@ -2023,10 +2988,6 @@ function getDonationTierSound(
         ||
         0;
 
-
-    /* =====================================================
-       1000+
-    ====================================================== */
 
     if (
         value >=
@@ -2044,10 +3005,6 @@ function getDonationTierSound(
     }
 
 
-    /* =====================================================
-       500 - 999
-    ====================================================== */
-
     if (
         value >=
         500
@@ -2063,10 +3020,6 @@ function getDonationTierSound(
         };
     }
 
-
-    /* =====================================================
-       300 - 499
-    ====================================================== */
 
     if (
         value >=
@@ -2084,10 +3037,6 @@ function getDonationTierSound(
     }
 
 
-    /* =====================================================
-       100 - 299
-    ====================================================== */
-
     if (
         value >=
         100
@@ -2103,10 +3052,6 @@ function getDonationTierSound(
         };
     }
 
-
-    /* =====================================================
-       50 - 99
-    ====================================================== */
 
     if (
         value >=
@@ -2124,14 +3069,10 @@ function getDonationTierSound(
     }
 
 
-    /* =====================================================
-       10 - 49
-    ====================================================== */
-
     return {
 
         soundTier:
-            "1-49",
+            "10-49",
 
         soundUrl:
             "/sounds/alert.mp3"
@@ -2175,7 +3116,7 @@ function createCustomSoundFileId() {
 
 
 /* =========================================================
-   NORMALIZE CUSTOM TOKEN
+   NORMALIZE CUSTOM SOUND TOKEN
 ========================================================= */
 
 function normalizeCustomSoundToken(
@@ -2193,9 +3134,9 @@ function normalizeCustomSoundToken(
 
     if (
         !/^snd_[a-f0-9]{48}$/
-        .test(
-            token
-        )
+            .test(
+                token
+            )
     ) {
 
         return null;
@@ -2302,7 +3243,7 @@ async function getCustomSoundRecord(
 
 
 /* =========================================================
-   CHECK CUSTOM SOUND
+   CUSTOM SOUND USABLE
 ========================================================= */
 
 async function customSoundIsUsable(
@@ -2379,7 +3320,6 @@ async function customSoundIsUsable(
 
         return true;
 
-
     } catch {
 
         return false;
@@ -2389,11 +3329,6 @@ async function customSoundIsUsable(
 
 /* =========================================================
    RESOLVE DONATION SOUND
-
-   ถ้า Custom ใช้ไม่ได้
-   จะ fallback เป็นเสียงตามยอด
-
-   Donation จะไม่ fail เพราะเสียง
 ========================================================= */
 
 async function resolveDonationSound(
@@ -2516,13 +3451,6 @@ async function markCustomSoundUsed(
         Date.now();
 
 
-    /*
-    หลังโดเนทผ่าน
-    ต่ออายุอีกอย่างน้อย 15 นาที
-
-    กันกรณี Alert Queue ยาว
-    */
-
     const keepUntil =
 
         now
@@ -2606,7 +3534,6 @@ async function saveUploadedCustomSound(
     ) {
 
         throw new Error(
-
             `Custom Sound ใช้ได้เมื่อโดเนท ${CUSTOM_SOUND_MIN_AMOUNT} บาทขึ้นไป`
         );
     }
@@ -2661,10 +3588,6 @@ async function saveUploadedCustomSound(
         CUSTOM_SOUND_TTL_MS;
 
 
-    /*
-    เขียนไฟล์ลงเครื่อง
-    */
-
     await fs.promises.writeFile(
         filePath,
         file.buffer,
@@ -2676,10 +3599,6 @@ async function saveUploadedCustomSound(
 
 
     try {
-
-        /*
-        บันทึก Metadata
-        */
 
         await dbRun(
             `
@@ -2748,13 +3667,7 @@ async function saveUploadedCustomSound(
             ]
         );
 
-
     } catch (error) {
-
-        /*
-        DB fail
-        ลบไฟล์ทิ้ง
-        */
 
         await fs.promises.unlink(
             filePath
@@ -2774,12 +3687,6 @@ async function saveUploadedCustomSound(
 
         expiresAt,
 
-
-        /*
-        ตอนแก้ overlay.html
-        เราจะบังคับเล่นสูงสุด 10 วิ
-        */
-
         maxPlaybackSeconds:
             10
     };
@@ -2787,7 +3694,7 @@ async function saveUploadedCustomSound(
 
 
 /* =========================================================
-   CLEANUP CUSTOM SOUNDS
+   CLEANUP CUSTOM SOUND
 ========================================================= */
 
 async function cleanupCustomSounds() {
@@ -2856,11 +3763,9 @@ async function cleanupCustomSounds() {
 
 
             console.log(
-
                 `🧹 Custom Sounds cleaned: ${expired.length}`
             );
         }
-
 
     } catch (error) {
 
@@ -2881,8 +3786,7 @@ async function saveDonation(
 ) {
 
     if (
-        !donation
-            .transRef
+        !donation.transRef
     ) {
 
         throw new Error(
@@ -2926,23 +3830,46 @@ async function saveDonation(
 
                     donation.transRef,
 
-                    donation.videoUrl || null,
-
-                    donation.videoId || null,
-
-                    donation.videoId
-                        ? Number(donation.videoStart || 0)
-                        : null,
+                    donation.videoUrl
+                    ||
+                    null,
 
                     donation.videoId
-                        ? Math.min(
+                    ||
+                    null,
+
+                    donation.videoId
+
+                        ?
+
+                        Number(
+                            donation.videoStart
+                            ||
+                            0
+                        )
+
+                        :
+
+                        null,
+
+                    donation.videoId
+
+                        ?
+
+                        Math.min(
+
                             Number(
-                                donation.videoDuration ||
+                                donation.videoDuration
+                                ||
                                 VIDEO_DONATION_MAX_DURATION
                             ),
+
                             VIDEO_DONATION_MAX_DURATION
                         )
-                        : null
+
+                        :
+
+                        null
                 ]
             );
 
@@ -2967,13 +3894,17 @@ async function saveDonation(
                     donation.customSound,
 
                 soundTier:
-                    donation.soundTier
+                    donation.soundTier,
+
+                videoId:
+                    donation.videoId
+                    ||
+                    null
             }
         );
 
 
         return result;
-
 
     } catch (error) {
 
@@ -3005,19 +3936,11 @@ async function broadcastDonation(
     donation
 ) {
 
-    /*
-    OBS
-    */
-
     io.emit(
         "donation",
         donation
     );
 
-
-    /*
-    TOP SUPPORTERS
-    */
 
     const donors =
         await getTopDonorsFromDB();
@@ -3028,10 +3951,6 @@ async function broadcastDonation(
         donors
     );
 
-
-    /*
-    GOAL
-    */
 
     await emitGoalUpdate();
 }
@@ -3067,58 +3986,120 @@ function generateMobileSessionId() {
 async function createMobileSessionDB(
     session
 ) {
+
     await dbRun(
         `
         INSERT INTO mobile_sessions
         (
             session_id,
+
             name,
+
             message,
+
             amount,
+
             status,
+
             created_at,
+
             expires_at,
+
             verified_at,
+
             trans_ref,
+
             custom_sound_token,
+
             video_url,
+
             video_id,
+
             video_start,
+
             video_duration
         )
 
         VALUES
         (
-            ?, ?, ?, ?, ?, ?, ?,
-            NULL, NULL,
-            ?, ?, ?, ?, ?
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            NULL,
+            NULL,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?
         )
         `,
         [
             session.sessionId,
+
             session.name,
+
             session.message,
+
             session.amount,
+
             session.status,
+
             session.createdAt,
+
             session.expiresAt,
-            session.customSoundToken || null,
-            session.videoUrl || null,
-            session.videoId || null,
+
+            session.customSoundToken
+            ||
+            null,
+
+            session.videoUrl
+            ||
+            null,
+
             session.videoId
-                ? Number(session.videoStart || 0)
-                : null,
+            ||
+            null,
+
             session.videoId
-                ? Math.min(
+
+                ?
+
+                Number(
+                    session.videoStart
+                    ||
+                    0
+                )
+
+                :
+
+                null,
+
+            session.videoId
+
+                ?
+
+                Math.min(
+
                     Number(
-                        session.videoDuration ||
+                        session.videoDuration
+                        ||
                         VIDEO_DONATION_MAX_DURATION
                     ),
+
                     VIDEO_DONATION_MAX_DURATION
                 )
-                : null
+
+                :
+
+                null
         ]
     );
+
 
     return session;
 }
@@ -3131,60 +4112,159 @@ async function createMobileSessionDB(
 async function getMobileSessionDB(
     sessionId
 ) {
-    const row = await dbGet(
-        `
-        SELECT
-            session_id,
-            name,
-            message,
-            amount,
-            status,
-            created_at,
-            expires_at,
-            verified_at,
-            trans_ref,
-            custom_sound_token,
-            video_url,
-            video_id,
-            video_start,
-            video_duration
-        FROM mobile_sessions
-        WHERE session_id = ?
-        `,
-        [sessionId]
-    );
 
-    if (!row) {
+    const row =
+        await dbGet(
+            `
+            SELECT
+
+                session_id,
+
+                name,
+
+                message,
+
+                amount,
+
+                status,
+
+                created_at,
+
+                expires_at,
+
+                verified_at,
+
+                trans_ref,
+
+                custom_sound_token,
+
+                video_url,
+
+                video_id,
+
+                video_start,
+
+                video_duration
+
+            FROM mobile_sessions
+
+            WHERE session_id = ?
+            `,
+            [
+                sessionId
+            ]
+        );
+
+
+    if (
+        !row
+    ) {
+
         return null;
     }
 
+
     return {
-        sessionId: row.session_id,
-        name: row.name,
-        message: row.message || "",
-        amount: Number(row.amount),
-        status: row.status,
-        createdAt: Number(row.created_at),
-        expiresAt: Number(row.expires_at),
-        verifiedAt: row.verified_at
-            ? Number(row.verified_at)
-            : null,
-        transRef: row.trans_ref || null,
-        customSoundToken: row.custom_sound_token || null,
-        videoUrl: row.video_url || null,
-        videoId: row.video_id || null,
-        videoStart: row.video_id
-            ? Number(row.video_start || 0)
-            : null,
-        videoDuration: row.video_id
-            ? Math.min(
+
+        sessionId:
+            row.session_id,
+
+        name:
+            row.name,
+
+        message:
+            row.message
+            ||
+            "",
+
+        amount:
+            Number(
+                row.amount
+            ),
+
+        status:
+            row.status,
+
+        createdAt:
+            Number(
+                row.created_at
+            ),
+
+        expiresAt:
+            Number(
+                row.expires_at
+            ),
+
+        verifiedAt:
+
+            row.verified_at
+
+                ?
+
                 Number(
-                    row.video_duration ||
+                    row.verified_at
+                )
+
+                :
+
+                null,
+
+        transRef:
+            row.trans_ref
+            ||
+            null,
+
+        customSoundToken:
+            row.custom_sound_token
+            ||
+            null,
+
+        videoUrl:
+            row.video_url
+            ||
+            null,
+
+        videoId:
+            row.video_id
+            ||
+            null,
+
+        videoStart:
+
+            row.video_id
+
+                ?
+
+                Number(
+                    row.video_start
+                    ||
+                    0
+                )
+
+                :
+
+                null,
+
+        videoDuration:
+
+            row.video_id
+
+                ?
+
+                Math.min(
+
+                    Number(
+                        row.video_duration
+                        ||
+                        VIDEO_DONATION_MAX_DURATION
+                    ),
+
                     VIDEO_DONATION_MAX_DURATION
-                ),
-                VIDEO_DONATION_MAX_DURATION
-            )
-            : null
+                )
+
+                :
+
+                null
     };
 }
 
@@ -3247,11 +4327,8 @@ async function lockMobileSession(
 
 
     return (
-
         result.changes
-
         ===
-
         1
     );
 }
@@ -3294,89 +4371,151 @@ async function resetMobileSession(
 
 
 /* =========================================================
-   SAVE MOBILE DONATION
-   + COMPLETE SESSION
-
-   Transaction เดียว
+   SAVE MOBILE DONATION + COMPLETE
 ========================================================= */
 
 async function saveMobileDonationAndComplete(
     sessionId,
     donation
 ) {
+
     try {
+
         await dbRun(
             "BEGIN IMMEDIATE TRANSACTION"
         );
 
-        const insertResult = await dbRun(
-            `
-            INSERT INTO donations
-            (
-                name,
-                message,
-                amount,
-                trans_ref,
-                video_url,
-                video_id,
-                video_start,
-                video_duration
-            )
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `,
-            [
-                donation.name,
-                donation.message,
-                donation.amount,
-                donation.transRef,
-                donation.videoUrl || null,
-                donation.videoId || null,
-                donation.videoId
-                    ? Number(donation.videoStart || 0)
-                    : null,
-                donation.videoId
-                    ? Math.min(
+        const insertResult =
+            await dbRun(
+                `
+                INSERT INTO donations
+                (
+                    name,
+
+                    message,
+
+                    amount,
+
+                    trans_ref,
+
+                    video_url,
+
+                    video_id,
+
+                    video_start,
+
+                    video_duration
+                )
+
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                `,
+                [
+                    donation.name,
+
+                    donation.message,
+
+                    donation.amount,
+
+                    donation.transRef,
+
+                    donation.videoUrl
+                    ||
+                    null,
+
+                    donation.videoId
+                    ||
+                    null,
+
+                    donation.videoId
+
+                        ?
+
                         Number(
-                            donation.videoDuration ||
+                            donation.videoStart
+                            ||
+                            0
+                        )
+
+                        :
+
+                        null,
+
+                    donation.videoId
+
+                        ?
+
+                        Math.min(
+
+                            Number(
+                                donation.videoDuration
+                                ||
+                                VIDEO_DONATION_MAX_DURATION
+                            ),
+
                             VIDEO_DONATION_MAX_DURATION
-                        ),
-                        VIDEO_DONATION_MAX_DURATION
-                    )
-                    : null
-            ]
-        );
+                        )
 
-        const updateResult = await dbRun(
-            `
-            UPDATE mobile_sessions
-            SET
-                status = 'verified',
-                verified_at = ?,
-                trans_ref = ?
-            WHERE
-                session_id = ?
-                AND status = 'verifying'
-            `,
-            [
-                Date.now(),
-                donation.transRef,
-                sessionId
-            ]
-        );
+                        :
 
-        if (updateResult.changes !== 1) {
+                        null
+                ]
+            );
+
+
+        const updateResult =
+            await dbRun(
+                `
+                UPDATE mobile_sessions
+
+                SET
+
+                    status = 'verified',
+
+                    verified_at = ?,
+
+                    trans_ref = ?
+
+                WHERE
+
+                    session_id = ?
+
+                    AND
+
+                    status = 'verifying'
+                `,
+                [
+                    Date.now(),
+
+                    donation.transRef,
+
+                    sessionId
+                ]
+            );
+
+
+        if (
+            updateResult.changes
+            !==
+            1
+        ) {
+
             throw new Error(
                 "ไม่สามารถยืนยัน Mobile Session ได้"
             );
         }
 
-        await dbRun("COMMIT");
+
+        await dbRun(
+            "COMMIT"
+        );
+
 
         console.log(
             "Donation saved ID:",
             insertResult.lastID
         );
+
 
         return insertResult;
 
@@ -3388,6 +4527,7 @@ async function saveMobileDonationAndComplete(
         .catch(
             () => {}
         );
+
 
         if (
             String(
@@ -3403,13 +4543,14 @@ async function saveMobileDonationAndComplete(
             );
         }
 
+
         throw error;
     }
 }
 
 
 /* =========================================================
-   CLEAN MOBILE SESSIONS
+   CLEAN MOBILE SESSION
 ========================================================= */
 
 async function cleanupMobileSessions() {
@@ -3435,11 +4576,9 @@ async function cleanupMobileSessions() {
         ) {
 
             console.log(
-
                 `🧹 Mobile Sessions cleaned: ${result.changes}`
             );
         }
-
 
     } catch (error) {
 
@@ -3487,11 +4626,9 @@ async function recoverMobileSessions() {
         ) {
 
             console.log(
-
                 `♻ Mobile Sessions recovered: ${result.changes}`
             );
         }
-
 
     } catch (error) {
 
@@ -3547,22 +4684,13 @@ function getPublicBaseUrl(
 
 
     return (
-
         `${protocol}://${req.get("host")}`
     );
 }
 
 
 /* =========================================================
-   CUSTOM SOUND UPLOAD API
-
-   POST
-   /api/custom-sound/upload
-
-   multipart/form-data
-
-   sound = audio file
-   amount = donation amount
+   CUSTOM SOUND UPLOAD
 ========================================================= */
 
 app.post(
@@ -3604,7 +4732,6 @@ app.post(
                     result
             });
 
-
         } catch (error) {
 
             console.error(
@@ -3637,8 +4764,6 @@ app.post(
 
 /* =========================================================
    CUSTOM SOUND STREAM
-
-   OBS จะโหลดเสียงผ่าน URL นี้
 ========================================================= */
 
 app.get(
@@ -3731,7 +4856,6 @@ app.get(
                 filePath
             );
 
-
         } catch (error) {
 
             console.error(
@@ -3777,7 +4901,8 @@ app.get(
 
                 ||
 
-                amount < 10
+                amount <
+                10
             ) {
 
                 return res
@@ -3826,9 +4951,7 @@ app.get(
 
             const payload =
                 generatePayload(
-
                     promptpayID,
-
                     {
                         amount
                     }
@@ -3851,7 +4974,6 @@ app.get(
 
                 amount
             });
-
 
         } catch (error) {
 
@@ -3923,34 +5045,21 @@ app.post(
 
             const data =
                 await verifySlipWithEasySlip(
-
                     req.file,
-
                     input.amount
                 );
 
 
             const donation =
                 normalizeDonationFromEasySlip(
-
                     input,
-
                     data
                 );
 
 
-            /* =================================================
-               SOUND
-
-               ใช้ยอดเงินจริงจาก EasySlip
-               ไม่เชื่อยอดจาก Client
-            ================================================= */
-
             const sound =
                 await resolveDonationSound(
-
                     donation.amount,
-
                     req.body
                         .customSoundToken
                 );
@@ -3962,18 +5071,10 @@ app.post(
             );
 
 
-            /* =================================================
-               SAVE
-            ================================================= */
-
             await saveDonation(
                 donation
             );
 
-
-            /* =================================================
-               CUSTOM SOUND USED
-            ================================================= */
 
             if (
                 donation.customSound
@@ -3998,10 +5099,6 @@ app.post(
             }
 
 
-            /* =================================================
-               OBS / GOAL / RANKING
-            ================================================= */
-
             await broadcastDonation(
                 donation
             );
@@ -4020,7 +5117,6 @@ app.post(
                 data:
                     data.data
             });
-
 
         } catch (error) {
 
@@ -4105,7 +5201,6 @@ app.get(
                 ...goal
             });
 
-
         } catch (error) {
 
             console.error(
@@ -4158,7 +5253,6 @@ app.get(
 
                 goal
             });
-
 
         } catch (error) {
 
@@ -4229,7 +5323,8 @@ app.post(
 
                 ||
 
-                target <= 0
+                target <=
+                0
             ) {
 
                 return res
@@ -4271,11 +5366,8 @@ app.post(
 
                 setSetting(
                     "goal_title",
-
                     title
-
                     ||
-
                     "เป้าหมายสนับสนุน"
                 ),
 
@@ -4288,7 +5380,6 @@ app.post(
 
                 setSetting(
                     "goal_enabled",
-
                     enabled
                         ?
                         "1"
@@ -4315,7 +5406,6 @@ app.post(
 
                 goal
             });
-
 
         } catch (error) {
 
@@ -4386,7 +5476,6 @@ app.post(
                 goal
             });
 
-
         } catch (error) {
 
             console.error(
@@ -4437,7 +5526,6 @@ app.get(
 
                 settings
             });
-
 
         } catch (error) {
 
@@ -4492,7 +5580,6 @@ app.get(
                 settings
             });
 
-
         } catch (error) {
 
             console.error(
@@ -4519,7 +5606,7 @@ app.get(
 
 
 /* =========================================================
-   UPDATE ALERT SETTINGS
+   UPDATE ALERT SETTINGS + VOLUME MIXER
 ========================================================= */
 
 app.post(
@@ -4534,47 +5621,181 @@ app.post(
 
         try {
 
+            /*
+            สำคัญ:
+            โหลดค่าปัจจุบันมาก่อน
+
+            ทำให้ Dashboard รุ่นเดิม
+            ที่ยังไม่ได้ส่ง Volume
+            ยัง Save Alert Settings ได้
+            */
+
+            const current =
+                await getAlertSettings();
+
+
             const ttsEnabled =
-                toBoolean(
-                    req.body.ttsEnabled
-                );
+
+                req.body.ttsEnabled
+                ===
+                undefined
+
+                    ?
+
+                    current.ttsEnabled
+
+                    :
+
+                    toBoolean(
+                        req.body.ttsEnabled
+                    );
 
 
             const readMessage =
-                toBoolean(
-                    req.body.readMessage
-                );
+
+                req.body.readMessage
+                ===
+                undefined
+
+                    ?
+
+                    current.readMessage
+
+                    :
+
+                    toBoolean(
+                        req.body.readMessage
+                    );
 
 
             const ttsRate =
-                Number(
-                    req.body.ttsRate
-                );
+
+                req.body.ttsRate
+                ===
+                undefined
+
+                    ?
+
+                    current.ttsRate
+
+                    :
+
+                    Number(
+                        req.body.ttsRate
+                    );
 
 
             const bigAmount =
-                Number(
-                    req.body.bigAmount
-                );
+
+                req.body.bigAmount
+                ===
+                undefined
+
+                    ?
+
+                    current.bigAmount
+
+                    :
+
+                    Number(
+                        req.body.bigAmount
+                    );
 
 
             const megaAmount =
-                Number(
-                    req.body.megaAmount
-                );
+
+                req.body.megaAmount
+                ===
+                undefined
+
+                    ?
+
+                    current.megaAmount
+
+                    :
+
+                    Number(
+                        req.body.megaAmount
+                    );
 
 
             const afterTtsDelay =
-                Number(
-                    req.body.afterTtsDelay
-                );
+
+                req.body.afterTtsDelay
+                ===
+                undefined
+
+                    ?
+
+                    current.afterTtsDelay
+
+                    :
+
+                    Number(
+                        req.body.afterTtsDelay
+                    );
 
 
             const noTtsDisplayTime =
-                Number(
-                    req.body.noTtsDisplayTime
+
+                req.body.noTtsDisplayTime
+                ===
+                undefined
+
+                    ?
+
+                    current.noTtsDisplayTime
+
+                    :
+
+                    Number(
+                        req.body.noTtsDisplayTime
+                    );
+
+
+            /* =================================================
+               VOLUME
+            ================================================= */
+
+            const alertVolume =
+                normalizeVolumeValue(
+
+                    req.body.alertVolume,
+
+                    current.alertVolume
                 );
 
+
+            const customSoundVolume =
+                normalizeVolumeValue(
+
+                    req.body.customSoundVolume,
+
+                    current.customSoundVolume
+                );
+
+
+            const ttsVolume =
+                normalizeVolumeValue(
+
+                    req.body.ttsVolume,
+
+                    current.ttsVolume
+                );
+
+
+            const videoVolume =
+                normalizeVolumeValue(
+
+                    req.body.videoVolume,
+
+                    current.videoVolume
+                );
+
+
+            /* =================================================
+               VALIDATION
+            ================================================= */
 
             if (
                 !Number.isFinite(
@@ -4583,11 +5804,13 @@ app.post(
 
                 ||
 
-                ttsRate < .5
+                ttsRate <
+                .5
 
                 ||
 
-                ttsRate > 2
+                ttsRate >
+                2
             ) {
 
                 return res
@@ -4612,7 +5835,8 @@ app.post(
 
                 ||
 
-                bigAmount <= 0
+                bigAmount <=
+                0
             ) {
 
                 return res
@@ -4663,11 +5887,13 @@ app.post(
 
                 ||
 
-                afterTtsDelay < 0
+                afterTtsDelay <
+                0
 
                 ||
 
-                afterTtsDelay > 10000
+                afterTtsDelay >
+                10000
             ) {
 
                 return res
@@ -4692,11 +5918,13 @@ app.post(
 
                 ||
 
-                noTtsDisplayTime < 1000
+                noTtsDisplayTime <
+                1000
 
                 ||
 
-                noTtsDisplayTime > 30000
+                noTtsDisplayTime >
+                30000
             ) {
 
                 return res
@@ -4714,12 +5942,14 @@ app.post(
             }
 
 
+            /* =================================================
+               SAVE
+            ================================================= */
+
             await Promise.all([
 
                 setSetting(
-
                     "alert_tts_enabled",
-
                     ttsEnabled
                         ?
                         "1"
@@ -4729,9 +5959,7 @@ app.post(
 
 
                 setSetting(
-
                     "alert_read_message",
-
                     readMessage
                         ?
                         "1"
@@ -4760,7 +5988,6 @@ app.post(
 
                 setSetting(
                     "alert_after_tts_delay",
-
                     Math.round(
                         afterTtsDelay
                     )
@@ -4769,10 +5996,37 @@ app.post(
 
                 setSetting(
                     "alert_no_tts_display_time",
-
                     Math.round(
                         noTtsDisplayTime
                     )
+                ),
+
+
+                /* ===============================
+                   VOLUME MIXER
+                =============================== */
+
+                setSetting(
+                    "alert_sound_volume",
+                    alertVolume
+                ),
+
+
+                setSetting(
+                    "alert_custom_sound_volume",
+                    customSoundVolume
+                ),
+
+
+                setSetting(
+                    "alert_tts_volume",
+                    ttsVolume
+                ),
+
+
+                setSetting(
+                    "alert_video_volume",
+                    videoVolume
                 )
             ]);
 
@@ -4780,6 +6034,10 @@ app.post(
             const settings =
                 await getAlertSettings();
 
+
+            /*
+            ส่งค่าใหม่ไป Overlay ทันที
+            */
 
             await emitAlertSettingsUpdate();
 
@@ -4795,7 +6053,6 @@ app.post(
                 settings
             });
 
-
         } catch (error) {
 
             console.error(
@@ -4806,7 +6063,7 @@ app.post(
 
             return res
                 .status(
-                    500
+                    400
                 )
                 .json({
 
@@ -4846,19 +6103,8 @@ app.post(
                 );
 
 
-            /* =================================================
-               CUSTOM SOUND TOKEN
-
-               ถ้าเลือกเสียงจาก PC มาก่อน
-               token จะถูกเก็บใน Mobile Session
-
-               เวลามือถืออัปสลิป
-               Server ยังรู้ว่าจะเล่นเสียงไหน
-            ================================================= */
-
             const requestedToken =
                 normalizeCustomSoundToken(
-
                     req.body
                         .customSoundToken
                 );
@@ -4879,9 +6125,7 @@ app.post(
 
                 const usable =
                     await customSoundIsUsable(
-
                         requestedToken,
-
                         input.amount
                     );
 
@@ -4917,43 +6161,32 @@ app.post(
 
                 sessionId,
 
-
                 name:
                     input.name,
-
 
                 message:
                     input.message,
 
-
                 amount:
                     input.amount,
-
 
                 status:
                     "pending",
 
-
                 createdAt,
-
 
                 expiresAt,
 
-
                 customSoundToken,
-
 
                 videoUrl:
                     input.videoUrl,
 
-
                 videoId:
                     input.videoId,
 
-
                 videoStart:
                     input.videoStart,
-
 
                 videoDuration:
                     input.videoDuration
@@ -5004,21 +6237,16 @@ app.post(
 
                 expiresAt,
 
-
                 customSoundAccepted:
-
                     Boolean(
                         customSoundToken
                     ),
 
-
                 videoAccepted:
-
                     Boolean(
                         input.videoId
                     )
             });
-
 
         } catch (error) {
 
@@ -5129,64 +6357,49 @@ app.get(
                 success:
                     true,
 
-
                 session: {
 
                     sessionId:
                         session.sessionId,
 
-
                     name:
                         session.name,
-
 
                     message:
                         session.message,
 
-
                     amount:
                         session.amount,
-
 
                     status:
                         session.status,
 
-
                     expiresAt:
                         session.expiresAt,
 
-
                     customSound:
-
                         Boolean(
                             session.customSoundToken
                         ),
 
-
                     video:
-
                         Boolean(
                             session.videoId
                         ),
 
-
                     videoUrl:
                         session.videoUrl,
-
 
                     videoId:
                         session.videoId,
 
-
                     videoStart:
                         session.videoStart,
-
 
                     videoDuration:
                         session.videoDuration
                 }
             });
-
 
         } catch (error) {
 
@@ -5273,10 +6486,6 @@ app.post(
             }
 
 
-            /* =================================================
-               EXPIRED
-            ================================================= */
-
             if (
                 Date.now()
                 >
@@ -5303,10 +6512,6 @@ app.post(
             }
 
 
-            /* =================================================
-               VERIFIED
-            ================================================= */
-
             if (
                 session.status ===
                 "verified"
@@ -5326,10 +6531,6 @@ app.post(
                     });
             }
 
-
-            /* =================================================
-               VERIFYING
-            ================================================= */
 
             if (
                 session.status ===
@@ -5351,10 +6552,6 @@ app.post(
             }
 
 
-            /* =================================================
-               FILE
-            ================================================= */
-
             if (
                 !req.file
             ) {
@@ -5373,10 +6570,6 @@ app.post(
                     });
             }
 
-
-            /* =================================================
-               LOCK
-            ================================================= */
 
             locked =
                 await lockMobileSession(
@@ -5403,22 +6596,15 @@ app.post(
             }
 
 
-            /* =================================================
-               EASYSLIP
-            ================================================= */
-
             const data =
                 await verifySlipWithEasySlip(
-
                     req.file,
-
                     session.amount
                 );
 
 
             const donation =
                 normalizeDonationFromEasySlip(
-
                     {
 
                         name:
@@ -5439,22 +6625,13 @@ app.post(
                         videoDuration:
                             session.videoDuration
                     },
-
                     data
                 );
 
 
-            /* =================================================
-               SOUND
-
-               Custom Sound ถูกเก็บไว้ใน Mobile Session
-            ================================================= */
-
             const sound =
                 await resolveDonationSound(
-
                     donation.amount,
-
                     session.customSoundToken
                 );
 
@@ -5465,14 +6642,8 @@ app.post(
             );
 
 
-            /* =================================================
-               DATABASE TRANSACTION
-            ================================================= */
-
             await saveMobileDonationAndComplete(
-
                 sessionId,
-
                 donation
             );
 
@@ -5480,10 +6651,6 @@ app.post(
             locked =
                 false;
 
-
-            /* =================================================
-               CUSTOM SOUND USED
-            ================================================= */
 
             if (
                 donation.customSound
@@ -5508,22 +6675,13 @@ app.post(
             }
 
 
-            /* =================================================
-               OBS / GOAL / RANKING
-            ================================================= */
-
             await broadcastDonation(
                 donation
             );
 
 
-            /* =================================================
-               PC SUCCESS
-            ================================================= */
-
             io.emit(
                 "mobile-slip-success",
-
                 {
 
                     sessionId,
@@ -5553,7 +6711,6 @@ app.post(
 
                 donation
             });
-
 
         } catch (error) {
 
@@ -5610,9 +6767,6 @@ app.post(
 
 /* =========================================================
    TEST DONATION
-
-   Test ใช้เสียงตาม Tier
-   ยังไม่ใช้ Custom Sound
 ========================================================= */
 
 app.post(
@@ -5629,7 +6783,8 @@ app.post(
 
             const name =
                 String(
-                    req.body?.name ||
+                    req.body?.name
+                    ||
                     "AMR29 Test"
                 )
                 .trim()
@@ -5641,7 +6796,8 @@ app.post(
 
             const message =
                 String(
-                    req.body?.message ||
+                    req.body?.message
+                    ||
                     ""
                 )
                 .trim()
@@ -5660,8 +6816,12 @@ app.post(
             if (
                 !Number.isFinite(
                     amount
-                ) ||
-                amount <= 0
+                )
+
+                ||
+
+                amount <
+                10
             ) {
 
                 return res
@@ -5674,7 +6834,7 @@ app.post(
                             false,
 
                         message:
-                            "จำนวนเงินไม่ถูกต้อง"
+                            "จำนวนเงิน Test ต้องตั้งแต่ 10 บาทขึ้นไป"
                     });
             }
 
@@ -5684,11 +6844,6 @@ app.post(
                     amount
                 );
 
-
-            /*
-            Test route รองรับ Video เพื่อให้ Dashboard
-            สามารถทดสอบ Overlay ได้โดยไม่บันทึก DB
-            */
 
             let video = {
 
@@ -5708,7 +6863,8 @@ app.post(
 
             if (
                 String(
-                    req.body?.videoUrl ||
+                    req.body?.videoUrl
+                    ||
                     ""
                 )
                 .trim()
@@ -5725,7 +6881,8 @@ app.post(
             const donation = {
 
                 name:
-                    name ||
+                    name
+                    ||
                     "AMR29 Test",
 
                 message,
@@ -5769,8 +6926,10 @@ app.post(
                 "🧪 Test Donation:",
                 `${donation.name} ${amount} บาท`,
                 donation.videoId
-                    ? `(video ${donation.videoId})`
-                    : ""
+                    ?
+                    `(video ${donation.videoId})`
+                    :
+                    ""
             );
 
 
@@ -5784,7 +6943,6 @@ app.post(
 
                 donation
             });
-
 
         } catch (error) {
 
@@ -5818,9 +6976,6 @@ app.post(
 
 /* =========================================================
    REPLAY DONATION
-
-   Replay ใช้เสียง Tier
-   เพราะ Custom Sound เก่าอาจถูกลบไปแล้ว
 ========================================================= */
 
 app.post(
@@ -5848,7 +7003,8 @@ app.post(
 
                 ||
 
-                donationId <= 0
+                donationId <=
+                0
             ) {
 
                 return res
@@ -5929,80 +7085,84 @@ app.post(
                 id:
                     donation.id,
 
-
                 name:
                     donation.name,
 
-
                 message:
-
                     donation.message
-
                     ||
-
                     "",
 
-
                 amount:
-
                     Number(
                         donation.amount
                         ||
                         0
                     ),
 
-
                 ...tier,
-
 
                 customSound:
                     false,
 
-
                 soundToken:
                     null,
-
 
                 isReplay:
                     true,
 
-
                 replay:
                     true,
-
 
                 originalDonationId:
                     donation.id,
 
-
                 videoUrl:
-                    donation.video_url || null,
-
+                    donation.video_url
+                    ||
+                    null,
 
                 videoId:
-                    donation.video_id || null,
-
+                    donation.video_id
+                    ||
+                    null,
 
                 videoStart:
+
                     donation.video_id
-                        ? Number(
-                            donation.video_start ||
+
+                        ?
+
+                        Number(
+                            donation.video_start
+                            ||
                             0
                         )
-                        : null,
 
+                        :
+
+                        null,
 
                 videoDuration:
+
                     donation.video_id
-                        ? Math.min(
+
+                        ?
+
+                        Math.min(
+
                             Number(
-                                donation.video_duration ||
+                                donation.video_duration
+                                ||
                                 VIDEO_DONATION_MAX_DURATION
                             ),
+
                             VIDEO_DONATION_MAX_DURATION
                         )
-                        : null,
 
+                        :
+
+                        null,
 
                 createdAt:
                     Date.now()
@@ -6026,7 +7186,6 @@ app.post(
                 donation:
                     replayDonation
             });
-
 
         } catch (error) {
 
@@ -6215,7 +7374,6 @@ app.get(
                     getDonationGoal(),
 
                     getAlertSettings()
-
                 ]);
 
 
@@ -6226,29 +7384,51 @@ app.get(
                         ...row,
 
                         videoUrl:
-                            row.video_url || null,
+                            row.video_url
+                            ||
+                            null,
 
                         videoId:
-                            row.video_id || null,
+                            row.video_id
+                            ||
+                            null,
 
                         videoStart:
+
                             row.video_id
-                                ? Number(
-                                    row.video_start ||
+
+                                ?
+
+                                Number(
+                                    row.video_start
+                                    ||
                                     0
                                 )
-                                : null,
+
+                                :
+
+                                null,
 
                         videoDuration:
+
                             row.video_id
-                                ? Math.min(
+
+                                ?
+
+                                Math.min(
+
                                     Number(
-                                        row.video_duration ||
+                                        row.video_duration
+                                        ||
                                         VIDEO_DONATION_MAX_DURATION
                                     ),
+
                                     VIDEO_DONATION_MAX_DURATION
                                 )
-                                : null
+
+                                :
+
+                                null
                     })
                 );
 
@@ -6258,26 +7438,20 @@ app.get(
                 success:
                     true,
 
-
                 stats: {
-
 
                     today: {
 
                         count:
-
                             Number(
-                                today
-                                    ?.count
+                                today?.count
                                 ||
                                 0
                             ),
 
                         total:
-
                             Number(
-                                today
-                                    ?.total
+                                today?.total
                                 ||
                                 0
                             )
@@ -6287,19 +7461,15 @@ app.get(
                     month: {
 
                         count:
-
                             Number(
-                                month
-                                    ?.count
+                                month?.count
                                 ||
                                 0
                             ),
 
                         total:
-
                             Number(
-                                month
-                                    ?.total
+                                month?.total
                                 ||
                                 0
                             )
@@ -6309,25 +7479,20 @@ app.get(
                     all: {
 
                         count:
-
                             Number(
-                                all
-                                    ?.count
+                                all?.count
                                 ||
                                 0
                             ),
 
                         total:
-
                             Number(
-                                all
-                                    ?.total
+                                all?.total
                                 ||
                                 0
                             )
                     }
                 },
-
 
                 recent:
                     recentDonations,
@@ -6336,9 +7501,13 @@ app.get(
 
                 goal,
 
+                /*
+                Dashboard จะได้ Volume
+                มาพร้อม Alert Settings เลย
+                */
+
                 alertSettings
             });
-
 
         } catch (error) {
 
@@ -6458,9 +7627,17 @@ app.use(
    START / SHUTDOWN
 ========================================================= */
 
-let cleanupInterval = null;
-let isShuttingDown = false;
+let cleanupInterval =
+    null;
 
+
+let isShuttingDown =
+    false;
+
+
+/* =========================================================
+   CLOSE DATABASE
+========================================================= */
 
 async function closeDatabase() {
 
@@ -6488,6 +7665,10 @@ async function closeDatabase() {
     );
 }
 
+
+/* =========================================================
+   SHUTDOWN
+========================================================= */
 
 async function gracefulShutdown(
     signal
@@ -6527,6 +7708,7 @@ async function gracefulShutdown(
                 console.error(
                     "Forced shutdown after timeout"
                 );
+
 
                 process.exit(
                     1
@@ -6570,7 +7752,6 @@ async function gracefulShutdown(
 
 process.on(
     "SIGTERM",
-
     () =>
         gracefulShutdown(
             "SIGTERM"
@@ -6580,7 +7761,6 @@ process.on(
 
 process.on(
     "SIGINT",
-
     () =>
         gracefulShutdown(
             "SIGINT"
@@ -6601,8 +7781,6 @@ async function start() {
 
         await initDatabase();
 
-
-        /* SQLite runtime tuning */
 
         await dbRun(
             "PRAGMA journal_mode = WAL"
@@ -6839,61 +8017,69 @@ async function start() {
 
 
                 console.log(
+                    "Default Volume:"
+                );
 
+
+                console.log(
+                    "  Alert       -> 70%"
+                );
+
+
+                console.log(
+                    "  Custom      -> 70%"
+                );
+
+
+                console.log(
+                    "  TTS         -> 100%"
+                );
+
+
+                console.log(
+                    "  Video       -> 80%"
+                );
+
+
+                console.log(
+                    ""
+                );
+
+
+                console.log(
                     "ADMIN_KEY:",
-
                     process.env.ADMIN_KEY
-
                         ?
-
                         "Loaded ✓"
-
                         :
-
                         "NOT SET ✗"
                 );
 
 
                 console.log(
-
                     "PROMPTPAY_ID:",
-
                     process.env.PROMPTPAY_ID
-
                         ?
-
                         "Loaded ✓"
-
                         :
-
                         "NOT SET ✗"
                 );
 
 
                 console.log(
-
                     "EASYSLIP:",
-
                     process.env.EASYSLIP_API_KEY
-
                         ?
-
                         "Loaded ✓"
-
                         :
-
                         "NOT SET ✗"
                 );
 
 
                 console.log(
-
                     "PUBLIC_BASE_URL:",
-
                     PUBLIC_BASE_URL
-
                     ||
-
                     "Not set"
                 );
 
@@ -6903,7 +8089,6 @@ async function start() {
                 );
             }
         );
-
 
     } catch (error) {
 

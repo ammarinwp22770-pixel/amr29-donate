@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AMR29 Donation Alert</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -29,7 +31,11 @@ body{
     margin:0;
     overflow:hidden;
     background:transparent;
-    font-family:"Segoe UI","Noto Sans Thai",Arial,sans-serif;
+    font-family:
+        "Segoe UI",
+        "Noto Sans Thai",
+        Arial,
+        sans-serif;
 }
 
 body{
@@ -44,7 +50,7 @@ body{
 
 
 /* =========================================================
-   VIDEO ONLY
+   VIDEO
 ========================================================= */
 
 .video-wrap{
@@ -203,7 +209,7 @@ body{
 
 
 /* =========================================================
-   NORMAL DONATION ALERT
+   NORMAL DONATION
 ========================================================= */
 
 .alert-wrap{
@@ -946,12 +952,8 @@ body{
     ></div>
 
 
-
     <!-- =====================================================
          VIDEO DONATION
-
-         ถ้ามี Video
-         จะแสดงเฉพาะส่วนนี้เท่านั้น
     ====================================================== -->
 
     <div
@@ -981,11 +983,8 @@ body{
     </div>
 
 
-
     <!-- =====================================================
          NORMAL DONATION
-
-         ใช้เมื่อไม่มี Video เท่านั้น
     ====================================================== -->
 
     <div
@@ -1002,7 +1001,6 @@ body{
         </div>
 
 
-
         <div class="alert-card">
 
 
@@ -1012,14 +1010,12 @@ body{
             <div class="alert-glow"></div>
 
 
-
             <div
                 class="avatar"
                 id="avatar"
             >
                 A
             </div>
-
 
 
             <div class="content">
@@ -1044,7 +1040,6 @@ body{
                 </div>
 
 
-
                 <div
                     class="donor-name"
                     id="donor-name"
@@ -1053,14 +1048,12 @@ body{
                 </div>
 
 
-
                 <div
                     class="message"
                     id="message"
                 ></div>
 
             </div>
-
 
 
             <div class="amount-box">
@@ -1081,7 +1074,6 @@ body{
             </div>
 
 
-
             <div class="progress">
 
                 <div
@@ -1096,7 +1088,6 @@ body{
     </div>
 
 </div>
-
 
 
 <audio
@@ -1135,22 +1126,12 @@ const VIDEO_HIDE_DELAY =
     220;
 
 
-/*
-YouTube ต้องเริ่มเล่นภายใน 10 วินาที
-ไม่งั้นข้ามเพื่อไม่ให้ Queue ค้าง
-*/
-
 const VIDEO_LOAD_TIMEOUT =
     10000;
 
 
-/*
-Hard timeout ป้องกัน Player ค้าง
-*/
-
 const VIDEO_HARD_GRACE =
     8000;
-
 
 
 /* =========================================================
@@ -1178,9 +1159,25 @@ let alertSettings = {
         1000,
 
     noTtsDisplayTime:
-        4500
-};
+        4500,
 
+
+    /* =====================================================
+       VOLUME 0 - 100
+    ====================================================== */
+
+    alertVolume:
+        70,
+
+    customSoundVolume:
+        70,
+
+    ttsVolume:
+        100,
+
+    videoVolume:
+        80
+};
 
 
 /* =========================================================
@@ -1189,7 +1186,6 @@ let alertSettings = {
 
 const socket =
     io();
-
 
 
 /* =========================================================
@@ -1274,7 +1270,6 @@ const videoProgressFill =
     );
 
 
-
 /* =========================================================
    QUEUE
 ========================================================= */
@@ -1291,9 +1286,8 @@ let currentDonation =
     null;
 
 
-
 /* =========================================================
-   ANIMATION STATE
+   ANIMATION
 ========================================================= */
 
 let progressAnimation =
@@ -1304,9 +1298,8 @@ let videoProgressAnimation =
     null;
 
 
-
 /* =========================================================
-   YOUTUBE PLAYER STATE
+   YOUTUBE
 ========================================================= */
 
 let youtubePlayer =
@@ -1321,7 +1314,6 @@ let resolveYouTubeReady =
     null;
 
 
-
 const youtubeReadyPromise =
     new Promise(
         resolve => {
@@ -1330,7 +1322,6 @@ const youtubeReadyPromise =
                 resolve;
         }
     );
-
 
 
 /* =========================================================
@@ -1353,11 +1344,6 @@ window.onYouTubeIframeAPIReady =
     };
 
 
-
-/*
-กรณี API โหลดเสร็จเร็วมาก
-*/
-
 if(
     window.YT
     &&
@@ -1376,6 +1362,158 @@ if(
     }
 }
 
+
+/* =========================================================
+   VOLUME HELPERS
+========================================================= */
+
+function normalizeVolumePercent(
+    value,
+    fallback = 100
+){
+
+    const number =
+        Number(
+            value
+        );
+
+
+    if(
+        !Number.isFinite(
+            number
+        )
+    ){
+
+        return Math.min(
+            100,
+            Math.max(
+                0,
+                Number(
+                    fallback
+                )
+                ||
+                0
+            )
+        );
+    }
+
+
+    return Math.min(
+        100,
+        Math.max(
+            0,
+            number
+        )
+    );
+}
+
+
+function volumeToAudioLevel(
+    value,
+    fallback = 100
+){
+
+    return (
+
+        normalizeVolumePercent(
+            value,
+            fallback
+        )
+
+        /
+
+        100
+    );
+}
+
+
+/* =========================================================
+   APPLY CURRENT VOLUME
+
+   ใช้ตอน Dashboard เปลี่ยน Volume แบบ Realtime
+========================================================= */
+
+function applyCurrentVolumes(){
+
+
+    /* =====================================================
+       AUDIO ELEMENT
+    ====================================================== */
+
+    try{
+
+        if(
+            currentDonation
+            &&
+            currentDonation.customSound
+        ){
+
+            alertSound.volume =
+
+                volumeToAudioLevel(
+
+                    alertSettings
+                        .customSoundVolume,
+
+                    70
+                );
+
+        }else{
+
+            alertSound.volume =
+
+                volumeToAudioLevel(
+
+                    alertSettings
+                        .alertVolume,
+
+                    70
+                );
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Apply Alert Volume:",
+            error
+        );
+    }
+
+
+    /* =====================================================
+       CURRENT YOUTUBE PLAYER
+    ====================================================== */
+
+    try{
+
+        if(
+            youtubePlayer
+            &&
+            typeof youtubePlayer.setVolume
+            ===
+            "function"
+        ){
+
+            youtubePlayer.setVolume(
+
+                normalizeVolumePercent(
+
+                    alertSettings
+                        .videoVolume,
+
+                    80
+                )
+            );
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Apply Video Volume:",
+            error
+        );
+    }
+}
 
 
 /* =========================================================
@@ -1423,6 +1561,9 @@ async function loadAlertSettings(){
         };
 
 
+        applyCurrentVolumes();
+
+
         console.log(
             "Alert Settings:",
             alertSettings
@@ -1437,7 +1578,6 @@ async function loadAlertSettings(){
         );
     }
 }
-
 
 
 /* =========================================================
@@ -1466,13 +1606,20 @@ socket.on(
         };
 
 
+        /*
+        Alert หรือ Video ที่กำลังเล่น
+        จะเปลี่ยน Volume ทันที
+        */
+
+        applyCurrentVolumes();
+
+
         console.log(
             "Alert Settings updated:",
             alertSettings
         );
     }
 );
-
 
 
 /* =========================================================
@@ -1494,12 +1641,10 @@ socket.on(
         }
 
 
-
         const amount =
             Number(
                 donation.amount
             );
-
 
 
         if(
@@ -1514,12 +1659,10 @@ socket.on(
         }
 
 
-
         const video =
             normalizeVideoDonation(
                 donation
             );
-
 
 
         donationQueue.push({
@@ -1539,7 +1682,6 @@ socket.on(
                 ),
 
 
-
             message:
 
                 String(
@@ -1554,9 +1696,7 @@ socket.on(
                 ),
 
 
-
             amount,
-
 
 
             isTest:
@@ -1568,7 +1708,6 @@ socket.on(
                 ),
 
 
-
             isReplay:
 
                 Boolean(
@@ -1578,7 +1717,6 @@ socket.on(
                 ),
 
 
-
             soundUrl:
 
                 sanitizeSoundUrl(
@@ -1586,13 +1724,11 @@ socket.on(
                 ),
 
 
-
             customSound:
 
                 Boolean(
                     donation.customSound
                 ),
-
 
 
             soundTier:
@@ -1604,10 +1740,8 @@ socket.on(
                 ),
 
 
-
             ...video
         });
-
 
 
         playNextDonation();
@@ -1615,9 +1749,8 @@ socket.on(
 );
 
 
-
 /* =========================================================
-   QUEUE PLAYER
+   QUEUE
 ========================================================= */
 
 async function playNextDonation(){
@@ -1634,57 +1767,76 @@ async function playNextDonation(){
     }
 
 
-
     playing =
         true;
-
 
 
     currentDonation =
         donationQueue.shift();
 
 
-
     try{
 
 
-        /*
-        =====================================================
-        VIDEO DONATION
-        =====================================================
-
-        มี Video:
-        - ไม่แสดง Alert ปกติ
-        - ไม่เล่น Donation Sound
-        - ไม่เล่น Custom Sound
-        - ไม่อ่าน TTS
-        - ไม่แสดงชื่อ/ยอด/ข้อความ
-        - เปิด YouTube อย่างเดียว
-        */
-
+        /* =================================================
+           VIDEO DONATION
+        ================================================= */
 
         if(
             currentDonation.videoId
         ){
 
-            await playVideoDonation(
-                currentDonation
+            const videoResult =
+                await playVideoDonation(
+                    currentDonation
+                );
+
+
+            /*
+            ถ้า Video เล่นสำเร็จ
+            จบ Donation นี้เลย
+            */
+
+            if(
+                videoResult ===
+                "complete"
+
+                ||
+
+                videoResult ===
+                "ended"
+            ){
+
+                return;
+            }
+
+
+            /*
+            ถ้า YouTube Error / Timeout
+            fallback เป็น Alert ปกติ
+            */
+
+            console.warn(
+                "Video failed -> fallback normal donation"
             );
-        }
 
-
-        /*
-        =====================================================
-        NORMAL DONATION
-        =====================================================
-        */
-
-        else{
 
             await showNormalDonation(
                 currentDonation
             );
+
+
+            return;
         }
+
+
+        /* =================================================
+           NORMAL
+        ================================================= */
+
+        await showNormalDonation(
+            currentDonation
+        );
 
     }
     catch(error){
@@ -1701,27 +1853,22 @@ async function playNextDonation(){
         cleanupEverything();
 
 
-
         await delay(
             450
         );
-
 
 
         playing =
             false;
 
 
-
         currentDonation =
             null;
-
 
 
         playNextDonation();
     }
 }
-
 
 
 /* =========================================================
@@ -1739,12 +1886,10 @@ async function showNormalDonation(
     resetAlertClasses();
 
 
-
     const amount =
         Number(
             donation.amount
         );
-
 
 
     const bigAmount =
@@ -1753,7 +1898,6 @@ async function showNormalDonation(
         )
         ||
         500;
-
 
 
     const megaAmount =
@@ -1769,7 +1913,6 @@ async function showNormalDonation(
             ||
             1000
         );
-
 
 
     /* =====================================================
@@ -1832,9 +1975,8 @@ async function showNormalDonation(
     }
 
 
-
     /* =====================================================
-       TEST / REPLAY BADGE
+       TEST / REPLAY
     ====================================================== */
 
     alertBadge.className =
@@ -1843,7 +1985,6 @@ async function showNormalDonation(
 
     alertBadge.innerText =
         "";
-
 
 
     if(
@@ -1878,7 +2019,6 @@ async function showNormalDonation(
     }
 
 
-
     /* =====================================================
        CONTENT
     ====================================================== */
@@ -1889,17 +2029,14 @@ async function showNormalDonation(
         "Anonymous";
 
 
-
     donorName.innerText =
         name;
-
 
 
     avatar.innerText =
         getFirstCharacter(
             name
         );
-
 
 
     amountElement.innerText =
@@ -1914,7 +2051,6 @@ async function showNormalDonation(
             );
 
 
-
     if(
         donation.message
     ){
@@ -1927,10 +2063,8 @@ async function showNormalDonation(
 
         messageElement.innerText =
             donation.message;
-    }
 
-
-    else{
+    }else{
 
         messageElement
             .style
@@ -1941,7 +2075,6 @@ async function showNormalDonation(
         messageElement.innerText =
             "";
     }
-
 
 
     /* =====================================================
@@ -1955,9 +2088,7 @@ async function showNormalDonation(
         );
 
 
-
     void alertWrap.offsetWidth;
-
 
 
     alertWrap
@@ -1967,21 +2098,18 @@ async function showNormalDonation(
         );
 
 
-
     await delay(
         180
     );
 
 
-
     /* =====================================================
-       ALERT SOUND
+       ALERT / CUSTOM SOUND
     ====================================================== */
 
     await playAlertSound(
-        donation.soundUrl
+        donation
     );
-
 
 
     /* =====================================================
@@ -1992,7 +2120,6 @@ async function showNormalDonation(
         createSpeechText(
             donation
         );
-
 
 
     const hasTTS =
@@ -2006,7 +2133,6 @@ async function showNormalDonation(
         Boolean(
             speechText
         );
-
 
 
     const afterDelay =
@@ -2025,7 +2151,6 @@ async function showNormalDonation(
         );
 
 
-
     const noTtsDisplayTime =
 
         clamp(
@@ -2042,11 +2167,6 @@ async function showNormalDonation(
         );
 
 
-
-    /* =====================================================
-       TTS ON
-    ====================================================== */
-
     if(
         hasTTS
     ){
@@ -2055,7 +2175,6 @@ async function showNormalDonation(
             estimateSpeechDuration(
                 speechText
             );
-
 
 
         startProgress(
@@ -2068,11 +2187,9 @@ async function showNormalDonation(
         );
 
 
-
         await speak(
             speechText
         );
-
 
 
         if(
@@ -2084,15 +2201,8 @@ async function showNormalDonation(
                 afterDelay
             );
         }
-    }
 
-
-
-    /* =====================================================
-       TTS OFF
-    ====================================================== */
-
-    else{
+    }else{
 
         startProgress(
             noTtsDisplayTime
@@ -2106,23 +2216,13 @@ async function showNormalDonation(
 }
 
 
-
 /* =========================================================
    VIDEO DONATION
-
-   VIDEO = VIDEO ONLY
 ========================================================= */
 
 async function playVideoDonation(
     donation
 ){
-
-
-    /*
-    =========================================================
-    STOP NORMAL DONATION SYSTEM
-    =========================================================
-    */
 
 
     hideAlert();
@@ -2138,26 +2238,13 @@ async function playVideoDonation(
         "";
 
 
-
-    /*
-    Player จาก Donation ก่อนหน้า
-    */
-
-
     await destroyYouTubePlayer();
-
-
-
-    /*
-    Reset progress
-    */
 
 
     videoProgressFill
         .style
         .transform =
         "scaleX(1)";
-
 
 
     if(
@@ -2173,14 +2260,6 @@ async function playVideoDonation(
     }
 
 
-
-    /*
-    =========================================================
-    SHOW VIDEO FRAME
-    =========================================================
-    */
-
-
     videoWrap
         .classList
         .remove(
@@ -2188,9 +2267,7 @@ async function playVideoDonation(
         );
 
 
-
     void videoWrap.offsetWidth;
-
 
 
     videoWrap
@@ -2200,18 +2277,9 @@ async function playVideoDonation(
         );
 
 
-
     await delay(
         VIDEO_SHOW_DELAY
     );
-
-
-
-    /*
-    =========================================================
-    PLAY YOUTUBE
-    =========================================================
-    */
 
 
     const result =
@@ -2225,46 +2293,20 @@ async function playVideoDonation(
         );
 
 
-
-    /*
-    Video Private / Embed disabled / Removed
-    หรือ Player Error
-    จะข้ามไป Queue ถัดไป
-    */
-
-
-    if(
-        result ===
-        "error"
-    ){
-
-        console.warn(
-            "Video Donation skipped because YouTube player failed"
-        );
-    }
-
-
-
-    /*
-    =========================================================
-    HIDE
-    =========================================================
-    */
-
-
     hideVideo();
-
 
 
     await delay(
         VIDEO_HIDE_DELAY
     );
+
+
+    return result;
 }
 
 
-
 /* =========================================================
-   WAIT YOUTUBE API
+   WAIT YOUTUBE
 ========================================================= */
 
 async function waitForYouTubeAPI(){
@@ -2284,7 +2326,6 @@ async function waitForYouTubeAPI(){
 
         return;
     }
-
 
 
     await Promise.race([
@@ -2307,7 +2348,6 @@ async function waitForYouTubeAPI(){
     ]);
 
 
-
     if(
         !window.YT
 
@@ -2321,7 +2361,6 @@ async function waitForYouTubeAPI(){
         );
     }
 }
-
 
 
 /* =========================================================
@@ -2352,7 +2391,6 @@ async function playYouTubeClip(
     }
 
 
-
     const safeStart =
 
         clamp(
@@ -2374,7 +2412,6 @@ async function playYouTubeClip(
         );
 
 
-
     const safeDuration =
 
         clamp(
@@ -2394,7 +2431,6 @@ async function playYouTubeClip(
 
             VIDEO_MAX_DURATION
         );
-
 
 
     return new Promise(
@@ -2421,14 +2457,6 @@ async function playYouTubeClip(
                 null;
 
 
-
-            /*
-            =====================================================
-            FINISH
-            =====================================================
-            */
-
-
             const finish =
                 async status => {
 
@@ -2443,7 +2471,6 @@ async function playYouTubeClip(
 
                     finished =
                         true;
-
 
 
                     clearTimeout(
@@ -2461,7 +2488,6 @@ async function playYouTubeClip(
                     );
 
 
-
                     if(
                         videoProgressAnimation
                     ){
@@ -2475,9 +2501,7 @@ async function playYouTubeClip(
                     }
 
 
-
                     await destroyYouTubePlayer();
-
 
 
                     resolve(
@@ -2486,16 +2510,9 @@ async function playYouTubeClip(
                 };
 
 
-
-            /*
-            =====================================================
-            START DURATION TIMER
-            =====================================================
-
-            เริ่มนับเวลาจริง
-            หลัง YouTube เริ่ม PLAYING แล้วเท่านั้น
-            */
-
+            /* =================================================
+               START TIMER
+            ================================================= */
 
             const startDurationTimer =
                 () => {
@@ -2513,16 +2530,9 @@ async function playYouTubeClip(
                         true;
 
 
-
                     clearTimeout(
                         loadTimeout
                     );
-
-
-
-                    /*
-                    Progress
-                    */
 
 
                     videoProgressAnimation =
@@ -2563,12 +2573,6 @@ async function playYouTubeClip(
                             );
 
 
-
-                    /*
-                    Stop ตามเวลาที่คนโดเนทเลือก
-                    */
-
-
                     durationTimeout =
 
                         setTimeout(
@@ -2589,13 +2593,9 @@ async function playYouTubeClip(
                 };
 
 
-
-            /*
-            =====================================================
-            LOAD TIMEOUT
-            =====================================================
-            */
-
+            /* =================================================
+               STARTUP TIMEOUT
+            ================================================= */
 
             loadTimeout =
 
@@ -2612,13 +2612,9 @@ async function playYouTubeClip(
                 );
 
 
-
-            /*
-            =====================================================
-            HARD TIMEOUT
-            =====================================================
-            */
-
+            /* =================================================
+               HARD TIMEOUT
+            ================================================= */
 
             hardTimeout =
 
@@ -2633,9 +2629,7 @@ async function playYouTubeClip(
 
                     (
                         safeDuration
-
                         *
-
                         1000
                     )
 
@@ -2645,19 +2639,14 @@ async function playYouTubeClip(
                 );
 
 
-
-            /*
-            =====================================================
-            CREATE PLAYER
-            =====================================================
-            */
-
+            /* =================================================
+               CREATE PLAYER
+            ================================================= */
 
             try{
 
 
                 ensureVideoPlayerHost();
-
 
 
                 youtubePlayer =
@@ -2678,7 +2667,6 @@ async function playYouTubeClip(
 
 
                             videoId,
-
 
 
                             playerVars: {
@@ -2721,7 +2709,6 @@ async function playYouTubeClip(
                             },
 
 
-
                             events: {
 
 
@@ -2729,17 +2716,11 @@ async function playYouTubeClip(
                                    READY
                                 ============================= */
 
-
                                 onReady:
                                     event => {
 
 
                                         try{
-
-
-                                            /*
-                                            บังคับไปจุดที่เลือก
-                                            */
 
 
                                             event.target.seekTo(
@@ -2750,25 +2731,28 @@ async function playYouTubeClip(
                                             );
 
 
-
                                             /*
-                                            เสียงคลิปต้องเปิด
+                                            Video Donation
+                                            ต้องใช้เสียงคลิป
                                             */
-
 
                                             event.target.unMute();
 
 
+                                            /*
+                                            VOLUME MIXER
+                                            */
 
                                             event.target.setVolume(
-                                                100
+
+                                                normalizeVolumePercent(
+
+                                                    alertSettings
+                                                        .videoVolume,
+
+                                                    80
+                                                )
                                             );
-
-
-
-                                            /*
-                                            Play
-                                            */
 
 
                                             event.target.playVideo();
@@ -2784,19 +2768,12 @@ async function playYouTubeClip(
                                     },
 
 
-
                                 /* =============================
                                    STATE
                                 ============================= */
 
-
                                 onStateChange:
                                     event => {
-
-
-                                        /*
-                                        เริ่มเล่นจริงแล้ว
-                                        */
 
 
                                         if(
@@ -2807,14 +2784,30 @@ async function playYouTubeClip(
                                             YT.PlayerState.PLAYING
                                         ){
 
+                                            /*
+                                            เผื่อ Volume
+                                            ถูกเปลี่ยนระหว่างโหลด
+                                            */
+
+                                            try{
+
+                                                event.target
+                                                    .setVolume(
+
+                                                        normalizeVolumePercent(
+
+                                                            alertSettings
+                                                                .videoVolume,
+
+                                                            80
+                                                        )
+                                                    );
+
+                                            }catch{}
+
+
                                             startDurationTimer();
                                         }
-
-
-
-                                        /*
-                                        คลิปจบก่อนเวลาที่เลือก
-                                        */
 
 
                                         if(
@@ -2832,11 +2825,9 @@ async function playYouTubeClip(
                                     },
 
 
-
                                 /* =============================
                                    ERROR
                                 ============================= */
-
 
                                 onError:
                                     event => {
@@ -2874,9 +2865,8 @@ async function playYouTubeClip(
 }
 
 
-
 /* =========================================================
-   ENSURE PLAYER HOST
+   PLAYER HOST
 ========================================================= */
 
 function ensureVideoPlayerHost(){
@@ -2886,12 +2876,6 @@ function ensureVideoPlayerHost(){
         document.getElementById(
             "video-player"
         );
-
-
-
-    /*
-    Div อยู่แล้ว
-    */
 
 
     if(
@@ -2911,24 +2895,12 @@ function ensureVideoPlayerHost(){
     }
 
 
-
-    /*
-    มี iframe เก่าค้าง
-    */
-
-
     if(
         host
     ){
 
         host.remove();
     }
-
-
-
-    /*
-    สร้าง Div ใหม่
-    */
 
 
     host =
@@ -2941,7 +2913,6 @@ function ensureVideoPlayerHost(){
         "video-player";
 
 
-
     const shell =
 
         videoWrap.querySelector(
@@ -2949,13 +2920,11 @@ function ensureVideoPlayerHost(){
         );
 
 
-
     const progress =
 
         shell.querySelector(
             ".video-progress"
         );
-
 
 
     shell.insertBefore(
@@ -2966,14 +2935,12 @@ function ensureVideoPlayerHost(){
     );
 
 
-
     return host;
 }
 
 
-
 /* =========================================================
-   DESTROY YOUTUBE PLAYER
+   DESTROY YOUTUBE
 ========================================================= */
 
 async function destroyYouTubePlayer(){
@@ -2991,7 +2958,6 @@ async function destroyYouTubePlayer(){
         }catch{}
 
 
-
         try{
 
             youtubePlayer.destroy();
@@ -2999,23 +2965,13 @@ async function destroyYouTubePlayer(){
         }catch{}
 
 
-
         youtubePlayer =
             null;
     }
 
 
-
-    /*
-    YT.Player destroy()
-    อาจลบ Element ออกไป
-    เลยสร้าง Host กลับไว้สำหรับ Donation ถัดไป
-    */
-
-
     ensureVideoPlayerHost();
 }
-
 
 
 /* =========================================================
@@ -3038,12 +2994,10 @@ function hideVideo(){
     }
 
 
-
     videoProgressFill
         .style
         .transform =
         "scaleX(1)";
-
 
 
     videoWrap
@@ -3053,13 +3007,11 @@ function hideVideo(){
         );
 
 
-
     videoWrap
         .classList
         .remove(
             "show"
         );
-
 
 
     destroyYouTubePlayer()
@@ -3069,9 +3021,8 @@ function hideVideo(){
 }
 
 
-
 /* =========================================================
-   NORMALIZE VIDEO DONATION
+   NORMALIZE VIDEO
 ========================================================= */
 
 function normalizeVideoDonation(
@@ -3096,7 +3047,6 @@ function normalizeVideoDonation(
         .trim();
 
 
-
     let videoId =
 
         /^[A-Za-z0-9_-]{11}$/
@@ -3111,12 +3061,6 @@ function normalizeVideoDonation(
             :
 
             null;
-
-
-
-    /*
-    ถ้า Server ส่งแค่ URL
-    */
 
 
     if(
@@ -3146,12 +3090,6 @@ function normalizeVideoDonation(
     }
 
 
-
-    /*
-    ไม่มี Video
-    */
-
-
     if(
         !videoId
     ){
@@ -3171,12 +3109,6 @@ function normalizeVideoDonation(
                 null
         };
     }
-
-
-
-    /*
-    Start
-    */
 
 
     const videoStart =
@@ -3209,12 +3141,6 @@ function normalizeVideoDonation(
         );
 
 
-
-    /*
-    Duration
-    */
-
-
     const videoDuration =
 
         clamp(
@@ -3245,7 +3171,6 @@ function normalizeVideoDonation(
         );
 
 
-
     return {
 
 
@@ -3263,7 +3188,6 @@ function normalizeVideoDonation(
         videoDuration
     };
 }
-
 
 
 /* =========================================================
@@ -3285,19 +3209,12 @@ function extractYouTubeId(
         .trim();
 
 
-
     if(
         !raw
     ){
 
         return null;
     }
-
-
-
-    /*
-    URL ไม่มี https://
-    */
 
 
     if(
@@ -3317,9 +3234,7 @@ function extractYouTubeId(
     }
 
 
-
     let url;
-
 
 
     try{
@@ -3336,7 +3251,6 @@ function extractYouTubeId(
     }
 
 
-
     const host =
 
         url.hostname
@@ -3347,15 +3261,9 @@ function extractYouTubeId(
             );
 
 
-
     let id =
         null;
 
-
-
-    /* =====================================================
-       youtu.be
-    ====================================================== */
 
     if(
         host ===
@@ -3376,11 +3284,6 @@ function extractYouTubeId(
     }
 
 
-
-    /* =====================================================
-       youtube.com
-    ====================================================== */
-
     if(
         host ===
             "youtube.com"
@@ -3397,11 +3300,6 @@ function extractYouTubeId(
     ){
 
 
-        /*
-        watch?v=
-        */
-
-
         if(
             url.pathname ===
             "/watch"
@@ -3414,12 +3312,6 @@ function extractYouTubeId(
                         "v"
                     );
         }
-
-
-
-        /*
-        shorts / live / embed
-        */
 
 
         else if(
@@ -3445,7 +3337,6 @@ function extractYouTubeId(
     }
 
 
-
     if(
         id
 
@@ -3461,20 +3352,22 @@ function extractYouTubeId(
     }
 
 
-
     return null;
 }
-
 
 
 /* =========================================================
    ALERT SOUND
 
-   ใช้เฉพาะ Donation ปกติ
+   Tier:
+   alertVolume
+
+   Custom:
+   customSoundVolume
 ========================================================= */
 
 async function playAlertSound(
-    soundUrl
+    donation
 ){
 
 
@@ -3484,15 +3377,57 @@ async function playAlertSound(
         stopAlertAudio();
 
 
-
         const nextSource =
 
-            soundUrl
+            donation.soundUrl
 
             ||
 
             "/sounds/alert.mp3";
 
+
+        /*
+        =====================================================
+        VOLUME
+        =====================================================
+        */
+
+        const selectedVolume =
+
+            donation.customSound
+
+                ?
+
+                alertSettings
+                    .customSoundVolume
+
+                :
+
+                alertSettings
+                    .alertVolume;
+
+
+        const fallbackVolume =
+
+            donation.customSound
+
+                ?
+
+                70
+
+                :
+
+                70;
+
+
+        alertSound.volume =
+
+            volumeToAudioLevel(
+
+                selectedVolume,
+
+                fallbackVolume
+            );
 
 
         if(
@@ -3514,10 +3449,22 @@ async function playAlertSound(
         }
 
 
+        /*
+        เผื่อ load()
+        */
+
+        alertSound.volume =
+
+            volumeToAudioLevel(
+
+                selectedVolume,
+
+                fallbackVolume
+            );
+
 
         const playPromise =
             alertSound.play();
-
 
 
         if(
@@ -3536,7 +3483,6 @@ async function playAlertSound(
         }
 
 
-
         await waitForAudioEnd(
             alertSound
         );
@@ -3544,18 +3490,12 @@ async function playAlertSound(
     }
     catch(error){
 
-        /*
-        เสียงผิดพลาด
-        อย่าให้ Queue พัง
-        */
-
         console.warn(
             "Alert Audio:",
             error
         );
     }
 }
-
 
 
 /* =========================================================
@@ -3572,7 +3512,6 @@ function stopAlertAudio(){
     }catch{}
 
 
-
     try{
 
         alertSound.currentTime =
@@ -3580,7 +3519,6 @@ function stopAlertAudio(){
 
     }catch{}
 }
-
 
 
 /* =========================================================
@@ -3602,19 +3540,12 @@ function sanitizeSoundUrl(
         .trim();
 
 
-
     if(
         !raw
     ){
 
         return "/sounds/alert.mp3";
     }
-
-
-
-    /*
-    Default Tier Sound
-    */
 
 
     if(
@@ -3627,12 +3558,6 @@ function sanitizeSoundUrl(
     }
 
 
-
-    /*
-    Custom Sound
-    */
-
-
     if(
         raw.startsWith(
             "/api/custom-sound/"
@@ -3643,15 +3568,8 @@ function sanitizeSoundUrl(
     }
 
 
-
-    /*
-    ไม่อนุญาต URL ภายนอก
-    */
-
-
     return "/sounds/alert.mp3";
 }
-
 
 
 /* =========================================================
@@ -3681,15 +3599,12 @@ function waitForAudioEnd(
             }
 
 
-
             let done =
                 false;
 
 
-
             let timeoutId =
                 null;
-
 
 
             const finish =
@@ -3708,14 +3623,12 @@ function waitForAudioEnd(
                         true;
 
 
-
                     audio.removeEventListener(
 
                         "ended",
 
                         finish
                     );
-
 
 
                     audio.removeEventListener(
@@ -3726,16 +3639,13 @@ function waitForAudioEnd(
                     );
 
 
-
                     clearTimeout(
                         timeoutId
                     );
 
 
-
                     resolve();
                 };
-
 
 
             audio.addEventListener(
@@ -3751,7 +3661,6 @@ function waitForAudioEnd(
             );
 
 
-
             audio.addEventListener(
 
                 "error",
@@ -3763,13 +3672,6 @@ function waitForAudioEnd(
                         true
                 }
             );
-
-
-
-            /*
-            Custom Sound จำกัดไม่เกิน 10 วิ
-            แต่เผื่อเวลาโหลด
-            */
 
 
             timeoutId =
@@ -3785,11 +3687,8 @@ function waitForAudioEnd(
 }
 
 
-
 /* =========================================================
-   CREATE TTS TEXT
-
-   ใช้เฉพาะ Donation ปกติ
+   CREATE TTS
 ========================================================= */
 
 function createSpeechText(
@@ -3806,13 +3705,11 @@ function createSpeechText(
         "Anonymous";
 
 
-
     let text =
 
         `${name} สนับสนุน ${formatAmountForSpeech(
             donation.amount
         )} บาท`;
-
 
 
     if(
@@ -3831,10 +3728,8 @@ function createSpeechText(
     }
 
 
-
     return text;
 }
-
 
 
 /* =========================================================
@@ -3864,9 +3759,7 @@ function speak(
             }
 
 
-
             cancelTTS();
-
 
 
             const utterance =
@@ -3876,10 +3769,8 @@ function speak(
                 );
 
 
-
             utterance.lang =
                 "th-TH";
-
 
 
             utterance.rate =
@@ -3900,25 +3791,34 @@ function speak(
                 );
 
 
-
             utterance.pitch =
                 1;
 
 
+            /*
+            =====================================================
+            TTS VOLUME
+            SpeechSynthesis ใช้ 0 - 1
+            =====================================================
+            */
 
             utterance.volume =
-                1;
 
+                volumeToAudioLevel(
+
+                    alertSettings
+                        .ttsVolume,
+
+                    100
+                );
 
 
             let finished =
                 false;
 
 
-
             let timeoutId =
                 null;
-
 
 
             const finish =
@@ -3937,26 +3837,21 @@ function speak(
                         true;
 
 
-
                     clearTimeout(
                         timeoutId
                     );
-
 
 
                     resolve();
                 };
 
 
-
             utterance.onend =
                 finish;
 
 
-
             utterance.onerror =
                 finish;
-
 
 
             window
@@ -3964,7 +3859,6 @@ function speak(
                 .speak(
                     utterance
                 );
-
 
 
             timeoutId =
@@ -3991,7 +3885,6 @@ function speak(
 }
 
 
-
 /* =========================================================
    CANCEL TTS
 ========================================================= */
@@ -4014,7 +3907,6 @@ function cancelTTS(){
 }
 
 
-
 /* =========================================================
    ESTIMATE TTS
 ========================================================= */
@@ -4034,7 +3926,6 @@ function estimateSpeechDuration(
         .length;
 
 
-
     const rate =
 
         clamp(
@@ -4051,7 +3942,6 @@ function estimateSpeechDuration(
 
             2
         );
-
 
 
     return Math.max(
@@ -4082,9 +3972,8 @@ function estimateSpeechDuration(
 }
 
 
-
 /* =========================================================
-   ALERT PROGRESS
+   PROGRESS
 ========================================================= */
 
 function startProgress(
@@ -4105,12 +3994,10 @@ function startProgress(
     }
 
 
-
     progressFill
         .style
         .transform =
         "scaleX(1)";
-
 
 
     progressAnimation =
@@ -4153,9 +4040,8 @@ function startProgress(
 }
 
 
-
 /* =========================================================
-   HIDE NORMAL ALERT
+   HIDE ALERT
 ========================================================= */
 
 function hideAlert(){
@@ -4174,13 +4060,11 @@ function hideAlert(){
     }
 
 
-
     alertWrap
         .classList
         .add(
             "hiding"
         );
-
 
 
     alertWrap
@@ -4190,25 +4074,21 @@ function hideAlert(){
         );
 
 
-
     stopAlertAudio();
-
 
 
     cancelTTS();
 }
 
 
-
 /* =========================================================
-   RESET NORMAL ALERT
+   RESET ALERT
 ========================================================= */
 
 function resetAlertClasses(){
 
 
     hideAlert();
-
 
 
     alertWrap
@@ -4225,10 +4105,8 @@ function resetAlertClasses(){
         );
 
 
-
     particles.innerHTML =
         "";
-
 
 
     progressFill
@@ -4238,9 +4116,8 @@ function resetAlertClasses(){
 }
 
 
-
 /* =========================================================
-   CLEANUP EVERYTHING
+   CLEANUP
 ========================================================= */
 
 function cleanupEverything(){
@@ -4249,23 +4126,18 @@ function cleanupEverything(){
     hideAlert();
 
 
-
     hideVideo();
-
 
 
     stopAlertAudio();
 
 
-
     cancelTTS();
-
 
 
     particles.innerHTML =
         "";
 }
-
 
 
 /* =========================================================
@@ -4279,7 +4151,6 @@ function createParticles(
 
     particles.innerHTML =
         "";
-
 
 
     for(
@@ -4301,10 +4172,8 @@ function createParticles(
                 );
 
 
-
         particle.className =
             "particle";
-
 
 
         particle.style.left =
@@ -4326,7 +4195,6 @@ function createParticles(
             "%";
 
 
-
         particle.style.bottom =
 
             (
@@ -4346,7 +4214,6 @@ function createParticles(
             "px";
 
 
-
         particle.style.animationDelay =
 
             (
@@ -4360,7 +4227,6 @@ function createParticles(
             +
 
             "s";
-
 
 
         particle.style.animationDuration =
@@ -4382,7 +4248,6 @@ function createParticles(
             "s";
 
 
-
         const size =
 
             4
@@ -4396,7 +4261,6 @@ function createParticles(
             7;
 
 
-
         particle.style.width =
 
             size
@@ -4404,7 +4268,6 @@ function createParticles(
             +
 
             "px";
-
 
 
         particle.style.height =
@@ -4416,14 +4279,12 @@ function createParticles(
             "px";
 
 
-
         particles
             .appendChild(
                 particle
             );
     }
 }
-
 
 
 /* =========================================================
@@ -4445,14 +4306,12 @@ function getFirstCharacter(
         .trim();
 
 
-
     if(
         !text
     ){
 
         return "A";
     }
-
 
 
     return Array
@@ -4463,9 +4322,8 @@ function getFirstCharacter(
 }
 
 
-
 /* =========================================================
-   FORMAT AMOUNT FOR SPEECH
+   AMOUNT SPEECH
 ========================================================= */
 
 function formatAmountForSpeech(
@@ -4482,7 +4340,6 @@ function formatAmountForSpeech(
         "th-TH"
     );
 }
-
 
 
 /* =========================================================
@@ -4508,7 +4365,6 @@ function clamp(
 }
 
 
-
 /* =========================================================
    DELAY
 ========================================================= */
@@ -4528,7 +4384,6 @@ function delay(
             )
     );
 }
-
 
 
 /* =========================================================
