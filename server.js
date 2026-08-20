@@ -1,4 +1,4 @@
-const sqlite3 = require("sqlite3").verbose();
+const { Pool } = require("pg");
 require("dotenv").config();
 
 const express = require("express");
@@ -15,9 +15,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-
 /* =========================================================
-   CONFIG / ENVIRONMENT
+   CONFIG
 ========================================================= */
 
 const ALLOWED_ENVIRONMENTS = [
@@ -31,41 +30,30 @@ const APP_ENV = String(
     process.env.NODE_ENV ||
     "development"
 )
-.trim()
-.toLowerCase();
-
+    .trim()
+    .toLowerCase();
 
 if (
     !ALLOWED_ENVIRONMENTS.includes(
         APP_ENV
     )
 ) {
-
     throw new Error(
         `APP_ENV ไม่ถูกต้อง: ${APP_ENV} (ใช้ development, staging หรือ production)`
     );
 }
 
-
 const IS_DEVELOPMENT =
     APP_ENV ===
     "development";
-
-
-const IS_STAGING =
-    APP_ENV ===
-    "staging";
-
 
 const IS_PRODUCTION =
     APP_ENV ===
     "production";
 
-
 const IS_DEPLOYED =
-    IS_STAGING ||
-    IS_PRODUCTION;
-
+    APP_ENV === "staging" ||
+    APP_ENV === "production";
 
 const PORT =
     Number(
@@ -74,26 +62,40 @@ const PORT =
     ||
     3000;
 
-
 const APP_VERSION =
     String(
         process.env.APP_VERSION ||
         "dev"
     )
-    .trim();
-
+        .trim();
 
 const PUBLIC_BASE_URL =
     String(
         process.env.PUBLIC_BASE_URL ||
         ""
     )
-    .trim()
-    .replace(
-        /\/+$/,
-        ""
-    );
+        .trim()
+        .replace(
+            /\/+$/,
+            ""
+        );
 
+const DATABASE_URL =
+    String(
+        process.env.DATABASE_URL ||
+        ""
+    )
+        .trim();
+
+const DATABASE_SSL =
+    String(
+        process.env.DATABASE_SSL ||
+        "true"
+    )
+        .trim()
+        .toLowerCase()
+    !==
+    "false";
 
 const DATA_DIR =
     path.resolve(
@@ -107,14 +109,6 @@ const DATA_DIR =
         )
     );
 
-
-const DB_PATH =
-    path.join(
-        DATA_DIR,
-        "donations.db"
-    );
-
-
 const PUBLIC_DIR_CANDIDATE =
     path.resolve(
         __dirname,
@@ -124,18 +118,13 @@ const PUBLIC_DIR_CANDIDATE =
         )
     );
 
-
 const PUBLIC_DIR =
     fs.existsSync(
         PUBLIC_DIR_CANDIDATE
     )
-
         ?
-
         PUBLIC_DIR_CANDIDATE
-
         :
-
         (
             IS_DEVELOPMENT
                 ?
@@ -144,47 +133,32 @@ const PUBLIC_DIR =
                 PUBLIC_DIR_CANDIDATE
         );
 
-
 const LEGACY_STATIC_MODE =
     PUBLIC_DIR ===
     __dirname;
-
-
-/* =========================================================
-   MOBILE SESSION CONFIG
-========================================================= */
 
 const MOBILE_SESSION_TTL_MS =
     15 *
     60 *
     1000;
 
-
-/* =========================================================
-   CUSTOM SOUND CONFIG
-========================================================= */
-
 const CUSTOM_SOUND_MIN_AMOUNT =
     100;
-
 
 const CUSTOM_SOUND_MAX_BYTES =
     3 *
     1024 *
     1024;
 
-
 const CUSTOM_SOUND_TTL_MS =
     30 *
     60 *
     1000;
 
-
 const CUSTOM_SOUND_AFTER_USE_TTL_MS =
     15 *
     60 *
     1000;
-
 
 const CUSTOM_SOUND_DIR =
     path.join(
@@ -192,184 +166,47 @@ const CUSTOM_SOUND_DIR =
         "custom-audio"
     );
 
-
-/* =========================================================
-   VIDEO DONATION CONFIG
-========================================================= */
-
 const VIDEO_DONATION_MIN_AMOUNT =
     10;
 
-
 const VIDEO_DONATION_MAX_DURATION =
     20;
-
 
 const VIDEO_DONATION_MAX_START =
     12 *
     60 *
     60;
 
-
-/* =========================================================
-   RUNTIME DIRECTORIES
-========================================================= */
-
 fs.mkdirSync(
     DATA_DIR,
     {
-        recursive:
-            true
+        recursive: true
     }
 );
-
 
 fs.mkdirSync(
     CUSTOM_SOUND_DIR,
     {
-        recursive:
-            true
+        recursive: true
     }
 );
 
-
-/* =========================================================
-   DEVELOPMENT MIGRATION
-========================================================= */
-
-if (
-    IS_DEVELOPMENT
-) {
-
-    const legacyDbPath =
-        path.join(
-            __dirname,
-            "donations.db"
-        );
-
-
-    if (
-        fs.existsSync(
-            legacyDbPath
-        )
-
-        &&
-
-        !fs.existsSync(
-            DB_PATH
-        )
-
-        &&
-
-        path.resolve(
-            legacyDbPath
-        )
-        !==
-        path.resolve(
-            DB_PATH
-        )
-    ) {
-
-        try {
-
-            fs.copyFileSync(
-                legacyDbPath,
-                DB_PATH
-            );
-
-
-            console.log(
-                "Local DB migrated to:",
-                DB_PATH
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Local DB migration failed:",
-                error
-            );
-        }
-    }
-
-
-    const legacySoundDir =
-        path.join(
-            __dirname,
-            ".amr29-private",
-            "custom-audio"
-        );
-
-
-    if (
-        fs.existsSync(
-            legacySoundDir
-        )
-
-        &&
-
-        fs.readdirSync(
-            CUSTOM_SOUND_DIR
-        ).length ===
-        0
-    ) {
-
-        try {
-
-            fs.cpSync(
-                legacySoundDir,
-                CUSTOM_SOUND_DIR,
-                {
-                    recursive:
-                        true,
-
-                    force:
-                        false
-                }
-            );
-
-
-            console.log(
-                "Local custom sounds migrated to:",
-                CUSTOM_SOUND_DIR
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Local custom sound migration failed:",
-                error
-            );
-        }
-    }
-}
-
-
-/* =========================================================
-   RUNTIME CONFIG VALIDATION
-========================================================= */
-
 function validateRuntimeConfig() {
 
-    if (
-        !IS_DEPLOYED
-    ) {
-
-        return;
-    }
-
-
     const required = [
-
-        "ADMIN_KEY",
-
-        "PROMPTPAY_ID",
-
-        "EASYSLIP_API_KEY",
-
-        "PUBLIC_BASE_URL"
+        "DATABASE_URL"
     ];
 
+    if (
+        IS_DEPLOYED
+    ) {
+        required.push(
+            "ADMIN_KEY",
+            "PROMPTPAY_ID",
+            "EASYSLIP_API_KEY",
+            "PUBLIC_BASE_URL"
+        );
+    }
 
     const missing =
         required.filter(
@@ -378,64 +215,58 @@ function validateRuntimeConfig() {
                     process.env[key] ||
                     ""
                 )
-                .trim()
+                    .trim()
         );
-
 
     if (
         missing.length
     ) {
-
         throw new Error(
             `Environment variables ไม่ครบ: ${missing.join(", ")}`
         );
     }
 
-
     if (
+        IS_DEPLOYED
+        &&
         !PUBLIC_BASE_URL.startsWith(
             "https://"
         )
     ) {
-
         throw new Error(
             "PUBLIC_BASE_URL ของ staging/production ต้องเป็น HTTPS"
         );
     }
 
-
     if (
+        IS_DEPLOYED
+        &&
         !fs.existsSync(
             PUBLIC_DIR_CANDIDATE
         )
     ) {
-
         throw new Error(
             `ไม่พบ public directory: ${PUBLIC_DIR_CANDIDATE}`
         );
     }
 }
 
-
 /* =========================================================
-   EXPRESS
+   EXPRESS / STATIC
 ========================================================= */
 
 app.disable(
     "x-powered-by"
 );
 
-
 if (
     IS_DEPLOYED
 ) {
-
     app.set(
         "trust proxy",
         1
     );
 }
-
 
 app.use(
     (
@@ -449,35 +280,29 @@ app.use(
             "nosniff"
         );
 
-
         res.setHeader(
             "Referrer-Policy",
             "strict-origin-when-cross-origin"
         );
-
 
         res.setHeader(
             "Permissions-Policy",
             "camera=(), microphone=(), geolocation=()"
         );
 
-
         res.setHeader(
             "X-AMR29-Environment",
             APP_ENV
         );
-
 
         res.setHeader(
             "X-AMR29-Version",
             APP_VERSION
         );
 
-
         next();
     }
 );
-
 
 app.use(
     express.json({
@@ -485,7 +310,6 @@ app.use(
             "1mb"
     })
 );
-
 
 app.use(
     express.urlencoded({
@@ -497,41 +321,25 @@ app.use(
     })
 );
 
-
-/* =========================================================
-   LEGACY STATIC PROTECTION
-========================================================= */
-
 if (
     LEGACY_STATIC_MODE
 ) {
 
     const blockedExact =
         new Set([
-
             "/server.js",
-
             "/package.json",
-
             "/package-lock.json",
-
             "/donations.db",
-
             "/.env"
         ]);
 
-
     const blockedPrefixes = [
-
         "/data/",
-
         "/.amr29-private/",
-
         "/.git/",
-
         "/node_modules/"
     ];
-
 
     app.use(
         (
@@ -540,59 +348,43 @@ if (
             next
         ) => {
 
-            const pathname =
+            const lower =
                 decodeURIComponent(
                     String(
                         req.path ||
                         ""
                     )
-                );
-
-
-            const lower =
-                pathname
+                )
                     .toLowerCase();
-
 
             if (
                 blockedExact.has(
                     lower
                 )
-
                 ||
-
                 blockedPrefixes.some(
                     prefix =>
                         lower.startsWith(
                             prefix
                         )
                 )
-
                 ||
-
                 lower.endsWith(
                     ".db"
                 )
-
                 ||
-
                 lower.endsWith(
                     ".db-journal"
                 )
-
                 ||
-
                 lower.endsWith(
                     ".sqlite"
                 )
-
                 ||
-
                 lower.endsWith(
                     ".sqlite3"
                 )
             ) {
-
                 return res
                     .status(
                         404
@@ -602,22 +394,15 @@ if (
                     );
             }
 
-
             next();
         }
     );
 }
 
-
-/* =========================================================
-   STATIC
-========================================================= */
-
 app.use(
     express.static(
         PUBLIC_DIR,
         {
-
             dotfiles:
                 "ignore",
 
@@ -631,49 +416,36 @@ app.use(
                     :
                     0,
 
+            setHeaders(
+                res,
+                filePath
+            ) {
 
-            setHeaders:
-                (
-                    res,
+                if (
                     filePath
-                ) => {
-
-                    if (
-                        filePath
-                            .toLowerCase()
-                            .endsWith(
-                                ".html"
-                            )
-                    ) {
-
-                        res.setHeader(
-                            "Cache-Control",
-                            "no-store, no-cache, must-revalidate"
-                        );
-
-
-                        return;
-                    }
-
-
-                    if (
-                        !IS_PRODUCTION
-                    ) {
-
-                        res.setHeader(
-                            "Cache-Control",
-                            "no-store"
-                        );
-                    }
+                        .toLowerCase()
+                        .endsWith(
+                            ".html"
+                        )
+                ) {
+                    res.setHeader(
+                        "Cache-Control",
+                        "no-store, no-cache, must-revalidate"
+                    );
                 }
+
+                else if (
+                    !IS_PRODUCTION
+                ) {
+                    res.setHeader(
+                        "Cache-Control",
+                        "no-store"
+                    );
+                }
+            }
         }
     )
 );
-
-
-/* =========================================================
-   HEALTH
-========================================================= */
 
 app.get(
     "/health",
@@ -682,8 +454,7 @@ app.get(
         res
     ) => {
 
-        return res.json({
-
+        res.json({
             success:
                 true,
 
@@ -708,11 +479,6 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   VERSION
-========================================================= */
-
 app.get(
     "/api/version",
     (
@@ -720,8 +486,7 @@ app.get(
         res
     ) => {
 
-        return res.json({
-
+        res.json({
             success:
                 true,
 
@@ -734,176 +499,145 @@ app.get(
     }
 );
 
-
 /* =========================================================
-   SQLITE
+   SUPABASE POSTGRESQL
 ========================================================= */
 
-const db =
-    new sqlite3.Database(
-        DB_PATH,
-        error => {
-
-            if (
-                error
-            ) {
-
-                console.error(
-                    "Database error:",
-                    error
-                );
-
-
-                return;
-            }
-
-
-            console.log(
-                "SQLite connected:",
-                DB_PATH
-            );
-        }
+if (
+    !DATABASE_URL
+) {
+    throw new Error(
+        "ยังไม่ได้ตั้ง DATABASE_URL สำหรับ Supabase PostgreSQL"
     );
+}
 
+const pool =
+    new Pool({
+        connectionString:
+            DATABASE_URL,
 
-db.configure(
-    "busyTimeout",
-    5000
+        ssl:
+            DATABASE_SSL
+                ?
+                {
+                    rejectUnauthorized:
+                        false
+                }
+                :
+                false,
+
+        max:
+            5,
+
+        idleTimeoutMillis:
+            30000,
+
+        connectionTimeoutMillis:
+            10000
+    });
+
+pool.on(
+    "error",
+    error => {
+        console.error(
+            "PostgreSQL Pool Error:",
+            error
+        );
+    }
 );
 
+function toPostgresSql(
+    sql
+) {
+
+    let index =
+        0;
+
+    return String(
+        sql
+    )
+        .replace(
+            /\?/g,
+            () =>
+                `$${++index}`
+        );
+}
+
+async function dbRun(
+    sql,
+    params = [],
+    executor = pool
+) {
+
+    const result =
+        await executor.query(
+            toPostgresSql(
+                sql
+            ),
+            params
+        );
+
+    return {
+        lastID:
+            result.rows?.[0]?.id
+            ??
+            null,
+
+        changes:
+            Number(
+                result.rowCount ||
+                0
+            ),
+
+        rows:
+            result.rows ||
+            []
+    };
+}
+
+async function dbGet(
+    sql,
+    params = [],
+    executor = pool
+) {
+
+    const result =
+        await executor.query(
+            toPostgresSql(
+                sql
+            ),
+            params
+        );
+
+    return result.rows?.[0]
+        ||
+        null;
+}
+
+async function dbAll(
+    sql,
+    params = [],
+    executor = pool
+) {
+
+    const result =
+        await executor.query(
+            toPostgresSql(
+                sql
+            ),
+            params
+        );
+
+    return result.rows
+        ||
+        [];
+}
 
 /* =========================================================
-   DB HELPERS
-========================================================= */
-
-function dbRun(
-    sql,
-    params = []
-) {
-
-    return new Promise(
-        (
-            resolve,
-            reject
-        ) => {
-
-            db.run(
-                sql,
-                params,
-                function (
-                    error
-                ) {
-
-                    if (
-                        error
-                    ) {
-
-                        return reject(
-                            error
-                        );
-                    }
-
-
-                    resolve({
-
-                        lastID:
-                            this.lastID,
-
-                        changes:
-                            this.changes
-                    });
-                }
-            );
-        }
-    );
-}
-
-
-function dbGet(
-    sql,
-    params = []
-) {
-
-    return new Promise(
-        (
-            resolve,
-            reject
-        ) => {
-
-            db.get(
-                sql,
-                params,
-                (
-                    error,
-                    row
-                ) => {
-
-                    if (
-                        error
-                    ) {
-
-                        return reject(
-                            error
-                        );
-                    }
-
-
-                    resolve(
-                        row
-                    );
-                }
-            );
-        }
-    );
-}
-
-
-function dbAll(
-    sql,
-    params = []
-) {
-
-    return new Promise(
-        (
-            resolve,
-            reject
-        ) => {
-
-            db.all(
-                sql,
-                params,
-                (
-                    error,
-                    rows
-                ) => {
-
-                    if (
-                        error
-                    ) {
-
-                        return reject(
-                            error
-                        );
-                    }
-
-
-                    resolve(
-                        rows
-                    );
-                }
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   DEFAULT SETTINGS
+   SETTINGS / DB INIT
 ========================================================= */
 
 const defaultSettings = {
-
-    /* GOAL */
 
     goal_title:
         "เป้าหมายสนับสนุน",
@@ -916,9 +650,6 @@ const defaultSettings = {
 
     goal_base_total:
         "0",
-
-
-    /* ALERT */
 
     alert_tts_enabled:
         "1",
@@ -941,13 +672,6 @@ const defaultSettings = {
     alert_no_tts_display_time:
         "4500",
 
-
-    /* =====================================================
-       VOLUME MIXER
-
-       เก็บเป็น 0 - 100
-    ====================================================== */
-
     alert_sound_volume:
         "70",
 
@@ -959,9 +683,6 @@ const defaultSettings = {
 
     alert_video_volume:
         "80",
-
-
-    /* AUDIO CONTROL CENTER PRO MAX */
 
     alert_master_volume:
         "100",
@@ -991,91 +712,54 @@ const defaultSettings = {
         "th-TH"
 };
 
-
-/* =========================================================
-   DATABASE MIGRATION
-========================================================= */
-
 async function ensureColumn(
     tableName,
     columnName,
     definition
 ) {
 
-    const columns =
-        await dbAll(
-            `PRAGMA table_info(${tableName})`
-        );
-
-
-    const exists =
-        columns.some(
-            column =>
-                column.name ===
-                columnName
-        );
-
+    const safe =
+        /^[A-Za-z_][A-Za-z0-9_]*$/;
 
     if (
-        exists
+        !safe.test(
+            tableName
+        )
+        ||
+        !safe.test(
+            columnName
+        )
     ) {
-
-        return;
+        throw new Error(
+            "Database identifier ไม่ถูกต้อง"
+        );
     }
-
 
     await dbRun(
         `
         ALTER TABLE ${tableName}
-        ADD COLUMN ${columnName}
+        ADD COLUMN IF NOT EXISTS ${columnName}
         ${definition}
         `
     );
-
-
-    console.log(
-        `DB migration: ${tableName}.${columnName} added`
-    );
 }
-
-
-/* =========================================================
-   INIT DATABASE
-========================================================= */
 
 async function initDatabase() {
 
-    await fs.promises.mkdir(
-        CUSTOM_SOUND_DIR,
-        {
-            recursive:
-                true
-        }
-    );
-
-
-    /* =====================================================
-       DONATIONS
-    ====================================================== */
-
     await dbRun(`
         CREATE TABLE IF NOT EXISTS donations (
-
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
+            id BIGSERIAL PRIMARY KEY,
             name TEXT NOT NULL,
-
             message TEXT,
-
-            amount REAL NOT NULL,
-
+            amount NUMERIC(12,2) NOT NULL,
             trans_ref TEXT UNIQUE,
-
-            created_at DATETIME
-                DEFAULT CURRENT_TIMESTAMP
+            video_url TEXT,
+            video_id TEXT,
+            video_start INTEGER,
+            video_duration INTEGER,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         )
     `);
-
 
     await ensureColumn(
         "donations",
@@ -1083,13 +767,11 @@ async function initDatabase() {
         "TEXT"
     );
 
-
     await ensureColumn(
         "donations",
         "video_id",
         "TEXT"
     );
-
 
     await ensureColumn(
         "donations",
@@ -1097,58 +779,37 @@ async function initDatabase() {
         "INTEGER"
     );
 
-
     await ensureColumn(
         "donations",
         "video_duration",
         "INTEGER"
     );
 
-
-    /* =====================================================
-       SETTINGS
-    ====================================================== */
-
     await dbRun(`
         CREATE TABLE IF NOT EXISTS settings (
-
             key TEXT PRIMARY KEY,
-
             value TEXT NOT NULL
         )
     `);
 
-
-    /* =====================================================
-       MOBILE SESSIONS
-    ====================================================== */
-
     await dbRun(`
         CREATE TABLE IF NOT EXISTS mobile_sessions (
-
             session_id TEXT PRIMARY KEY,
-
             name TEXT NOT NULL,
-
             message TEXT,
-
-            amount REAL NOT NULL,
-
-            status TEXT NOT NULL
-                DEFAULT 'pending',
-
-            created_at INTEGER NOT NULL,
-
-            expires_at INTEGER NOT NULL,
-
-            verified_at INTEGER,
-
+            amount NUMERIC(12,2) NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            created_at BIGINT NOT NULL,
+            expires_at BIGINT NOT NULL,
+            verified_at BIGINT,
             trans_ref TEXT,
-
-            custom_sound_token TEXT
+            custom_sound_token TEXT,
+            video_url TEXT,
+            video_id TEXT,
+            video_start INTEGER,
+            video_duration INTEGER
         )
     `);
-
 
     await ensureColumn(
         "mobile_sessions",
@@ -1156,13 +817,11 @@ async function initDatabase() {
         "TEXT"
     );
 
-
     await ensureColumn(
         "mobile_sessions",
         "video_url",
         "TEXT"
     );
-
 
     await ensureColumn(
         "mobile_sessions",
@@ -1170,13 +829,11 @@ async function initDatabase() {
         "TEXT"
     );
 
-
     await ensureColumn(
         "mobile_sessions",
         "video_start",
         "INTEGER"
     );
-
 
     await ensureColumn(
         "mobile_sessions",
@@ -1184,69 +841,37 @@ async function initDatabase() {
         "INTEGER"
     );
 
-
     await dbRun(`
         CREATE INDEX IF NOT EXISTS
         idx_mobile_sessions_expires_at
-
-        ON mobile_sessions (
-            expires_at
-        )
+        ON mobile_sessions (expires_at)
     `);
-
 
     await dbRun(`
         CREATE INDEX IF NOT EXISTS
         idx_mobile_sessions_status
-
-        ON mobile_sessions (
-            status
-        )
+        ON mobile_sessions (status)
     `);
-
-
-    /* =====================================================
-       CUSTOM SOUNDS
-    ====================================================== */
 
     await dbRun(`
         CREATE TABLE IF NOT EXISTS custom_sounds (
-
             token TEXT PRIMARY KEY,
-
             file_name TEXT NOT NULL,
-
             original_name TEXT,
-
             mime_type TEXT NOT NULL,
-
             size INTEGER NOT NULL,
-
-            status TEXT NOT NULL
-                DEFAULT 'pending',
-
-            created_at INTEGER NOT NULL,
-
-            expires_at INTEGER NOT NULL,
-
-            used_at INTEGER
+            status TEXT NOT NULL DEFAULT 'pending',
+            created_at BIGINT NOT NULL,
+            expires_at BIGINT NOT NULL,
+            used_at BIGINT
         )
     `);
-
 
     await dbRun(`
         CREATE INDEX IF NOT EXISTS
         idx_custom_sounds_expires_at
-
-        ON custom_sounds (
-            expires_at
-        )
+        ON custom_sounds (expires_at)
     `);
-
-
-    /* =====================================================
-       DEFAULT SETTINGS
-    ====================================================== */
 
     for (
         const [
@@ -1260,14 +885,16 @@ async function initDatabase() {
 
         await dbRun(
             `
-            INSERT OR IGNORE
-            INTO settings
+            INSERT INTO settings
             (
                 key,
                 value
             )
 
             VALUES (?, ?)
+
+            ON CONFLICT(key)
+            DO NOTHING
             `,
             [
                 key,
@@ -1277,186 +904,32 @@ async function initDatabase() {
     }
 }
 
-
-/* =========================================================
-   MULTER - SLIP
-========================================================= */
-
-const upload =
-    multer({
-
-        storage:
-            multer.memoryStorage(),
-
-
-        limits: {
-
-            fileSize:
-                4 *
-                1024 *
-                1024
-        },
-
-
-        fileFilter:
-            (
-                req,
-                file,
-                callback
-            ) => {
-
-                const allowed = [
-
-                    "image/jpeg",
-
-                    "image/png",
-
-                    "image/webp"
-                ];
-
-
-                if (
-                    !allowed.includes(
-                        file.mimetype
-                    )
-                ) {
-
-                    return callback(
-                        new Error(
-                            "รองรับสลิปเฉพาะ JPG, PNG และ WEBP"
-                        )
-                    );
-                }
-
-
-                callback(
-                    null,
-                    true
-                );
-            }
-    });
-
-
-/* =========================================================
-   MULTER - CUSTOM SOUND
-========================================================= */
-
-const audioUpload =
-    multer({
-
-        storage:
-            multer.memoryStorage(),
-
-
-        limits: {
-
-            fileSize:
-                CUSTOM_SOUND_MAX_BYTES
-        },
-
-
-        fileFilter:
-            (
-                req,
-                file,
-                callback
-            ) => {
-
-                const allowed = [
-
-                    "audio/mpeg",
-
-                    "audio/mp3",
-
-                    "audio/wav",
-
-                    "audio/x-wav",
-
-                    "audio/ogg",
-
-                    "application/ogg"
-                ];
-
-
-                if (
-                    !allowed.includes(
-                        file.mimetype
-                    )
-                ) {
-
-                    return callback(
-                        new Error(
-                            "รองรับเสียงเฉพาะ MP3, WAV และ OGG"
-                        )
-                    );
-                }
-
-
-                callback(
-                    null,
-                    true
-                );
-            }
-    });
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
 async function getSettings() {
 
-    try {
+    const rows =
+        await dbAll(`
+            SELECT
+                key,
+                value
+            FROM settings
+        `);
 
-        const rows =
-            await dbAll(`
-                SELECT
-                    key,
-                    value
+    const settings = {
+        ...defaultSettings
+    };
 
-                FROM settings
-            `);
-
-
-        const settings = {
-
-            ...defaultSettings
-        };
-
-
-        for (
-            const row
-            of rows
-        ) {
-
-            settings[
-                row.key
-            ] =
-                row.value;
-        }
-
-
-        return settings;
-
-    } catch (error) {
-
-        console.error(
-            "Settings DB error:",
-            error
-        );
-
-
-        return {
-
-            ...defaultSettings
-        };
+    for (
+        const row
+        of rows
+    ) {
+        settings[
+            row.key
+        ] =
+            row.value;
     }
+
+    return settings;
 }
-
-
-/* =========================================================
-   SET SETTING
-========================================================= */
 
 async function setSetting(
     key,
@@ -1476,13 +949,10 @@ async function setSetting(
         ON CONFLICT(key)
 
         DO UPDATE SET
-
-            value =
-            excluded.value
+            value = EXCLUDED.value
         `,
         [
             key,
-
             String(
                 value
             )
@@ -1490,41 +960,20 @@ async function setSetting(
     );
 }
 
-
-/* =========================================================
-   BOOLEAN
-========================================================= */
-
 function toBoolean(
     value
 ) {
 
     return (
-
-        value ===
-        true
-
+        value === true
         ||
-
-        value ===
-        1
-
+        value === 1
         ||
-
-        value ===
-        "1"
-
+        value === "1"
         ||
-
-        value ===
-        "true"
+        value === "true"
     );
 }
-
-
-/* =========================================================
-   CLAMP
-========================================================= */
 
 function clamp(
     value,
@@ -1541,33 +990,19 @@ function clamp(
     );
 }
 
-
-/* =========================================================
-   NORMALIZE VOLUME
-========================================================= */
-
 function normalizeVolumeValue(
     value,
     fallback
 ) {
 
     if (
-        value ===
-        undefined
-
+        value === undefined
         ||
-
-        value ===
-        null
-
+        value === null
         ||
-
-        value ===
-        ""
+        value === ""
     ) {
-
         return clamp(
-
             Math.round(
                 Number(
                     fallback
@@ -1575,57 +1010,39 @@ function normalizeVolumeValue(
                 ||
                 0
             ),
-
             0,
-
             100
         );
     }
-
 
     const number =
         Number(
             value
         );
 
-
     if (
         !Number.isFinite(
             number
         )
-
         ||
-
-        number <
-        0
-
+        number < 0
         ||
-
-        number >
-        100
+        number > 100
     ) {
-
         throw new Error(
             "Volume ต้องอยู่ระหว่าง 0 - 100"
         );
     }
-
 
     return Math.round(
         number
     );
 }
 
-
-/* =========================================================
-   ALERT SETTINGS
-========================================================= */
-
 async function getAlertSettings() {
 
-    const settings =
+    const s =
         await getSettings();
-
 
     const numberOr =
         (
@@ -1633,274 +1050,171 @@ async function getAlertSettings() {
             fallback
         ) => {
 
-            const number =
+            const n =
                 Number(
                     value
                 );
 
-
             return Number.isFinite(
-                number
+                n
             )
-
                 ?
-
-                number
-
+                n
                 :
-
                 fallback;
         };
 
-
     return {
 
-        /* ===============================
-           TTS / ALERT
-        =============================== */
-
         ttsEnabled:
-
-            settings
-                .alert_tts_enabled
-
-            ===
-
+            s.alert_tts_enabled ===
             "1",
-
 
         readMessage:
-
-            settings
-                .alert_read_message
-
-            ===
-
+            s.alert_read_message ===
             "1",
 
-
         ttsRate:
-
             numberOr(
-                settings
-                    .alert_tts_rate,
+                s.alert_tts_rate,
                 1
             ),
 
-
         bigAmount:
-
             numberOr(
-                settings
-                    .alert_big_amount,
+                s.alert_big_amount,
                 500
             ),
 
-
         megaAmount:
-
             numberOr(
-                settings
-                    .alert_mega_amount,
+                s.alert_mega_amount,
                 1000
             ),
-
 
         afterTtsDelay:
-
             numberOr(
-                settings
-                    .alert_after_tts_delay,
+                s.alert_after_tts_delay,
                 1000
             ),
 
-
         noTtsDisplayTime:
-
             numberOr(
-                settings
-                    .alert_no_tts_display_time,
+                s.alert_no_tts_display_time,
                 4500
             ),
 
-
-        /* ===============================
-           VOLUME MIXER
-           0 - 100
-        =============================== */
-
         alertVolume:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_sound_volume,
+                    s.alert_sound_volume,
                     70
                 ),
                 0,
                 100
             ),
-
 
         customSoundVolume:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_custom_sound_volume,
+                    s.alert_custom_sound_volume,
                     70
                 ),
                 0,
                 100
             ),
 
-
         ttsVolume:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_tts_volume,
+                    s.alert_tts_volume,
                     100
                 ),
                 0,
                 100
             ),
 
-
         videoVolume:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_video_volume,
+                    s.alert_video_volume,
                     80
                 ),
                 0,
                 100
             ),
 
-
-        /* ===============================
-           AUDIO CONTROL CENTER PRO MAX
-        =============================== */
-
         masterVolume:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_master_volume,
+                    s.alert_master_volume,
                     100
                 ),
                 0,
                 100
             ),
 
-
         alertMuted:
-
-            settings
-                .alert_sound_muted
-
-            ===
-
+            s.alert_sound_muted ===
             "1",
-
 
         customSoundMuted:
-
-            settings
-                .alert_custom_sound_muted
-
-            ===
-
+            s.alert_custom_sound_muted ===
             "1",
-
 
         ttsMuted:
-
-            settings
-                .alert_tts_muted
-
-            ===
-
+            s.alert_tts_muted ===
             "1",
-
 
         videoMuted:
-
-            settings
-                .alert_video_muted
-
-            ===
-
+            s.alert_video_muted ===
             "1",
 
-
         ttsPitch:
-
             clamp(
                 numberOr(
-                    settings
-                        .alert_tts_pitch,
+                    s.alert_tts_pitch,
                     1
                 ),
-                .5,
+                0.5,
                 2
             ),
 
-
         ttsVoiceURI:
-
             String(
-                settings
-                    .alert_tts_voice_uri
+                s.alert_tts_voice_uri
                 ||
                 "auto"
             ),
 
-
         ttsVoiceName:
-
             String(
-                settings
-                    .alert_tts_voice_name
+                s.alert_tts_voice_name
                 ||
                 ""
             ),
 
-
         ttsLang:
-
             String(
-                settings
-                    .alert_tts_lang
+                s.alert_tts_lang
                 ||
                 "th-TH"
             )
     };
 }
 
-
-/* =========================================================
-   EMIT ALERT SETTINGS
-========================================================= */
-
 async function emitAlertSettingsUpdate() {
 
     try {
 
-        const settings =
-            await getAlertSettings();
-
-
         io.emit(
             "alert-settings-update",
-            settings
+            await getAlertSettings()
         );
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Emit Alert Settings Error:",
@@ -1909,124 +1223,73 @@ async function emitAlertSettingsUpdate() {
     }
 }
 
-
 /* =========================================================
-   TOTAL
+   DONATION DATA / GOAL
 ========================================================= */
 
 async function getAllDonationTotal() {
 
-    try {
+    const row =
+        await dbGet(`
+            SELECT
+                COALESCE(
+                    SUM(amount),
+                    0
+                )
+                AS total
+            FROM donations
+        `);
 
-        const row =
-            await dbGet(`
-                SELECT
-
-                    COALESCE(
-                        SUM(amount),
-                        0
-                    )
-
-                    AS total
-
-                FROM donations
-            `);
-
-
-        return Number(
-            row?.total
-            ||
-            0
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Donation total error:",
-            error
-        );
-
-
-        return 0;
-    }
+    return Number(
+        row?.total
+        ||
+        0
+    );
 }
-
-
-/* =========================================================
-   TOP DONORS
-========================================================= */
 
 async function getTopDonorsFromDB() {
 
-    try {
+    const rows =
+        await dbAll(`
+            SELECT
+                name,
+                SUM(amount) AS amount
 
-        const rows =
-            await dbAll(`
-                SELECT
+            FROM donations
 
-                    name,
+            GROUP BY name
 
-                    SUM(amount)
-                    AS amount
+            ORDER BY amount DESC
 
-                FROM donations
+            LIMIT 3
+        `);
 
-                GROUP BY name
+    return rows.map(
+        row => ({
+            name:
+                row.name,
 
-                ORDER BY amount DESC
-
-                LIMIT 3
-            `);
-
-
-        return rows.map(
-            row => ({
-
-                name:
-                    row.name,
-
-                amount:
-
-                    Number(
-                        row.amount
-                        ||
-                        0
-                    )
-            })
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Ranking DB error:",
-            error
-        );
-
-
-        return [];
-    }
+            amount:
+                Number(
+                    row.amount
+                    ||
+                    0
+                )
+        })
+    );
 }
-
-
-/* =========================================================
-   GOAL
-========================================================= */
 
 async function getDonationGoal() {
 
     const settings =
         await getSettings();
 
-
     const allTimeTotal =
         await getAllDonationTotal();
 
-
     const target =
         Math.max(
-
             1,
-
             Number(
                 settings.goal_target
                 ||
@@ -2034,12 +1297,9 @@ async function getDonationGoal() {
             )
         );
 
-
     const baseTotal =
         Math.max(
-
             0,
-
             Number(
                 settings.goal_base_total
                 ||
@@ -2047,51 +1307,35 @@ async function getDonationGoal() {
             )
         );
 
-
     const total =
         Math.max(
-
             0,
-
             allTimeTotal -
             baseTotal
         );
 
-
     const percent =
         Math.min(
-
             100,
-
             Math.max(
-
                 0,
-
                 Math.round(
-
                     (
                         total /
                         target
                     )
-
                     *
-
                     100
                 )
             )
         );
 
-
     return {
 
         title:
-
             settings.goal_title
-
             ||
-
             "เป้าหมายสนับสนุน",
-
 
         target,
 
@@ -2099,37 +1343,22 @@ async function getDonationGoal() {
 
         percent,
 
-
         enabled:
-
-            settings.goal_enabled
-
-            ===
-
+            settings.goal_enabled ===
             "1"
     };
 }
 
-
-/* =========================================================
-   EMIT GOAL
-========================================================= */
-
 async function emitGoalUpdate() {
-
-    const goal =
-        await getDonationGoal();
-
 
     io.emit(
         "goal-update",
-        goal
+        await getDonationGoal()
     );
 }
 
-
 /* =========================================================
-   ADMIN AUTH
+   ADMIN AUTH / SOCKET
 ========================================================= */
 
 function requireAdminKey(
@@ -2144,8 +1373,7 @@ function requireAdminKey(
             ||
             ""
         )
-        .trim();
-
+            .trim();
 
     const received =
         String(
@@ -2155,19 +1383,16 @@ function requireAdminKey(
             ||
             ""
         )
-        .trim();
-
+            .trim();
 
     if (
         !expected
     ) {
-
         return res
             .status(
                 500
             )
             .json({
-
                 success:
                     false,
 
@@ -2176,18 +1401,15 @@ function requireAdminKey(
             });
     }
 
-
     if (
         received !==
         expected
     ) {
-
         return res
             .status(
                 401
             )
             .json({
-
                 success:
                     false,
 
@@ -2196,14 +1418,8 @@ function requireAdminKey(
             });
     }
 
-
     next();
 }
-
-
-/* =========================================================
-   SOCKET.IO
-========================================================= */
 
 io.on(
     "connection",
@@ -2213,7 +1429,6 @@ io.on(
             "Client connected:",
             socket.id
         );
-
 
         socket.on(
             "disconnect",
@@ -2228,6 +1443,98 @@ io.on(
     }
 );
 
+/* =========================================================
+   MULTER
+========================================================= */
+
+const upload =
+    multer({
+
+        storage:
+            multer.memoryStorage(),
+
+        limits: {
+            fileSize:
+                4 *
+                1024 *
+                1024
+        },
+
+        fileFilter(
+            req,
+            file,
+            callback
+        ) {
+
+            const allowed = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (
+                !allowed.includes(
+                    file.mimetype
+                )
+            ) {
+                return callback(
+                    new Error(
+                        "รองรับสลิปเฉพาะ JPG, PNG และ WEBP"
+                    )
+                );
+            }
+
+            callback(
+                null,
+                true
+            );
+        }
+    });
+
+const audioUpload =
+    multer({
+
+        storage:
+            multer.memoryStorage(),
+
+        limits: {
+            fileSize:
+                CUSTOM_SOUND_MAX_BYTES
+        },
+
+        fileFilter(
+            req,
+            file,
+            callback
+        ) {
+
+            const allowed = [
+                "audio/mpeg",
+                "audio/mp3",
+                "audio/wav",
+                "audio/x-wav",
+                "audio/ogg",
+                "application/ogg"
+            ];
+
+            if (
+                !allowed.includes(
+                    file.mimetype
+                )
+            ) {
+                return callback(
+                    new Error(
+                        "รองรับเสียงเฉพาะ MP3, WAV และ OGG"
+                    )
+                );
+            }
+
+            callback(
+                null,
+                true
+            );
+        }
+    });
 
 /* =========================================================
    EASYSLIP
@@ -2240,42 +1547,33 @@ async function verifySlipWithEasySlip(
 
     const apiKey =
         String(
-            process.env
-                .EASYSLIP_API_KEY
+            process.env.EASYSLIP_API_KEY
             ||
             ""
         )
-        .trim();
-
+            .trim();
 
     if (
         !apiKey
     ) {
-
         throw new Error(
             "ยังไม่ได้ตั้ง EASYSLIP_API_KEY"
         );
     }
 
-
     const form =
         new FormData();
 
-
     const blob =
         new Blob(
-
             [
                 file.buffer
             ],
-
             {
-
                 type:
                     file.mimetype
             }
         );
-
 
     form.append(
         "image",
@@ -2283,12 +1581,10 @@ async function verifySlipWithEasySlip(
         file.originalname
     );
 
-
     form.append(
         "checkDuplicate",
         "true"
     );
-
 
     form.append(
         "matchAmount",
@@ -2297,25 +1593,19 @@ async function verifySlipWithEasySlip(
         )
     );
 
-
     form.append(
         "matchAccount",
         "true"
     );
 
-
     const response =
         await fetch(
-
             "https://api.easyslip.com/v2/verify/bank",
-
             {
-
                 method:
                     "POST",
 
                 headers: {
-
                     Authorization:
                         `Bearer ${apiKey}`
                 },
@@ -2325,15 +1615,12 @@ async function verifySlipWithEasySlip(
             }
         );
 
-
     let data;
-
 
     try {
 
         data =
-            await response
-                .json();
+            await response.json();
 
     } catch {
 
@@ -2342,84 +1629,56 @@ async function verifySlipWithEasySlip(
         );
     }
 
-
     console.log(
         "EasySlip HTTP:",
         response.status
     );
 
-
     if (
         !response.ok
-
         ||
-
         !data.success
     ) {
-
         throw new Error(
-
-            data.error
-                ?.message
-
+            data.error?.message
             ||
-
             data.message
-
             ||
-
             "ตรวจสอบสลิปไม่สำเร็จ"
         );
     }
 
-
     if (
-        data.data
-            ?.isDuplicate
-
-        ===
-
+        data.data?.isDuplicate ===
         true
     ) {
-
         throw new Error(
             "สลิปนี้ถูกใช้ไปแล้ว ไม่สามารถใช้ซ้ำได้"
         );
     }
 
-
     if (
-        !data.data
-            ?.matchedAccount
+        !data.data?.matchedAccount
     ) {
-
         throw new Error(
             "บัญชีผู้รับไม่ถูกต้อง กรุณาโอนเข้าบัญชีที่กำหนด"
         );
     }
 
-
     if (
-        data.data
-            ?.isAmountMatched
-
-        !==
-
+        data.data?.isAmountMatched !==
         true
     ) {
-
         throw new Error(
             "ยอดเงินในสลิปไม่ตรงกับยอดโดเนท"
         );
     }
 
-
     return data;
 }
 
-
 /* =========================================================
-   YOUTUBE PARSER
+   VIDEO DONATION
 ========================================================= */
 
 function parseYouTubeVideoUrl(
@@ -2432,33 +1691,26 @@ function parseYouTubeVideoUrl(
             ||
             ""
         )
-        .trim();
-
+            .trim();
 
     if (
         !rawUrl
     ) {
-
         return null;
     }
 
-
     if (
-        !/^https?:\/\//i
-            .test(
-                rawUrl
-            )
+        !/^https?:\/\//i.test(
+            rawUrl
+        )
     ) {
-
         rawUrl =
             "https://"
             +
             rawUrl;
     }
 
-
     let url;
-
 
     try {
 
@@ -2474,7 +1726,6 @@ function parseYouTubeVideoUrl(
         );
     }
 
-
     const hostname =
         url.hostname
             .toLowerCase()
@@ -2483,28 +1734,24 @@ function parseYouTubeVideoUrl(
                 ""
             );
 
-
     let videoId =
         null;
-
 
     if (
         hostname ===
         "youtu.be"
     ) {
-
         videoId =
             url.pathname
-                .split("/")
+                .split(
+                    "/"
+                )
                 .filter(
                     Boolean
                 )[0]
-
             ||
-
             null;
     }
-
 
     if (
         [
@@ -2512,16 +1759,15 @@ function parseYouTubeVideoUrl(
             "m.youtube.com",
             "music.youtube.com"
         ]
-        .includes(
-            hostname
-        )
+            .includes(
+                hostname
+            )
     ) {
 
         if (
             url.pathname ===
             "/watch"
         ) {
-
             videoId =
                 url.searchParams
                     .get(
@@ -2535,52 +1781,39 @@ function parseYouTubeVideoUrl(
                     url.pathname
                 )
         ) {
-
             videoId =
                 url.pathname
-                    .split("/")
+                    .split(
+                        "/"
+                    )
                     .filter(
                         Boolean
                     )[1]
-
-            ||
-
-            null;
+                ||
+                null;
         }
     }
 
-
     if (
         !videoId
-
         ||
-
         !/^[A-Za-z0-9_-]{11}$/
             .test(
                 videoId
             )
     ) {
-
         throw new Error(
             "รองรับเฉพาะลิงก์ YouTube / youtu.be ที่ถูกต้อง"
         );
     }
 
-
     return {
-
         videoId,
 
         videoUrl:
-
             `https://www.youtube.com/watch?v=${videoId}`
     };
 }
-
-
-/* =========================================================
-   VIDEO START
-========================================================= */
 
 function parseVideoStart(
     value
@@ -2592,16 +1825,13 @@ function parseVideoStart(
             ??
             ""
         )
-        .trim();
-
+            .trim();
 
     if (
         !raw
     ) {
-
         return 0;
     }
-
 
     if (
         /^\d+$/
@@ -2609,20 +1839,16 @@ function parseVideoStart(
                 raw
             )
     ) {
-
         return Math.min(
-
             Math.max(
                 0,
                 Number(
                     raw
                 )
             ),
-
             VIDEO_DONATION_MAX_START
         );
     }
-
 
     if (
         /^\d{1,2}:\d{1,2}(:\d{1,2})?$/
@@ -2632,17 +1858,16 @@ function parseVideoStart(
     ) {
 
         const parts =
-            raw.split(
-                ":"
-            )
-            .map(
-                Number
-            );
-
+            raw
+                .split(
+                    ":"
+                )
+                .map(
+                    Number
+                );
 
         let seconds =
             0;
-
 
         if (
             parts.length ===
@@ -2653,81 +1878,55 @@ function parseVideoStart(
                 parts[1] >
                 59
             ) {
-
                 throw new Error(
                     "วินาทีต้องไม่เกิน 59"
                 );
             }
 
-
             seconds =
-                (
-                    parts[0] *
-                    60
-                )
-
+                parts[0] *
+                60
                 +
-
                 parts[1];
+        }
 
-        } else {
+        else {
 
             if (
                 parts[1] >
                 59
-
                 ||
-
                 parts[2] >
                 59
             ) {
-
                 throw new Error(
                     "นาทีหรือวินาทีไม่ถูกต้อง"
                 );
             }
 
-
             seconds =
-                (
-                    parts[0] *
-                    3600
-                )
-
+                parts[0] *
+                3600
                 +
-
-                (
-                    parts[1] *
-                    60
-                )
-
+                parts[1] *
+                60
                 +
-
                 parts[2];
         }
 
-
         return Math.min(
-
             Math.max(
                 0,
                 seconds
             ),
-
             VIDEO_DONATION_MAX_START
         );
     }
-
 
     throw new Error(
         "เวลาเริ่มใช้รูปแบบ 00:00 หรือ 01:25"
     );
 }
-
-
-/* =========================================================
-   NORMALIZE VIDEO
-========================================================= */
 
 function normalizeVideoDonation(
     body = {},
@@ -2742,15 +1941,12 @@ function normalizeVideoDonation(
             ||
             ""
         )
-        .trim();
-
+            .trim();
 
     if (
         !rawUrl
     ) {
-
         return {
-
             videoUrl:
                 null,
 
@@ -2765,7 +1961,6 @@ function normalizeVideoDonation(
         };
     }
 
-
     if (
         Number(
             amount
@@ -2773,81 +1968,57 @@ function normalizeVideoDonation(
         <
         VIDEO_DONATION_MIN_AMOUNT
     ) {
-
         throw new Error(
             `แนบวิดีโอได้เมื่อสนับสนุนตั้งแต่ ${VIDEO_DONATION_MIN_AMOUNT} บาท`
         );
     }
-
 
     const video =
         parseYouTubeVideoUrl(
             rawUrl
         );
 
-
     const videoStart =
         parseVideoStart(
-
             body.videoStart
-
             ??
-
             body.video_start
-
             ??
-
             0
         );
 
-
     let videoDuration =
         Number.parseInt(
-
             body.videoDuration
-
             ??
-
             body.video_duration
-
             ??
-
             VIDEO_DONATION_MAX_DURATION,
-
             10
         );
-
 
     if (
         !Number.isFinite(
             videoDuration
         )
-
         ||
-
         videoDuration <=
         0
     ) {
-
         videoDuration =
             VIDEO_DONATION_MAX_DURATION;
     }
 
-
     videoDuration =
         Math.min(
-
             Math.max(
                 1,
                 videoDuration
             ),
-
             VIDEO_DONATION_MAX_DURATION
         );
 
-
     return {
-
         videoUrl:
             video.videoUrl,
 
@@ -2860,11 +2031,6 @@ function normalizeVideoDonation(
     };
 }
 
-
-/* =========================================================
-   VALIDATE DONATION
-========================================================= */
-
 function validateDonationInput(
     body = {}
 ) {
@@ -2874,15 +2040,15 @@ function validateDonationInput(
             body.amount
         );
 
-
     let name =
         String(
             body.name
             ||
             "Anonymous"
         )
-        .trim();
-
+            .trim()
+        ||
+        "Anonymous";
 
     const message =
         String(
@@ -2890,80 +2056,52 @@ function validateDonationInput(
             ||
             ""
         )
-        .trim();
-
-
-    if (
-        !name
-    ) {
-
-        name =
-            "Anonymous";
-    }
-
+            .trim();
 
     if (
         !Number.isFinite(
             amount
         )
-
         ||
-
         amount <
         10
     ) {
-
         throw new Error(
             "สนับสนุนขั้นต่ำ 10 บาท"
         );
     }
 
-
     if (
         name.length >
         30
     ) {
-
         throw new Error(
             "ชื่อต้องไม่เกิน 30 ตัวอักษร"
         );
     }
 
-
     if (
         message.length >
         200
     ) {
-
         throw new Error(
             "ข้อความต้องไม่เกิน 200 ตัวอักษร"
         );
     }
 
-
-    const video =
-        normalizeVideoDonation(
-            body,
-            amount
-        );
-
-
     return {
-
         amount,
 
         name,
 
         message,
 
-        ...video
+        ...normalizeVideoDonation(
+            body,
+            amount
+        )
     };
 }
-
-
-/* =========================================================
-   NORMALIZE EASYSLIP
-========================================================= */
 
 function normalizeDonationFromEasySlip(
     input,
@@ -2972,37 +2110,29 @@ function normalizeDonationFromEasySlip(
 
     const amountInSlip =
         Number(
-            data.data
-                ?.amountInSlip
+            data.data?.amountInSlip
         );
-
 
     if (
         !Number.isFinite(
             amountInSlip
         )
     ) {
-
         throw new Error(
             "ไม่พบยอดเงินในสลิป"
         );
     }
 
-
     if (
         input.videoId
-
         &&
-
         amountInSlip <
         VIDEO_DONATION_MIN_AMOUNT
     ) {
-
         throw new Error(
             `แนบวิดีโอได้เมื่อสนับสนุนตั้งแต่ ${VIDEO_DONATION_MIN_AMOUNT} บาท`
         );
     }
-
 
     return {
 
@@ -3016,47 +2146,26 @@ function normalizeDonationFromEasySlip(
             amountInSlip,
 
         transRef:
-
-            data.data
-                ?.rawSlip
-                ?.transRef
-
+            data.data?.rawSlip?.transRef
             ||
-
-            data.data
-                ?.transRef
-
+            data.data?.transRef
             ||
-
             null,
-
 
         videoUrl:
-
             input.videoUrl
-
             ||
-
             null,
-
 
         videoId:
-
             input.videoId
-
             ||
-
             null,
 
-
         videoStart:
-
             input.videoId
-
                 ?
-
                 Math.min(
-
                     Math.max(
                         0,
                         Number(
@@ -3065,46 +2174,32 @@ function normalizeDonationFromEasySlip(
                             0
                         )
                     ),
-
                     VIDEO_DONATION_MAX_START
                 )
-
                 :
-
                 null,
 
-
         videoDuration:
-
             input.videoId
-
                 ?
-
                 Math.min(
-
                     Math.max(
-
                         1,
-
                         Number(
                             input.videoDuration
                             ||
                             VIDEO_DONATION_MAX_DURATION
                         )
                     ),
-
                     VIDEO_DONATION_MAX_DURATION
                 )
-
                 :
-
                 null
     };
 }
 
-
 /* =========================================================
-   SOUND TIERS
+   SOUND TIERS / CUSTOM SOUND
 ========================================================= */
 
 function getDonationTierSound(
@@ -3118,14 +2213,11 @@ function getDonationTierSound(
         ||
         0;
 
-
     if (
         value >=
         1000
     ) {
-
         return {
-
             soundTier:
                 "mega",
 
@@ -3134,14 +2226,11 @@ function getDonationTierSound(
         };
     }
 
-
     if (
         value >=
         500
     ) {
-
         return {
-
             soundTier:
                 "500-999",
 
@@ -3150,14 +2239,11 @@ function getDonationTierSound(
         };
     }
 
-
     if (
         value >=
         300
     ) {
-
         return {
-
             soundTier:
                 "300-499",
 
@@ -3166,14 +2252,11 @@ function getDonationTierSound(
         };
     }
 
-
     if (
         value >=
         100
     ) {
-
         return {
-
             soundTier:
                 "100-299",
 
@@ -3182,14 +2265,11 @@ function getDonationTierSound(
         };
     }
 
-
     if (
         value >=
         50
     ) {
-
         return {
-
             soundTier:
                 "50-99",
 
@@ -3198,9 +2278,7 @@ function getDonationTierSound(
         };
     }
 
-
     return {
-
         soundTier:
             "10-49",
 
@@ -3209,19 +2287,11 @@ function getDonationTierSound(
     };
 }
 
-
-/* =========================================================
-   CUSTOM SOUND TOKEN
-========================================================= */
-
 function createCustomSoundToken() {
 
     return (
-
         "snd_"
-
         +
-
         crypto
             .randomBytes(
                 24
@@ -3231,7 +2301,6 @@ function createCustomSoundToken() {
             )
     );
 }
-
 
 function createCustomSoundFileId() {
 
@@ -3244,11 +2313,6 @@ function createCustomSoundFileId() {
         );
 }
 
-
-/* =========================================================
-   NORMALIZE CUSTOM SOUND TOKEN
-========================================================= */
-
 function normalizeCustomSoundToken(
     value
 ) {
@@ -3259,27 +2323,17 @@ function normalizeCustomSoundToken(
             ||
             ""
         )
-        .trim();
+            .trim();
 
-
-    if (
-        !/^snd_[a-f0-9]{48}$/
-            .test(
-                token
-            )
-    ) {
-
-        return null;
-    }
-
-
-    return token;
+    return /^snd_[a-f0-9]{48}$/
+        .test(
+            token
+        )
+        ?
+        token
+        :
+        null;
 }
-
-
-/* =========================================================
-   AUDIO EXTENSION
-========================================================= */
 
 function getAudioExtension(
     mimeType
@@ -3290,36 +2344,25 @@ function getAudioExtension(
     ) {
 
         case "audio/mpeg":
-
         case "audio/mp3":
 
             return ".mp3";
 
-
         case "audio/wav":
-
         case "audio/x-wav":
 
             return ".wav";
 
-
         case "audio/ogg":
-
         case "application/ogg":
 
             return ".ogg";
-
 
         default:
 
             return null;
     }
 }
-
-
-/* =========================================================
-   GET CUSTOM SOUND
-========================================================= */
 
 async function getCustomSoundRecord(
     token
@@ -3330,35 +2373,23 @@ async function getCustomSoundRecord(
             token
         );
 
-
     if (
         !safeToken
     ) {
-
         return null;
     }
-
 
     return dbGet(
         `
         SELECT
-
             token,
-
             file_name,
-
             original_name,
-
             mime_type,
-
             size,
-
             status,
-
             created_at,
-
             expires_at,
-
             used_at
 
         FROM custom_sounds
@@ -3370,11 +2401,6 @@ async function getCustomSoundRecord(
         ]
     );
 }
-
-
-/* =========================================================
-   CUSTOM SOUND USABLE
-========================================================= */
 
 async function customSoundIsUsable(
     token,
@@ -3388,24 +2414,19 @@ async function customSoundIsUsable(
         <
         CUSTOM_SOUND_MIN_AMOUNT
     ) {
-
         return false;
     }
-
 
     const record =
         await getCustomSoundRecord(
             token
         );
 
-
     if (
         !record
     ) {
-
         return false;
     }
-
 
     if (
         Number(
@@ -3414,39 +2435,30 @@ async function customSoundIsUsable(
         <=
         Date.now()
     ) {
-
         return false;
     }
-
 
     if (
         ![
             "pending",
             "used"
         ]
-        .includes(
-            record.status
-        )
+            .includes(
+                record.status
+            )
     ) {
-
         return false;
     }
-
-
-    const filePath =
-        path.join(
-            CUSTOM_SOUND_DIR,
-            record.file_name
-        );
-
 
     try {
 
         await fs.promises.access(
-            filePath,
+            path.join(
+                CUSTOM_SOUND_DIR,
+                record.file_name
+            ),
             fs.constants.R_OK
         );
-
 
         return true;
 
@@ -3455,11 +2467,6 @@ async function customSoundIsUsable(
         return false;
     }
 }
-
-
-/* =========================================================
-   RESOLVE DONATION SOUND
-========================================================= */
 
 async function resolveDonationSound(
     amount,
@@ -3471,27 +2478,21 @@ async function resolveDonationSound(
             amount
         );
 
-
     const token =
         normalizeCustomSoundToken(
             customSoundToken
         );
 
-
     if (
         !token
-
         ||
-
         Number(
             amount
         )
         <
         CUSTOM_SOUND_MIN_AMOUNT
     ) {
-
         return {
-
             ...tier,
 
             customSound:
@@ -3502,25 +2503,20 @@ async function resolveDonationSound(
         };
     }
 
-
-    const usable =
-        await customSoundIsUsable(
-            token,
-            amount
-        );
-
-
     if (
-        !usable
+        !(
+            await customSoundIsUsable(
+                token,
+                amount
+            )
+        )
     ) {
 
         console.warn(
             "Custom Sound ใช้ไม่ได้/หมดอายุ -> fallback tier sound"
         );
 
-
         return {
-
             ...tier,
 
             customSound:
@@ -3531,33 +2527,21 @@ async function resolveDonationSound(
         };
     }
 
-
     return {
 
         soundTier:
             "custom",
 
-
         soundUrl:
-
-            `/api/custom-sound/${encodeURIComponent(
-                token
-            )}/audio`,
-
+            `/api/custom-sound/${encodeURIComponent(token)}/audio`,
 
         customSound:
             true,
-
 
         soundToken:
             token
     };
 }
-
-
-/* =========================================================
-   MARK CUSTOM SOUND USED
-========================================================= */
 
 async function markCustomSoundUsed(
     token
@@ -3568,68 +2552,44 @@ async function markCustomSoundUsed(
             token
         );
 
-
     if (
         !safeToken
     ) {
-
         return;
     }
-
 
     const now =
         Date.now();
 
-
     const keepUntil =
-
         now
-
         +
-
         CUSTOM_SOUND_AFTER_USE_TTL_MS;
-
 
     await dbRun(
         `
         UPDATE custom_sounds
 
         SET
-
             status = 'used',
-
             used_at = ?,
-
             expires_at =
-
                 CASE
-
                     WHEN expires_at < ?
-
                     THEN ?
-
                     ELSE expires_at
-
                 END
 
         WHERE token = ?
         `,
         [
             now,
-
             keepUntil,
-
             keepUntil,
-
             safeToken
         ]
     );
 }
-
-
-/* =========================================================
-   SAVE CUSTOM SOUND
-========================================================= */
 
 async function saveUploadedCustomSound(
     file,
@@ -3639,64 +2599,49 @@ async function saveUploadedCustomSound(
     if (
         !file
     ) {
-
         throw new Error(
             "กรุณาเลือกไฟล์เสียง"
         );
     }
-
 
     const expectedAmount =
         Number(
             amount
         );
 
-
     if (
         !Number.isFinite(
             expectedAmount
         )
-
         ||
-
         expectedAmount <
         CUSTOM_SOUND_MIN_AMOUNT
     ) {
-
         throw new Error(
             `Custom Sound ใช้ได้เมื่อโดเนท ${CUSTOM_SOUND_MIN_AMOUNT} บาทขึ้นไป`
         );
     }
-
 
     const extension =
         getAudioExtension(
             file.mimetype
         );
 
-
     if (
         !extension
     ) {
-
         throw new Error(
             "รองรับเสียงเฉพาะ MP3, WAV และ OGG"
         );
     }
 
-
     const token =
         createCustomSoundToken();
 
-
     const fileName =
-
         createCustomSoundFileId()
-
         +
-
         extension;
-
 
     const filePath =
         path.join(
@@ -3704,19 +2649,13 @@ async function saveUploadedCustomSound(
             fileName
         );
 
-
     const createdAt =
         Date.now();
 
-
     const expiresAt =
-
         createdAt
-
         +
-
         CUSTOM_SOUND_TTL_MS;
-
 
     await fs.promises.writeFile(
         filePath,
@@ -3727,7 +2666,6 @@ async function saveUploadedCustomSound(
         }
     );
 
-
     try {
 
         await dbRun(
@@ -3735,21 +2673,13 @@ async function saveUploadedCustomSound(
             INSERT INTO custom_sounds
             (
                 token,
-
                 file_name,
-
                 original_name,
-
                 mime_type,
-
                 size,
-
                 status,
-
                 created_at,
-
                 expires_at,
-
                 used_at
             )
 
@@ -3768,21 +2698,17 @@ async function saveUploadedCustomSound(
             `,
             [
                 token,
-
                 fileName,
-
                 String(
                     file.originalname
                     ||
                     "sound"
                 )
-                .slice(
-                    0,
-                    160
-                ),
-
+                    .slice(
+                        0,
+                        160
+                    ),
                 file.mimetype,
-
                 Number(
                     file.size
                     ||
@@ -3790,29 +2716,26 @@ async function saveUploadedCustomSound(
                     ||
                     0
                 ),
-
                 createdAt,
-
                 expiresAt
             ]
         );
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         await fs.promises.unlink(
             filePath
         )
-        .catch(
-            () => {}
-        );
-
+            .catch(
+                () => {}
+            );
 
         throw error;
     }
 
-
     return {
-
         token,
 
         expiresAt,
@@ -3822,11 +2745,6 @@ async function saveUploadedCustomSound(
     };
 }
 
-
-/* =========================================================
-   CLEANUP CUSTOM SOUND
-========================================================= */
-
 async function cleanupCustomSounds() {
 
     try {
@@ -3834,14 +2752,11 @@ async function cleanupCustomSounds() {
         const now =
             Date.now();
 
-
         const expired =
             await dbAll(
                 `
                 SELECT
-
                     token,
-
                     file_name
 
                 FROM custom_sounds
@@ -3853,37 +2768,29 @@ async function cleanupCustomSounds() {
                 ]
             );
 
-
         for (
             const item
             of expired
         ) {
 
-            const filePath =
+            await fs.promises.unlink(
                 path.join(
                     CUSTOM_SOUND_DIR,
                     item.file_name
-                );
-
-
-            await fs.promises.unlink(
-                filePath
+                )
             )
-            .catch(
-                () => {}
-            );
+                .catch(
+                    () => {}
+                );
         }
 
-
         if (
-            expired.length >
-            0
+            expired.length
         ) {
 
             await dbRun(
                 `
                 DELETE FROM custom_sounds
-
                 WHERE expires_at <= ?
                 `,
                 [
@@ -3891,13 +2798,14 @@ async function cleanupCustomSounds() {
                 ]
             );
 
-
             console.log(
                 `🧹 Custom Sounds cleaned: ${expired.length}`
             );
         }
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Custom Sound Cleanup:",
@@ -3906,9 +2814,8 @@ async function cleanupCustomSounds() {
     }
 }
 
-
 /* =========================================================
-   SAVE DONATION
+   SAVE / BROADCAST DONATION
 ========================================================= */
 
 async function saveDonation(
@@ -3918,12 +2825,10 @@ async function saveDonation(
     if (
         !donation.transRef
     ) {
-
         throw new Error(
             "ไม่พบเลขอ้างอิงธุรกรรมในสลิป"
         );
     }
-
 
     try {
 
@@ -3933,134 +2838,84 @@ async function saveDonation(
                 INSERT INTO donations
                 (
                     name,
-
                     message,
-
                     amount,
-
                     trans_ref,
-
                     video_url,
-
                     video_id,
-
                     video_start,
-
                     video_duration
                 )
 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+
+                RETURNING id
                 `,
                 [
                     donation.name,
-
                     donation.message,
-
                     donation.amount,
-
                     donation.transRef,
-
                     donation.videoUrl
                     ||
                     null,
-
                     donation.videoId
                     ||
                     null,
-
                     donation.videoId
-
                         ?
-
                         Number(
                             donation.videoStart
                             ||
                             0
                         )
-
                         :
-
                         null,
-
                     donation.videoId
-
                         ?
-
                         Math.min(
-
                             Number(
                                 donation.videoDuration
                                 ||
                                 VIDEO_DONATION_MAX_DURATION
                             ),
-
                             VIDEO_DONATION_MAX_DURATION
                         )
-
                         :
-
                         null
                 ]
             );
-
 
         console.log(
             "Donation saved ID:",
             result.lastID
         );
 
-
-        console.log(
-            "DONATION VERIFIED:",
-            {
-
-                name:
-                    donation.name,
-
-                amount:
-                    donation.amount,
-
-                customSound:
-                    donation.customSound,
-
-                soundTier:
-                    donation.soundTier,
-
-                videoId:
-                    donation.videoId
-                    ||
-                    null
-            }
-        );
-
-
         return result;
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         if (
+            error?.code ===
+            "23505"
+            ||
             String(
                 error.message
             )
-            .includes(
-                "UNIQUE constraint failed"
-            )
+                .includes(
+                    "duplicate key value violates unique constraint"
+                )
         ) {
-
             throw new Error(
                 "รายการนี้ถูกบันทึกไปแล้ว"
             );
         }
 
-
         throw error;
     }
 }
-
-
-/* =========================================================
-   BROADCAST
-========================================================= */
 
 async function broadcastDonation(
     donation
@@ -4071,33 +2926,23 @@ async function broadcastDonation(
         donation
     );
 
-
-    const donors =
-        await getTopDonorsFromDB();
-
-
     io.emit(
         "ranking-update",
-        donors
+        await getTopDonorsFromDB()
     );
-
 
     await emitGoalUpdate();
 }
 
-
 /* =========================================================
-   MOBILE SESSION ID
+   MOBILE SESSIONS
 ========================================================= */
 
 function generateMobileSessionId() {
 
     return (
-
         "mob_"
-
         +
-
         crypto
             .randomBytes(
                 24
@@ -4108,11 +2953,6 @@ function generateMobileSessionId() {
     );
 }
 
-
-/* =========================================================
-   CREATE MOBILE SESSION DB
-========================================================= */
-
 async function createMobileSessionDB(
     session
 ) {
@@ -4122,31 +2962,18 @@ async function createMobileSessionDB(
         INSERT INTO mobile_sessions
         (
             session_id,
-
             name,
-
             message,
-
             amount,
-
             status,
-
             created_at,
-
             expires_at,
-
             verified_at,
-
             trans_ref,
-
             custom_sound_token,
-
             video_url,
-
             video_id,
-
             video_start,
-
             video_duration
         )
 
@@ -4170,74 +2997,47 @@ async function createMobileSessionDB(
         `,
         [
             session.sessionId,
-
             session.name,
-
             session.message,
-
             session.amount,
-
             session.status,
-
             session.createdAt,
-
             session.expiresAt,
-
             session.customSoundToken
             ||
             null,
-
             session.videoUrl
             ||
             null,
-
             session.videoId
             ||
             null,
-
             session.videoId
-
                 ?
-
                 Number(
                     session.videoStart
                     ||
                     0
                 )
-
                 :
-
                 null,
-
             session.videoId
-
                 ?
-
                 Math.min(
-
                     Number(
                         session.videoDuration
                         ||
                         VIDEO_DONATION_MAX_DURATION
                     ),
-
                     VIDEO_DONATION_MAX_DURATION
                 )
-
                 :
-
                 null
         ]
     );
 
-
     return session;
 }
-
-
-/* =========================================================
-   GET MOBILE SESSION DB
-========================================================= */
 
 async function getMobileSessionDB(
     sessionId
@@ -4247,33 +3047,19 @@ async function getMobileSessionDB(
         await dbGet(
             `
             SELECT
-
                 session_id,
-
                 name,
-
                 message,
-
                 amount,
-
                 status,
-
                 created_at,
-
                 expires_at,
-
                 verified_at,
-
                 trans_ref,
-
                 custom_sound_token,
-
                 video_url,
-
                 video_id,
-
                 video_start,
-
                 video_duration
 
             FROM mobile_sessions
@@ -4285,14 +3071,11 @@ async function getMobileSessionDB(
             ]
         );
 
-
     if (
         !row
     ) {
-
         return null;
     }
-
 
     return {
 
@@ -4326,17 +3109,12 @@ async function getMobileSessionDB(
             ),
 
         verifiedAt:
-
             row.verified_at
-
                 ?
-
                 Number(
                     row.verified_at
                 )
-
                 :
-
                 null,
 
         transRef:
@@ -4360,48 +3138,31 @@ async function getMobileSessionDB(
             null,
 
         videoStart:
-
             row.video_id
-
                 ?
-
                 Number(
                     row.video_start
                     ||
                     0
                 )
-
                 :
-
                 null,
 
         videoDuration:
-
             row.video_id
-
                 ?
-
                 Math.min(
-
                     Number(
                         row.video_duration
                         ||
                         VIDEO_DONATION_MAX_DURATION
                     ),
-
                     VIDEO_DONATION_MAX_DURATION
                 )
-
                 :
-
                 null
     };
 }
-
-
-/* =========================================================
-   DELETE MOBILE SESSION
-========================================================= */
 
 async function deleteMobileSessionDB(
     sessionId
@@ -4410,7 +3171,6 @@ async function deleteMobileSessionDB(
     await dbRun(
         `
         DELETE FROM mobile_sessions
-
         WHERE session_id = ?
         `,
         [
@@ -4418,11 +3178,6 @@ async function deleteMobileSessionDB(
         ]
     );
 }
-
-
-/* =========================================================
-   LOCK MOBILE SESSION
-========================================================= */
 
 async function lockMobileSession(
     sessionId
@@ -4437,36 +3192,21 @@ async function lockMobileSession(
                 status = 'verifying'
 
             WHERE
-
                 session_id = ?
-
                 AND
-
                 status = 'pending'
-
                 AND
-
                 expires_at > ?
             `,
             [
                 sessionId,
-
                 Date.now()
             ]
         );
 
-
-    return (
-        result.changes
-        ===
-        1
-    );
+    return result.changes ===
+        1;
 }
-
-
-/* =========================================================
-   RESET MOBILE SESSION
-========================================================= */
 
 async function resetMobileSession(
     sessionId
@@ -4480,41 +3220,32 @@ async function resetMobileSession(
             status = 'pending'
 
         WHERE
-
             session_id = ?
-
             AND
-
             status = 'verifying'
-
             AND
-
             expires_at > ?
         `,
         [
             sessionId,
-
             Date.now()
         ]
     );
 }
-
-
-/* =========================================================
-   SAVE MOBILE DONATION + COMPLETE
-========================================================= */
 
 async function saveMobileDonationAndComplete(
     sessionId,
     donation
 ) {
 
+    const client =
+        await pool.connect();
+
     try {
 
-        await dbRun(
-            "BEGIN IMMEDIATE TRANSACTION"
+        await client.query(
+            "BEGIN"
         );
-
 
         const insertResult =
             await dbRun(
@@ -4522,76 +3253,54 @@ async function saveMobileDonationAndComplete(
                 INSERT INTO donations
                 (
                     name,
-
                     message,
-
                     amount,
-
                     trans_ref,
-
                     video_url,
-
                     video_id,
-
                     video_start,
-
                     video_duration
                 )
 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+
+                RETURNING id
                 `,
                 [
                     donation.name,
-
                     donation.message,
-
                     donation.amount,
-
                     donation.transRef,
-
                     donation.videoUrl
                     ||
                     null,
-
                     donation.videoId
                     ||
                     null,
-
                     donation.videoId
-
                         ?
-
                         Number(
                             donation.videoStart
                             ||
                             0
                         )
-
                         :
-
                         null,
-
                     donation.videoId
-
                         ?
-
                         Math.min(
-
                             Number(
                                 donation.videoDuration
                                 ||
                                 VIDEO_DONATION_MAX_DURATION
                             ),
-
                             VIDEO_DONATION_MAX_DURATION
                         )
-
                         :
-
                         null
-                ]
+                ],
+                client
             );
-
 
         const updateResult =
             await dbRun(
@@ -4599,89 +3308,72 @@ async function saveMobileDonationAndComplete(
                 UPDATE mobile_sessions
 
                 SET
-
                     status = 'verified',
-
                     verified_at = ?,
-
                     trans_ref = ?
 
                 WHERE
-
                     session_id = ?
-
                     AND
-
                     status = 'verifying'
                 `,
                 [
                     Date.now(),
-
                     donation.transRef,
-
                     sessionId
-                ]
+                ],
+                client
             );
 
-
         if (
-            updateResult.changes
-            !==
+            updateResult.changes !==
             1
         ) {
-
             throw new Error(
                 "ไม่สามารถยืนยัน Mobile Session ได้"
             );
         }
 
-
-        await dbRun(
+        await client.query(
             "COMMIT"
         );
 
-
-        console.log(
-            "Donation saved ID:",
-            insertResult.lastID
-        );
-
-
         return insertResult;
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
-        await dbRun(
+        await client.query(
             "ROLLBACK"
         )
-        .catch(
-            () => {}
-        );
-
+            .catch(
+                () => {}
+            );
 
         if (
+            error?.code ===
+            "23505"
+            ||
             String(
                 error.message
             )
-            .includes(
-                "UNIQUE constraint failed"
-            )
+                .includes(
+                    "duplicate key value violates unique constraint"
+                )
         ) {
-
             throw new Error(
                 "รายการนี้ถูกบันทึกไปแล้ว"
             );
         }
 
-
         throw error;
+
+    } finally {
+
+        client.release();
     }
 }
-
-
-/* =========================================================
-   CLEAN MOBILE SESSION
-========================================================= */
 
 async function cleanupMobileSessions() {
 
@@ -4691,7 +3383,6 @@ async function cleanupMobileSessions() {
             await dbRun(
                 `
                 DELETE FROM mobile_sessions
-
                 WHERE expires_at <= ?
                 `,
                 [
@@ -4699,18 +3390,18 @@ async function cleanupMobileSessions() {
                 ]
             );
 
-
         if (
             result.changes >
             0
         ) {
-
             console.log(
                 `🧹 Mobile Sessions cleaned: ${result.changes}`
             );
         }
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Mobile Session Cleanup:",
@@ -4718,11 +3409,6 @@ async function cleanupMobileSessions() {
         );
     }
 }
-
-
-/* =========================================================
-   RECOVER MOBILE SESSION
-========================================================= */
 
 async function recoverMobileSessions() {
 
@@ -4737,11 +3423,8 @@ async function recoverMobileSessions() {
                     status = 'pending'
 
                 WHERE
-
                     status = 'verifying'
-
                     AND
-
                     expires_at > ?
                 `,
                 [
@@ -4749,18 +3432,18 @@ async function recoverMobileSessions() {
                 ]
             );
 
-
         if (
             result.changes >
             0
         ) {
-
             console.log(
                 `♻ Mobile Sessions recovered: ${result.changes}`
             );
         }
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Mobile Session Recovery:",
@@ -4769,11 +3452,6 @@ async function recoverMobileSessions() {
     }
 }
 
-
-/* =========================================================
-   PUBLIC BASE URL
-========================================================= */
-
 function getPublicBaseUrl(
     req
 ) {
@@ -4781,10 +3459,8 @@ function getPublicBaseUrl(
     if (
         PUBLIC_BASE_URL
     ) {
-
         return PUBLIC_BASE_URL;
     }
-
 
     const forwardedProto =
         String(
@@ -4794,42 +3470,32 @@ function getPublicBaseUrl(
             ||
             ""
         )
-        .split(
-            ","
-        )[0]
-        .trim();
-
+            .split(
+                ","
+            )[0]
+            .trim();
 
     const protocol =
-
         forwardedProto
-
         ||
-
         req.protocol
-
         ||
-
         "http";
-
 
     return (
         `${protocol}://${req.get("host")}`
     );
 }
 
-
 /* =========================================================
-   CUSTOM SOUND UPLOAD
+   ROUTES: CUSTOM SOUND
 ========================================================= */
 
 app.post(
     "/api/custom-sound/upload",
-
     audioUpload.single(
         "sound"
     ),
-
     async (
         req,
         res
@@ -4837,21 +3503,15 @@ app.post(
 
         try {
 
-            const amount =
-                Number(
-                    req.body.amount
-                );
-
-
             const result =
                 await saveUploadedCustomSound(
                     req.file,
-                    amount
+                    Number(
+                        req.body.amount
+                    )
                 );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -4862,43 +3522,34 @@ app.post(
                     result
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Custom Sound Upload Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "อัปโหลดเสียงไม่สำเร็จ"
                 });
         }
     }
 );
 
-
-/* =========================================================
-   CUSTOM SOUND STREAM
-========================================================= */
-
 app.get(
     "/api/custom-sound/:token/audio",
-
     async (
         req,
         res
@@ -4911,52 +3562,36 @@ app.get(
                     req.params.token
                 );
 
-
             if (
                 !token
             ) {
-
                 return res
                     .status(
                         404
                     )
                     .end();
             }
-
 
             const record =
                 await getCustomSoundRecord(
                     token
                 );
 
-
             if (
                 !record
-            ) {
-
-                return res
-                    .status(
-                        404
-                    )
-                    .end();
-            }
-
-
-            if (
+                ||
                 Number(
                     record.expires_at
                 )
                 <=
                 Date.now()
             ) {
-
                 return res
                     .status(
                         404
                     )
                     .end();
             }
-
 
             const filePath =
                 path.join(
@@ -4964,37 +3599,34 @@ app.get(
                     record.file_name
                 );
 
-
             await fs.promises.access(
                 filePath,
                 fs.constants.R_OK
             );
-
 
             res.set(
                 "Cache-Control",
                 "no-store"
             );
 
-
             res.type(
                 record.mime_type
             );
 
-
-            return res.sendFile(
+            res.sendFile(
                 filePath
             );
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Custom Sound Stream Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     404
                 )
@@ -5003,14 +3635,12 @@ app.get(
     }
 );
 
-
 /* =========================================================
-   PROMPTPAY QR
+   ROUTES: PROMPTPAY / VERIFY
 ========================================================= */
 
 app.get(
     "/generate-qr/:amount",
-
     async (
         req,
         res
@@ -5023,24 +3653,19 @@ app.get(
                     req.params.amount
                 );
 
-
             if (
                 !Number.isFinite(
                     amount
                 )
-
                 ||
-
                 amount <
                 10
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -5049,27 +3674,22 @@ app.get(
                     });
             }
 
-
             const promptpayID =
                 String(
-                    process.env
-                        .PROMPTPAY_ID
+                    process.env.PROMPTPAY_ID
                     ||
                     ""
                 )
-                .trim();
-
+                    .trim();
 
             if (
                 !promptpayID
             ) {
-
                 return res
                     .status(
                         500
                     )
                     .json({
-
                         success:
                             false,
 
@@ -5077,7 +3697,6 @@ app.get(
                             "ยังไม่ได้ตั้ง PROMPTPAY_ID"
                     });
             }
-
 
             const payload =
                 generatePayload(
@@ -5087,16 +3706,12 @@ app.get(
                     }
                 );
 
-
             const qr =
-                await QRCode
-                    .toDataURL(
-                        payload
-                    );
+                await QRCode.toDataURL(
+                    payload
+                );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -5105,20 +3720,20 @@ app.get(
                 amount
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "QR ERROR:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5129,18 +3744,11 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   DESKTOP VERIFY
-========================================================= */
-
 app.post(
     "/verify-slip",
-
     upload.single(
         "slip"
     ),
-
     async (
         req,
         res
@@ -5151,13 +3759,11 @@ app.post(
             if (
                 !req.file
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -5166,12 +3772,10 @@ app.post(
                     });
             }
 
-
             const input =
                 validateDonationInput(
                     req.body
                 );
-
 
             const data =
                 await verifySlipWithEasySlip(
@@ -5179,63 +3783,46 @@ app.post(
                     input.amount
                 );
 
-
             const donation =
                 normalizeDonationFromEasySlip(
                     input,
                     data
                 );
 
-
-            const sound =
-                await resolveDonationSound(
-                    donation.amount,
-                    req.body
-                        .customSoundToken
-                );
-
-
             Object.assign(
                 donation,
-                sound
+                await resolveDonationSound(
+                    donation.amount,
+                    req.body.customSoundToken
+                )
             );
-
 
             await saveDonation(
                 donation
             );
 
-
             if (
                 donation.customSound
-
                 &&
-
                 donation.soundToken
             ) {
-
                 await markCustomSoundUsed(
                     donation.soundToken
                 )
-                .catch(
-                    error => {
-
-                        console.error(
-                            "Mark Custom Sound Used Error:",
-                            error
-                        );
-                    }
-                );
+                    .catch(
+                        error =>
+                            console.error(
+                                "Mark Custom Sound Used Error:",
+                                error
+                            )
+                    );
             }
-
 
             await broadcastDonation(
                 donation
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -5248,70 +3835,38 @@ app.post(
                     data.data
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "VERIFY ERROR:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "ตรวจสอบสลิปไม่สำเร็จ"
                 });
         }
     }
 );
 
-
 /* =========================================================
-   TOP DONORS
+   ROUTES: TOP DONORS / GOAL
 ========================================================= */
 
 app.get(
     "/top-donors",
-
-    async (
-        req,
-        res
-    ) => {
-
-        const donors =
-            await getTopDonorsFromDB();
-
-
-        return res.json({
-
-            success:
-                true,
-
-            donors
-        });
-    }
-);
-
-
-/* =========================================================
-   PUBLIC GOAL
-========================================================= */
-
-app.get(
-    "/api/goal",
-
     async (
         req,
         res
@@ -5319,32 +3874,73 @@ app.get(
 
         try {
 
-            const goal =
-                await getDonationGoal();
-
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
-                ...goal
+                donors:
+                    await getTopDonorsFromDB()
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
+
+            console.error(
+                "Top Donors Error:",
+                error
+            );
+
+            res
+                .status(
+                    500
+                )
+                .json({
+                    success:
+                        false,
+
+                    donors:
+                        [],
+
+                    message:
+                        "โหลดอันดับไม่สำเร็จ"
+                });
+        }
+    }
+);
+
+app.get(
+    "/api/goal",
+    async (
+        req,
+        res
+    ) => {
+
+        try {
+
+            res.json({
+                success:
+                    true,
+
+                ...(
+                    await getDonationGoal()
+                )
+            });
+
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Public Goal Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5355,16 +3951,9 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   ADMIN GET GOAL
-========================================================= */
-
 app.get(
     "/api/admin/goal",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -5372,32 +3961,28 @@ app.get(
 
         try {
 
-            const goal =
-                await getDonationGoal();
-
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
-                goal
+                goal:
+                    await getDonationGoal()
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Admin Get Goal:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5408,16 +3993,9 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   UPDATE GOAL
-========================================================= */
-
 app.post(
     "/api/admin/goal",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -5431,38 +4009,31 @@ app.post(
                     ||
                     "เป้าหมายสนับสนุน"
                 )
-                .trim();
-
+                    .trim();
 
             const target =
                 Number(
                     req.body.target
                 );
 
-
             const enabled =
                 toBoolean(
                     req.body.enabled
                 );
 
-
             if (
                 !Number.isFinite(
                     target
                 )
-
                 ||
-
                 target <=
                 0
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -5471,18 +4042,15 @@ app.post(
                     });
             }
 
-
             if (
                 title.length >
                 60
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -5491,23 +4059,17 @@ app.post(
                     });
             }
 
-
             await Promise.all([
-
                 setSetting(
                     "goal_title",
                     title
                     ||
                     "เป้าหมายสนับสนุน"
                 ),
-
-
                 setSetting(
                     "goal_target",
                     target
                 ),
-
-
                 setSetting(
                     "goal_enabled",
                     enabled
@@ -5518,39 +4080,35 @@ app.post(
                 )
             ]);
 
-
             const goal =
                 await getDonationGoal();
-
 
             io.emit(
                 "goal-update",
                 goal
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
                 goal
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Update Goal Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5561,16 +4119,9 @@ app.post(
     }
 );
 
-
-/* =========================================================
-   RESET GOAL
-========================================================= */
-
 app.post(
     "/api/admin/goal/reset",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -5578,48 +4129,40 @@ app.post(
 
         try {
 
-            const total =
-                await getAllDonationTotal();
-
-
             await setSetting(
                 "goal_base_total",
-                total
+                await getAllDonationTotal()
             );
-
 
             const goal =
                 await getDonationGoal();
-
 
             io.emit(
                 "goal-update",
                 goal
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
                 goal
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Reset Goal Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5630,14 +4173,12 @@ app.post(
     }
 );
 
-
 /* =========================================================
-   PUBLIC ALERT SETTINGS
+   ROUTES: ALERT SETTINGS / AUDIO CONTROL
 ========================================================= */
 
 app.get(
     "/api/alert-settings",
-
     async (
         req,
         res
@@ -5645,32 +4186,28 @@ app.get(
 
         try {
 
-            const settings =
-                await getAlertSettings();
-
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
-                settings
+                settings:
+                    await getAlertSettings()
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Get Alert Settings Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5681,16 +4218,9 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   ADMIN GET ALERT SETTINGS
-========================================================= */
-
 app.get(
     "/api/admin/alert-settings",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -5698,32 +4228,28 @@ app.get(
 
         try {
 
-            const settings =
-                await getAlertSettings();
-
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
-                settings
+                settings:
+                    await getAlertSettings()
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Admin Get Alert Settings Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -5734,16 +4260,9 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   UPDATE ALERT SETTINGS + VOLUME MIXER
-========================================================= */
-
 app.post(
     "/api/admin/alert-settings",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -5751,398 +4270,226 @@ app.post(
 
         try {
 
-            /*
-            สำคัญ:
-            โหลดค่าปัจจุบันมาก่อน
-
-            ทำให้ Dashboard รุ่นเดิม
-            ที่ยังไม่ได้ส่ง Volume
-            ยัง Save Alert Settings ได้
-            */
-
             const current =
                 await getAlertSettings();
 
+            const pickBool =
+                (
+                    key,
+                    fallback
+                ) =>
+                    req.body[key] ===
+                    undefined
+                        ?
+                        fallback
+                        :
+                        toBoolean(
+                            req.body[key]
+                        );
+
+            const pickNum =
+                (
+                    key,
+                    fallback
+                ) =>
+                    req.body[key] ===
+                    undefined
+                        ?
+                        fallback
+                        :
+                        Number(
+                            req.body[key]
+                        );
 
             const ttsEnabled =
-
-                req.body.ttsEnabled
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "ttsEnabled",
                     current.ttsEnabled
-
-                    :
-
-                    toBoolean(
-                        req.body.ttsEnabled
-                    );
-
+                );
 
             const readMessage =
-
-                req.body.readMessage
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "readMessage",
                     current.readMessage
-
-                    :
-
-                    toBoolean(
-                        req.body.readMessage
-                    );
-
+                );
 
             const ttsRate =
-
-                req.body.ttsRate
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "ttsRate",
                     current.ttsRate
-
-                    :
-
-                    Number(
-                        req.body.ttsRate
-                    );
-
+                );
 
             const bigAmount =
-
-                req.body.bigAmount
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "bigAmount",
                     current.bigAmount
-
-                    :
-
-                    Number(
-                        req.body.bigAmount
-                    );
-
+                );
 
             const megaAmount =
-
-                req.body.megaAmount
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "megaAmount",
                     current.megaAmount
-
-                    :
-
-                    Number(
-                        req.body.megaAmount
-                    );
-
+                );
 
             const afterTtsDelay =
-
-                req.body.afterTtsDelay
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "afterTtsDelay",
                     current.afterTtsDelay
-
-                    :
-
-                    Number(
-                        req.body.afterTtsDelay
-                    );
-
+                );
 
             const noTtsDisplayTime =
-
-                req.body.noTtsDisplayTime
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "noTtsDisplayTime",
                     current.noTtsDisplayTime
-
-                    :
-
-                    Number(
-                        req.body.noTtsDisplayTime
-                    );
-
-
-            /* =================================================
-               VOLUME
-            ================================================= */
+                );
 
             const alertVolume =
                 normalizeVolumeValue(
-
                     req.body.alertVolume,
-
                     current.alertVolume
                 );
 
-
             const customSoundVolume =
                 normalizeVolumeValue(
-
                     req.body.customSoundVolume,
-
                     current.customSoundVolume
                 );
 
-
             const ttsVolume =
                 normalizeVolumeValue(
-
                     req.body.ttsVolume,
-
                     current.ttsVolume
                 );
 
-
             const videoVolume =
                 normalizeVolumeValue(
-
                     req.body.videoVolume,
-
                     current.videoVolume
                 );
 
-
-            /* =================================================
-               AUDIO CONTROL CENTER PRO MAX
-            ================================================= */
-
             const masterVolume =
                 normalizeVolumeValue(
-
                     req.body.masterVolume,
-
                     current.masterVolume
                 );
 
-
             const alertMuted =
-
-                req.body.alertMuted
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "alertMuted",
                     current.alertMuted
-
-                    :
-
-                    toBoolean(
-                        req.body.alertMuted
-                    );
-
+                );
 
             const customSoundMuted =
-
-                req.body.customSoundMuted
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "customSoundMuted",
                     current.customSoundMuted
-
-                    :
-
-                    toBoolean(
-                        req.body.customSoundMuted
-                    );
-
+                );
 
             const ttsMuted =
-
-                req.body.ttsMuted
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "ttsMuted",
                     current.ttsMuted
-
-                    :
-
-                    toBoolean(
-                        req.body.ttsMuted
-                    );
-
+                );
 
             const videoMuted =
-
-                req.body.videoMuted
-                ===
-                undefined
-
-                    ?
-
+                pickBool(
+                    "videoMuted",
                     current.videoMuted
-
-                    :
-
-                    toBoolean(
-                        req.body.videoMuted
-                    );
-
+                );
 
             const ttsPitch =
-
-                req.body.ttsPitch
-                ===
-                undefined
-
-                    ?
-
+                pickNum(
+                    "ttsPitch",
                     current.ttsPitch
-
-                    :
-
-                    Number(
-                        req.body.ttsPitch
-                    );
-
+                );
 
             const ttsVoiceURI =
-
-                req.body.ttsVoiceURI
-                ===
+                req.body.ttsVoiceURI ===
                 undefined
-
                     ?
-
                     String(
                         current.ttsVoiceURI
                         ||
                         "auto"
                     )
-
                     :
-
                     (
                         String(
                             req.body.ttsVoiceURI
                             ||
                             "auto"
                         )
-                        .trim()
-                        .slice(
-                            0,
-                            255
-                        )
-
+                            .trim()
+                            .slice(
+                                0,
+                                255
+                            )
                         ||
-
                         "auto"
                     );
 
-
             const ttsVoiceName =
-
-                req.body.ttsVoiceName
-                ===
+                req.body.ttsVoiceName ===
                 undefined
-
                     ?
-
                     String(
                         current.ttsVoiceName
                         ||
                         ""
                     )
-
                     :
-
                     String(
                         req.body.ttsVoiceName
                         ||
                         ""
                     )
-                    .trim()
-                    .slice(
-                        0,
-                        255
-                    );
-
+                        .trim()
+                        .slice(
+                            0,
+                            255
+                        );
 
             const ttsLang =
-
-                req.body.ttsLang
-                ===
+                req.body.ttsLang ===
                 undefined
-
                     ?
-
                     String(
                         current.ttsLang
                         ||
                         "th-TH"
                     )
-
                     :
-
                     (
                         String(
                             req.body.ttsLang
                             ||
                             "th-TH"
                         )
-                        .trim()
-                        .slice(
-                            0,
-                            40
-                        )
-
+                            .trim()
+                            .slice(
+                                0,
+                                40
+                            )
                         ||
-
                         "th-TH"
                     );
-
-
-            /* =================================================
-               VALIDATION
-            ================================================= */
 
             if (
                 !Number.isFinite(
                     ttsRate
                 )
-
                 ||
-
                 ttsRate <
-                .5
-
+                0.5
                 ||
-
                 ttsRate >
                 2
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6151,29 +4498,22 @@ app.post(
                     });
             }
 
-
             if (
                 !Number.isFinite(
                     ttsPitch
                 )
-
                 ||
-
                 ttsPitch <
-                .5
-
+                0.5
                 ||
-
                 ttsPitch >
                 2
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6182,24 +4522,19 @@ app.post(
                     });
             }
 
-
             if (
                 !Number.isFinite(
                     bigAmount
                 )
-
                 ||
-
                 bigAmount <=
                 0
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6208,24 +4543,19 @@ app.post(
                     });
             }
 
-
             if (
                 !Number.isFinite(
                     megaAmount
                 )
-
                 ||
-
                 megaAmount <=
                 bigAmount
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6234,29 +4564,22 @@ app.post(
                     });
             }
 
-
             if (
                 !Number.isFinite(
                     afterTtsDelay
                 )
-
                 ||
-
                 afterTtsDelay <
                 0
-
                 ||
-
                 afterTtsDelay >
                 10000
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6265,29 +4588,22 @@ app.post(
                     });
             }
 
-
             if (
                 !Number.isFinite(
                     noTtsDisplayTime
                 )
-
                 ||
-
                 noTtsDisplayTime <
                 1000
-
                 ||
-
                 noTtsDisplayTime >
                 30000
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6295,11 +4611,6 @@ app.post(
                             "เวลาแสดง Alert ต้องอยู่ระหว่าง 1 - 30 วินาที"
                     });
             }
-
-
-            /* =================================================
-               SAVE
-            ================================================= */
 
             await Promise.all([
 
@@ -6312,7 +4623,6 @@ app.post(
                         "0"
                 ),
 
-
                 setSetting(
                     "alert_read_message",
                     readMessage
@@ -6322,24 +4632,20 @@ app.post(
                         "0"
                 ),
 
-
                 setSetting(
                     "alert_tts_rate",
                     ttsRate
                 ),
-
 
                 setSetting(
                     "alert_big_amount",
                     bigAmount
                 ),
 
-
                 setSetting(
                     "alert_mega_amount",
                     megaAmount
                 ),
-
 
                 setSetting(
                     "alert_after_tts_delay",
@@ -6348,7 +4654,6 @@ app.post(
                     )
                 ),
 
-
                 setSetting(
                     "alert_no_tts_display_time",
                     Math.round(
@@ -6356,44 +4661,30 @@ app.post(
                     )
                 ),
 
-
-                /* ===============================
-                   VOLUME MIXER
-                =============================== */
-
                 setSetting(
                     "alert_sound_volume",
                     alertVolume
                 ),
-
 
                 setSetting(
                     "alert_custom_sound_volume",
                     customSoundVolume
                 ),
 
-
                 setSetting(
                     "alert_tts_volume",
                     ttsVolume
                 ),
-
 
                 setSetting(
                     "alert_video_volume",
                     videoVolume
                 ),
 
-
-                /* ===============================
-                   AUDIO CONTROL CENTER PRO MAX
-                =============================== */
-
                 setSetting(
                     "alert_master_volume",
                     masterVolume
                 ),
-
 
                 setSetting(
                     "alert_sound_muted",
@@ -6404,7 +4695,6 @@ app.post(
                         "0"
                 ),
 
-
                 setSetting(
                     "alert_custom_sound_muted",
                     customSoundMuted
@@ -6413,7 +4703,6 @@ app.post(
                         :
                         "0"
                 ),
-
 
                 setSetting(
                     "alert_tts_muted",
@@ -6424,7 +4713,6 @@ app.post(
                         "0"
                 ),
 
-
                 setSetting(
                     "alert_video_muted",
                     videoMuted
@@ -6434,24 +4722,20 @@ app.post(
                         "0"
                 ),
 
-
                 setSetting(
                     "alert_tts_pitch",
                     ttsPitch
                 ),
-
 
                 setSetting(
                     "alert_tts_voice_uri",
                     ttsVoiceURI
                 ),
 
-
                 setSetting(
                     "alert_tts_voice_name",
                     ttsVoiceName
                 ),
-
 
                 setSetting(
                     "alert_tts_lang",
@@ -6459,20 +4743,12 @@ app.post(
                 )
             ]);
 
-
             const settings =
                 await getAlertSettings();
 
-
-            /*
-            ส่งค่าใหม่ไป Overlay ทันที
-            */
-
             await emitAlertSettingsUpdate();
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -6482,43 +4758,38 @@ app.post(
                 settings
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Update Alert Settings Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "บันทึก Alert Settings ไม่สำเร็จ"
                 });
         }
     }
 );
 
-
 /* =========================================================
-   CREATE MOBILE SESSION
+   ROUTES: MOBILE UPLOAD
 ========================================================= */
 
 app.post(
     "/api/mobile-upload/create",
-
     async (
         req,
         res
@@ -6531,60 +4802,42 @@ app.post(
                     req.body
                 );
 
-
             const requestedToken =
                 normalizeCustomSoundToken(
-                    req.body
-                        .customSoundToken
+                    req.body.customSoundToken
                 );
-
 
             let customSoundToken =
                 null;
 
-
             if (
                 requestedToken
-
                 &&
-
                 input.amount >=
                 CUSTOM_SOUND_MIN_AMOUNT
             ) {
 
-                const usable =
+                if (
                     await customSoundIsUsable(
                         requestedToken,
                         input.amount
-                    );
-
-
-                if (
-                    usable
+                    )
                 ) {
-
                     customSoundToken =
                         requestedToken;
                 }
             }
 
-
             const sessionId =
                 generateMobileSessionId();
-
 
             const createdAt =
                 Date.now();
 
-
             const expiresAt =
-
                 createdAt
-
                 +
-
                 MOBILE_SESSION_TTL_MS;
-
 
             const session = {
 
@@ -6621,39 +4874,24 @@ app.post(
                     input.videoDuration
             };
 
-
             await createMobileSessionDB(
                 session
             );
 
-
-            const baseUrl =
-                getPublicBaseUrl(
-                    req
-                );
-
-
             const uploadUrl =
-
-                `${baseUrl}/mobile-upload.html?session=${encodeURIComponent(
-                    sessionId
-                )}`;
-
+                `${getPublicBaseUrl(req)}/mobile-upload.html?session=${encodeURIComponent(sessionId)}`;
 
             const qr =
-                await QRCode
-                    .toDataURL(
-                        uploadUrl
-                    );
-
+                await QRCode.toDataURL(
+                    uploadUrl
+                );
 
             console.log(
                 "📱 Mobile Session created:",
                 sessionId
             );
 
-
-            return res.json({
+            res.json({
 
                 success:
                     true,
@@ -6677,43 +4915,34 @@ app.post(
                     )
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Create Mobile Session:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "สร้าง Mobile Upload ไม่สำเร็จ"
                 });
         }
     }
 );
 
-
-/* =========================================================
-   GET MOBILE SESSION
-========================================================= */
-
 app.get(
     "/api/mobile-upload/session/:sessionId",
-
     async (
         req,
         res
@@ -6727,25 +4956,21 @@ app.get(
                     ||
                     ""
                 )
-                .trim();
-
+                    .trim();
 
             const session =
                 await getMobileSessionDB(
                     sessionId
                 );
 
-
             if (
                 !session
             ) {
-
                 return res
                     .status(
                         404
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6754,10 +4979,8 @@ app.get(
                     });
             }
 
-
             if (
-                Date.now()
-                >
+                Date.now() >
                 session.expiresAt
             ) {
 
@@ -6765,13 +4988,11 @@ app.get(
                     sessionId
                 );
 
-
                 return res
                     .status(
                         410
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6780,8 +5001,7 @@ app.get(
                     });
             }
 
-
-            return res.json({
+            res.json({
 
                 success:
                     true,
@@ -6830,20 +5050,20 @@ app.get(
                 }
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Get Mobile Session:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
@@ -6854,18 +5074,11 @@ app.get(
     }
 );
 
-
-/* =========================================================
-   MOBILE VERIFY
-========================================================= */
-
 app.post(
     "/api/mobile-upload/verify/:sessionId",
-
     upload.single(
         "slip"
     ),
-
     async (
         req,
         res
@@ -6874,10 +5087,8 @@ app.post(
         let sessionId =
             null;
 
-
         let locked =
             false;
-
 
         try {
 
@@ -6887,25 +5098,21 @@ app.post(
                     ||
                     ""
                 )
-                .trim();
-
+                    .trim();
 
             const session =
                 await getMobileSessionDB(
                     sessionId
                 );
 
-
             if (
                 !session
             ) {
-
                 return res
                     .status(
                         404
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6914,10 +5121,8 @@ app.post(
                     });
             }
 
-
             if (
-                Date.now()
-                >
+                Date.now() >
                 session.expiresAt
             ) {
 
@@ -6925,13 +5130,11 @@ app.post(
                     sessionId
                 );
 
-
                 return res
                     .status(
                         410
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6940,18 +5143,15 @@ app.post(
                     });
             }
 
-
             if (
                 session.status ===
                 "verified"
             ) {
-
                 return res
                     .status(
                         409
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6960,18 +5160,15 @@ app.post(
                     });
             }
 
-
             if (
                 session.status ===
                 "verifying"
             ) {
-
                 return res
                     .status(
                         409
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6980,17 +5177,14 @@ app.post(
                     });
             }
 
-
             if (
                 !req.file
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -6999,23 +5193,19 @@ app.post(
                     });
             }
 
-
             locked =
                 await lockMobileSession(
                     sessionId
                 );
 
-
             if (
                 !locked
             ) {
-
                 return res
                     .status(
                         409
                     )
                     .json({
-
                         success:
                             false,
 
@@ -7024,18 +5214,15 @@ app.post(
                     });
             }
 
-
             const data =
                 await verifySlipWithEasySlip(
                     req.file,
                     session.amount
                 );
 
-
             const donation =
                 normalizeDonationFromEasySlip(
                     {
-
                         name:
                             session.name,
 
@@ -7057,62 +5244,46 @@ app.post(
                     data
                 );
 
-
-            const sound =
+            Object.assign(
+                donation,
                 await resolveDonationSound(
                     donation.amount,
                     session.customSoundToken
-                );
-
-
-            Object.assign(
-                donation,
-                sound
+                )
             );
-
 
             await saveMobileDonationAndComplete(
                 sessionId,
                 donation
             );
 
-
             locked =
                 false;
 
-
             if (
                 donation.customSound
-
                 &&
-
                 donation.soundToken
             ) {
-
                 await markCustomSoundUsed(
                     donation.soundToken
                 )
-                .catch(
-                    error => {
-
-                        console.error(
-                            "Mark Mobile Custom Sound Used Error:",
-                            error
-                        );
-                    }
-                );
+                    .catch(
+                        error =>
+                            console.error(
+                                "Mark Mobile Custom Sound Used Error:",
+                                error
+                            )
+                    );
             }
-
 
             await broadcastDonation(
                 donation
             );
 
-
             io.emit(
                 "mobile-slip-success",
                 {
-
                     sessionId,
 
                     amount:
@@ -7123,15 +5294,12 @@ app.post(
                 }
             );
 
-
             console.log(
                 "✅ Mobile Session verified:",
                 sessionId
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -7141,68 +5309,56 @@ app.post(
                 donation
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Mobile Verify Error:",
                 error
             );
 
-
             if (
                 locked
-
                 &&
-
                 sessionId
             ) {
-
                 await resetMobileSession(
                     sessionId
                 )
-                .catch(
-                    resetError => {
-
-                        console.error(
-                            "Reset Mobile Session Error:",
-                            resetError
-                        );
-                    }
-                );
+                    .catch(
+                        resetError =>
+                            console.error(
+                                "Reset Mobile Session Error:",
+                                resetError
+                            )
+                    );
             }
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "ตรวจสอบสลิปไม่สำเร็จ"
                 });
         }
     }
 );
 
-
 /* =========================================================
-   TEST DONATION
+   TEST / REPLAY
 ========================================================= */
 
 app.post(
     "/test-donation",
-
     requireAdminKey,
-
     (
         req,
         res
@@ -7216,12 +5372,13 @@ app.post(
                     ||
                     "AMR29 Test"
                 )
-                .trim()
-                .slice(
-                    0,
-                    30
-                );
-
+                    .trim()
+                    .slice(
+                        0,
+                        30
+                    )
+                ||
+                "AMR29 Test";
 
             const message =
                 String(
@@ -7229,36 +5386,30 @@ app.post(
                     ||
                     ""
                 )
-                .trim()
-                .slice(
-                    0,
-                    200
-                );
-
+                    .trim()
+                    .slice(
+                        0,
+                        200
+                    );
 
             const amount =
                 Number(
                     req.body?.amount
                 );
 
-
             if (
                 !Number.isFinite(
                     amount
                 )
-
                 ||
-
                 amount <
                 10
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -7267,15 +5418,7 @@ app.post(
                     });
             }
 
-
-            const tier =
-                getDonationTierSound(
-                    amount
-                );
-
-
             let video = {
-
                 videoUrl:
                     null,
 
@@ -7289,16 +5432,14 @@ app.post(
                     null
             };
 
-
             if (
                 String(
                     req.body?.videoUrl
                     ||
                     ""
                 )
-                .trim()
+                    .trim()
             ) {
-
                 video =
                     normalizeVideoDonation(
                         req.body,
@@ -7306,19 +5447,17 @@ app.post(
                     );
             }
 
-
             const donation = {
 
-                name:
-                    name
-                    ||
-                    "AMR29 Test",
+                name,
 
                 message,
 
                 amount,
 
-                ...tier,
+                ...getDonationTierSound(
+                    amount
+                ),
 
                 customSound:
                     false,
@@ -7338,32 +5477,22 @@ app.post(
                     Date.now()
             };
 
-
             io.emit(
                 "donation",
                 donation
             );
-
 
             io.emit(
                 "test-donation-preview",
                 donation
             );
 
-
             console.log(
                 "🧪 Test Donation:",
-                `${donation.name} ${amount} บาท`,
-                donation.videoId
-                    ?
-                    `(video ${donation.videoId})`
-                    :
-                    ""
+                `${donation.name} ${amount} บาท`
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -7373,45 +5502,35 @@ app.post(
                 donation
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Test Donation Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "Test Donation ไม่สำเร็จ"
                 });
         }
     }
 );
 
-
-/* =========================================================
-   REPLAY DONATION
-========================================================= */
-
 app.post(
     "/api/admin/donation/:id/replay",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -7424,24 +5543,19 @@ app.post(
                     req.params.id
                 );
 
-
             if (
                 !Number.isInteger(
                     donationId
                 )
-
                 ||
-
                 donationId <=
                 0
             ) {
-
                 return res
                     .status(
                         400
                     )
                     .json({
-
                         success:
                             false,
 
@@ -7450,28 +5564,18 @@ app.post(
                     });
             }
 
-
             const donation =
                 await dbGet(
                     `
                     SELECT
-
                         id,
-
                         name,
-
                         message,
-
                         amount,
-
                         video_url,
-
                         video_id,
-
                         video_start,
-
                         video_duration,
-
                         created_at
 
                     FROM donations
@@ -7483,17 +5587,14 @@ app.post(
                     ]
                 );
 
-
             if (
                 !donation
             ) {
-
                 return res
                     .status(
                         404
                     )
                     .json({
-
                         success:
                             false,
 
@@ -7501,13 +5602,6 @@ app.post(
                             "ไม่พบ Donation นี้"
                     });
             }
-
-
-            const tier =
-                getDonationTierSound(
-                    donation.amount
-                );
-
 
             const replayDonation = {
 
@@ -7529,7 +5623,9 @@ app.post(
                         0
                     ),
 
-                ...tier,
+                ...getDonationTierSound(
+                    donation.amount
+                ),
 
                 customSound:
                     false,
@@ -7557,55 +5653,40 @@ app.post(
                     null,
 
                 videoStart:
-
                     donation.video_id
-
                         ?
-
                         Number(
                             donation.video_start
                             ||
                             0
                         )
-
                         :
-
                         null,
 
                 videoDuration:
-
                     donation.video_id
-
                         ?
-
                         Math.min(
-
                             Number(
                                 donation.video_duration
                                 ||
                                 VIDEO_DONATION_MAX_DURATION
                             ),
-
                             VIDEO_DONATION_MAX_DURATION
                         )
-
                         :
-
                         null,
 
                 createdAt:
                     Date.now()
             };
 
-
             io.emit(
                 "donation",
                 replayDonation
             );
 
-
-            return res.json({
-
+            res.json({
                 success:
                     true,
 
@@ -7616,35 +5697,31 @@ app.post(
                     replayDonation
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Replay Donation Error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "Replay Alert ไม่สำเร็จ"
                 });
         }
     }
 );
-
 
 /* =========================================================
    DASHBOARD
@@ -7652,9 +5729,7 @@ app.post(
 
 app.get(
     "/api/dashboard",
-
     requireAdminKey,
-
     async (
         req,
         res
@@ -7663,131 +5738,87 @@ app.get(
         try {
 
             const [
-
                 today,
-
                 month,
-
                 all,
-
                 recent,
-
                 topDonors,
-
                 goal,
-
                 alertSettings
-
             ] =
-
                 await Promise.all([
 
-
-                    /* TODAY */
-
                     dbGet(`
                         SELECT
-
-                            COUNT(*)
-                            AS count,
-
+                            COUNT(*) AS count,
                             COALESCE(
                                 SUM(amount),
                                 0
-                            )
-                            AS total
+                            ) AS total
 
                         FROM donations
 
                         WHERE
-
-                            date(
-                                created_at,
-                                'localtime'
-                            )
-
+                            (
+                                created_at
+                                AT TIME ZONE
+                                'Asia/Bangkok'
+                            )::date
                             =
-
-                            date(
-                                'now',
-                                'localtime'
-                            )
+                            (
+                                NOW()
+                                AT TIME ZONE
+                                'Asia/Bangkok'
+                            )::date
                     `),
-
-
-                    /* MONTH */
 
                     dbGet(`
                         SELECT
-
-                            COUNT(*)
-                            AS count,
-
+                            COUNT(*) AS count,
                             COALESCE(
                                 SUM(amount),
                                 0
-                            )
-                            AS total
+                            ) AS total
 
                         FROM donations
 
                         WHERE
-
-                            strftime(
-                                '%Y-%m',
-                                created_at,
-                                'localtime'
+                            TO_CHAR(
+                                created_at
+                                AT TIME ZONE
+                                'Asia/Bangkok',
+                                'YYYY-MM'
                             )
-
                             =
-
-                            strftime(
-                                '%Y-%m',
-                                'now',
-                                'localtime'
+                            TO_CHAR(
+                                NOW()
+                                AT TIME ZONE
+                                'Asia/Bangkok',
+                                'YYYY-MM'
                             )
                     `),
-
-
-                    /* ALL */
 
                     dbGet(`
                         SELECT
-
-                            COUNT(*)
-                            AS count,
-
+                            COUNT(*) AS count,
                             COALESCE(
                                 SUM(amount),
                                 0
-                            )
-                            AS total
+                            ) AS total
 
                         FROM donations
                     `),
-
-
-                    /* RECENT */
 
                     dbAll(`
                         SELECT
-
                             id,
-
                             name,
-
                             message,
-
                             amount,
-
                             video_url,
-
                             video_id,
-
                             video_start,
-
                             video_duration,
-
                             created_at
 
                         FROM donations
@@ -7797,7 +5828,6 @@ app.get(
                         LIMIT 12
                     `),
 
-
                     getTopDonorsFromDB(),
 
                     getDonationGoal(),
@@ -7805,12 +5835,17 @@ app.get(
                     getAlertSettings()
                 ]);
 
-
             const recentDonations =
                 recent.map(
                     row => ({
-
                         ...row,
+
+                        amount:
+                            Number(
+                                row.amount
+                                ||
+                                0
+                            ),
 
                         videoUrl:
                             row.video_url
@@ -7823,46 +5858,33 @@ app.get(
                             null,
 
                         videoStart:
-
                             row.video_id
-
                                 ?
-
                                 Number(
                                     row.video_start
                                     ||
                                     0
                                 )
-
                                 :
-
                                 null,
 
                         videoDuration:
-
                             row.video_id
-
                                 ?
-
                                 Math.min(
-
                                     Number(
                                         row.video_duration
                                         ||
                                         VIDEO_DONATION_MAX_DURATION
                                     ),
-
                                     VIDEO_DONATION_MAX_DURATION
                                 )
-
                                 :
-
                                 null
                     })
                 );
 
-
-            return res.json({
+            res.json({
 
                 success:
                     true,
@@ -7870,7 +5892,6 @@ app.get(
                 stats: {
 
                     today: {
-
                         count:
                             Number(
                                 today?.count
@@ -7886,9 +5907,7 @@ app.get(
                             )
                     },
 
-
                     month: {
-
                         count:
                             Number(
                                 month?.count
@@ -7904,9 +5923,7 @@ app.get(
                             )
                     },
 
-
                     all: {
-
                         count:
                             Number(
                                 all?.count
@@ -7930,42 +5947,35 @@ app.get(
 
                 goal,
 
-                /*
-                Dashboard จะได้ Volume
-                มาพร้อม Alert Settings เลย
-                */
-
                 alertSettings
             });
 
-        } catch (error) {
+        } catch (
+            error
+        ) {
 
             console.error(
                 "Dashboard error:",
                 error
             );
 
-
-            return res
+            res
                 .status(
                     500
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         `โหลด Dashboard ไม่สำเร็จ: ${error.message}`
                 });
         }
     }
 );
 
-
 /* =========================================================
-   MULTER ERROR
+   UPLOAD ERROR
 ========================================================= */
 
 app.use(
@@ -7979,43 +5989,32 @@ app.use(
         if (
             error instanceof
             multer.MulterError
+            &&
+            error.code ===
+            "LIMIT_FILE_SIZE"
         ) {
 
-            if (
-                error.code ===
-                "LIMIT_FILE_SIZE"
-            ) {
+            const customSound =
+                req.path.includes(
+                    "custom-sound"
+                );
 
-                const customSound =
-                    req.path.includes(
-                        "custom-sound"
-                    );
+            return res
+                .status(
+                    400
+                )
+                .json({
+                    success:
+                        false,
 
-
-                return res
-                    .status(
-                        400
-                    )
-                    .json({
-
-                        success:
-                            false,
-
-                        message:
-
-                            customSound
-
-                                ?
-
-                                "ไฟล์เสียงต้องไม่เกิน 3 MB"
-
-                                :
-
-                                "ไฟล์สลิปต้องไม่เกิน 4 MB"
-                    });
-            }
+                    message:
+                        customSound
+                            ?
+                            "ไฟล์เสียงต้องไม่เกิน 3 MB"
+                            :
+                            "ไฟล์สลิปต้องไม่เกิน 4 MB"
+                });
         }
-
 
         if (
             error
@@ -8026,31 +6025,24 @@ app.use(
                 error
             );
 
-
             return res
                 .status(
                     400
                 )
                 .json({
-
                     success:
                         false,
 
                     message:
-
                         error.message
-
                         ||
-
                         "อัปโหลดไฟล์ไม่สำเร็จ"
                 });
         }
 
-
         next();
     }
 );
-
 
 /* =========================================================
    START / SHUTDOWN
@@ -8059,45 +6051,25 @@ app.use(
 let cleanupInterval =
     null;
 
-
 let isShuttingDown =
     false;
 
-
-/* =========================================================
-   CLOSE DATABASE
-========================================================= */
-
 async function closeDatabase() {
 
-    return new Promise(
-        resolve => {
+    try {
 
-            db.close(
-                error => {
+        await pool.end();
 
-                    if (
-                        error
-                    ) {
+    } catch (
+        error
+    ) {
 
-                        console.error(
-                            "Database close error:",
-                            error
-                        );
-                    }
-
-
-                    resolve();
-                }
-            );
-        }
-    );
+        console.error(
+            "PostgreSQL close error:",
+            error
+        );
+    }
 }
-
-
-/* =========================================================
-   SHUTDOWN
-========================================================= */
 
 async function gracefulShutdown(
     signal
@@ -8106,29 +6078,23 @@ async function gracefulShutdown(
     if (
         isShuttingDown
     ) {
-
         return;
     }
 
-
     isShuttingDown =
         true;
-
 
     console.log(
         `\n${signal} received - shutting down...`
     );
 
-
     if (
         cleanupInterval
     ) {
-
         clearInterval(
             cleanupInterval
         );
     }
-
 
     const forceTimer =
         setTimeout(
@@ -8138,7 +6104,6 @@ async function gracefulShutdown(
                     "Forced shutdown after timeout"
                 );
 
-
                 process.exit(
                     1
                 );
@@ -8146,9 +6111,7 @@ async function gracefulShutdown(
             10000
         );
 
-
     forceTimer.unref();
-
 
     server.close(
         async error => {
@@ -8156,16 +6119,13 @@ async function gracefulShutdown(
             if (
                 error
             ) {
-
                 console.error(
                     "HTTP server close error:",
                     error
                 );
             }
 
-
             await closeDatabase();
-
 
             process.exit(
                 error
@@ -8178,7 +6138,6 @@ async function gracefulShutdown(
     );
 }
 
-
 process.on(
     "SIGTERM",
     () =>
@@ -8186,7 +6145,6 @@ process.on(
             "SIGTERM"
         )
 );
-
 
 process.on(
     "SIGINT",
@@ -8196,44 +6154,27 @@ process.on(
         )
 );
 
-
-/* =========================================================
-   START
-========================================================= */
-
 async function start() {
 
     try {
 
         validateRuntimeConfig();
 
-
         await initDatabase();
 
-
-        await dbRun(
-            "PRAGMA journal_mode = WAL"
+        await dbGet(
+            "SELECT 1 AS ok"
         );
 
-
-        await dbRun(
-            "PRAGMA synchronous = NORMAL"
+        console.log(
+            "PostgreSQL connected ✓"
         );
-
-
-        await dbRun(
-            "PRAGMA busy_timeout = 5000"
-        );
-
 
         await cleanupMobileSessions();
 
-
         await recoverMobileSessions();
 
-
         await cleanupCustomSounds();
-
 
         cleanupInterval =
             setInterval(
@@ -8241,239 +6182,107 @@ async function start() {
 
                     cleanupMobileSessions()
                         .catch(
-                            error => {
-
+                            error =>
                                 console.error(
                                     "Mobile cleanup interval:",
                                     error
-                                );
-                            }
+                                )
                         );
-
 
                     cleanupCustomSounds()
                         .catch(
-                            error => {
-
+                            error =>
                                 console.error(
                                     "Custom sound cleanup interval:",
                                     error
-                                );
-                            }
+                                )
                         );
                 },
-
                 60 *
                 1000
             );
-
 
         cleanupInterval
             .unref
             ?.();
 
-
         server.listen(
-
             PORT,
-
             "0.0.0.0",
-
             () => {
 
                 const baseUrl =
-
                     PUBLIC_BASE_URL
-
                     ||
-
                     `http://localhost:${PORT}`;
 
-
                 console.log(
-                    ""
+                    "\n======================================="
                 );
-
-
-                console.log(
-                    "======================================="
-                );
-
 
                 console.log(
                     "        AMR29 DONATE SERVER"
                 );
 
-
                 console.log(
                     "======================================="
                 );
-
 
                 console.log(
                     "Environment:",
                     APP_ENV
                 );
 
-
                 console.log(
                     "Version:",
                     APP_VERSION
                 );
-
 
                 console.log(
                     "Public Dir:",
                     PUBLIC_DIR
                 );
 
-
                 console.log(
                     "Data Dir:",
                     DATA_DIR
                 );
 
-
                 console.log(
-                    "Database:",
-                    DB_PATH
+                    "Database: Supabase PostgreSQL"
                 );
-
 
                 console.log(
                     ""
                 );
-
 
                 console.log(
                     `Donate:        ${baseUrl}`
                 );
 
-
                 console.log(
                     `Dashboard:     ${baseUrl}/dashboard.html`
                 );
-
 
                 console.log(
                     `OBS Overlay:   ${baseUrl}/overlay.html`
                 );
 
-
                 console.log(
                     `Goal Overlay:  ${baseUrl}/goal-overlay.html`
                 );
-
 
                 console.log(
                     `Health:        ${baseUrl}/health`
                 );
 
-
                 console.log(
                     `Version API:   ${baseUrl}/api/version`
                 );
 
-
                 console.log(
                     ""
                 );
-
-
-                console.log(
-                    "Sound Tiers:"
-                );
-
-
-                console.log(
-                    "  10-49      -> alert.mp3"
-                );
-
-
-                console.log(
-                    "  50-99      -> alert2.mp3"
-                );
-
-
-                console.log(
-                    "  100-299    -> alert3.mp3 + Custom Sound"
-                );
-
-
-                console.log(
-                    "  300-499    -> alert4.mp3 + Custom Sound"
-                );
-
-
-                console.log(
-                    "  500-999    -> alert5.mp3 + Custom Sound"
-                );
-
-
-                console.log(
-                    "  1000+      -> alert5.mp3 + Custom Sound"
-                );
-
-
-                console.log(
-                    ""
-                );
-
-
-                console.log(
-                    "Video Donation:"
-                );
-
-
-                console.log(
-                    `  Minimum     -> ${VIDEO_DONATION_MIN_AMOUNT} บาท`
-                );
-
-
-                console.log(
-                    `  Max length  -> ${VIDEO_DONATION_MAX_DURATION} seconds`
-                );
-
-
-                console.log(
-                    "  Provider    -> YouTube / youtu.be"
-                );
-
-
-                console.log(
-                    ""
-                );
-
-
-                console.log(
-                    "Default Volume:"
-                );
-
-
-                console.log(
-                    "  Alert       -> 70%"
-                );
-
-
-                console.log(
-                    "  Custom      -> 70%"
-                );
-
-
-                console.log(
-                    "  TTS         -> 100%"
-                );
-
-
-                console.log(
-                    "  Video       -> 80%"
-                );
-
-
-                console.log(
-                    ""
-                );
-
 
                 console.log(
                     "ADMIN_KEY:",
@@ -8484,7 +6293,6 @@ async function start() {
                         "NOT SET ✗"
                 );
 
-
                 console.log(
                     "PROMPTPAY_ID:",
                     process.env.PROMPTPAY_ID
@@ -8493,7 +6301,6 @@ async function start() {
                         :
                         "NOT SET ✗"
                 );
-
 
                 console.log(
                     "EASYSLIP:",
@@ -8504,7 +6311,6 @@ async function start() {
                         "NOT SET ✗"
                 );
 
-
                 console.log(
                     "PUBLIC_BASE_URL:",
                     PUBLIC_BASE_URL
@@ -8512,6 +6318,14 @@ async function start() {
                     "Not set"
                 );
 
+                console.log(
+                    "DATABASE_URL:",
+                    DATABASE_URL
+                        ?
+                        "Loaded ✓"
+                        :
+                        "NOT SET ✗"
+                );
 
                 console.log(
                     "======================================="
@@ -8519,19 +6333,19 @@ async function start() {
             }
         );
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Server startup failed:",
             error
         );
 
-
         process.exit(
             1
         );
     }
 }
-
 
 start();
