@@ -1176,7 +1176,39 @@ let alertSettings = {
         100,
 
     videoVolume:
-        80
+        80,
+
+
+    /* =====================================================
+       AUDIO CONTROL CENTER PRO MAX
+    ====================================================== */
+
+    masterVolume:
+        100,
+
+    alertMuted:
+        false,
+
+    customSoundMuted:
+        false,
+
+    ttsMuted:
+        false,
+
+    videoMuted:
+        false,
+
+    ttsPitch:
+        1,
+
+    ttsVoiceURI:
+        "auto",
+
+    ttsVoiceName:
+        "",
+
+    ttsLang:
+        "th-TH"
 };
 
 
@@ -1428,6 +1460,335 @@ function volumeToAudioLevel(
 
 
 /* =========================================================
+   AUDIO CONTROL CENTER PRO MAX
+========================================================= */
+
+function effectiveVolumePercent(
+    channelValue,
+    muted = false,
+    channelFallback = 100
+){
+
+    if(
+        Boolean(
+            muted
+        )
+    ){
+
+        return 0;
+    }
+
+
+    const master =
+
+        normalizeVolumePercent(
+
+            alertSettings
+                .masterVolume,
+
+            100
+        );
+
+
+    const channel =
+
+        normalizeVolumePercent(
+
+            channelValue,
+
+            channelFallback
+        );
+
+
+    return Math.round(
+
+        (
+            master
+            *
+            channel
+        )
+
+        /
+
+        100
+    );
+}
+
+
+function alertAudioVolumePercent(
+    useCustomSound = false
+){
+
+    return effectiveVolumePercent(
+
+        useCustomSound
+
+            ?
+
+            alertSettings
+                .customSoundVolume
+
+            :
+
+            alertSettings
+                .alertVolume,
+
+
+        useCustomSound
+
+            ?
+
+            alertSettings
+                .customSoundMuted
+
+            :
+
+            alertSettings
+                .alertMuted,
+
+
+        70
+    );
+}
+
+
+function videoAudioVolumePercent(){
+
+    return effectiveVolumePercent(
+
+        alertSettings
+            .videoVolume,
+
+        alertSettings
+            .videoMuted,
+
+        80
+    );
+}
+
+
+function ttsAudioVolumeLevel(){
+
+    return (
+
+        effectiveVolumePercent(
+
+            alertSettings
+                .ttsVolume,
+
+            alertSettings
+                .ttsMuted,
+
+            100
+        )
+
+        /
+
+        100
+    );
+}
+
+
+function findPreferredSpeechVoice(){
+
+    if(
+        !window.speechSynthesis
+    ){
+
+        return null;
+    }
+
+
+    const voices =
+
+        window
+            .speechSynthesis
+            .getVoices();
+
+
+    if(
+        !Array.isArray(
+            voices
+        )
+
+        ||
+
+        !voices.length
+    ){
+
+        return null;
+    }
+
+
+    const voiceURI =
+
+        String(
+            alertSettings
+                .ttsVoiceURI
+            ||
+            ""
+        )
+        .trim();
+
+
+    const voiceName =
+
+        String(
+            alertSettings
+                .ttsVoiceName
+            ||
+            ""
+        )
+        .trim();
+
+
+    const wantedLang =
+
+        String(
+            alertSettings
+                .ttsLang
+            ||
+            "th-TH"
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if(
+        voiceURI
+
+        &&
+
+        voiceURI !==
+        "auto"
+    ){
+
+        const exactURI =
+
+            voices.find(
+                voice =>
+                    String(
+                        voice.voiceURI
+                        ||
+                        ""
+                    )
+                    ===
+                    voiceURI
+            );
+
+
+        if(
+            exactURI
+        ){
+
+            return exactURI;
+        }
+    }
+
+
+    if(
+        voiceName
+    ){
+
+        const exactName =
+
+            voices.find(
+                voice =>
+                    String(
+                        voice.name
+                        ||
+                        ""
+                    )
+                    ===
+                    voiceName
+            );
+
+
+        if(
+            exactName
+        ){
+
+            return exactName;
+        }
+    }
+
+
+    const exactLang =
+
+        voices.find(
+            voice =>
+                String(
+                    voice.lang
+                    ||
+                    ""
+                )
+                .toLowerCase()
+                ===
+                wantedLang
+        );
+
+
+    if(
+        exactLang
+    ){
+
+        return exactLang;
+    }
+
+
+    const langPrefix =
+
+        wantedLang
+            .split(
+                "-"
+            )[0];
+
+
+    const sameLanguage =
+
+        voices.find(
+            voice =>
+                String(
+                    voice.lang
+                    ||
+                    ""
+                )
+                .toLowerCase()
+                .startsWith(
+                    langPrefix
+                )
+        );
+
+
+    if(
+        sameLanguage
+    ){
+
+        return sameLanguage;
+    }
+
+
+    return (
+
+        voices.find(
+            voice =>
+                Boolean(
+                    voice.default
+                )
+        )
+
+        ||
+
+        voices[0]
+
+        ||
+
+        null
+    );
+}
+
+
+/* =========================================================
    APPLY CURRENT VOLUME
 
    ใช้ตอน Dashboard เปลี่ยน Volume แบบ Realtime
@@ -1442,34 +1803,24 @@ function applyCurrentVolumes(){
 
     try{
 
-        if(
-            currentDonation
-            &&
-            currentDonation.customSound
-        ){
+        const useCustomSound =
 
-            alertSound.volume =
+            Boolean(
+                currentDonation
+                &&
+                currentDonation.customSound
+            );
 
-                volumeToAudioLevel(
 
-                    alertSettings
-                        .customSoundVolume,
+        alertSound.volume =
 
-                    70
-                );
+            alertAudioVolumePercent(
+                useCustomSound
+            )
 
-        }else{
+            /
 
-            alertSound.volume =
-
-                volumeToAudioLevel(
-
-                    alertSettings
-                        .alertVolume,
-
-                    70
-                );
-        }
+            100;
 
     }catch(error){
 
@@ -1496,14 +1847,40 @@ function applyCurrentVolumes(){
 
             youtubePlayer.setVolume(
 
-                normalizeVolumePercent(
-
-                    alertSettings
-                        .videoVolume,
-
-                    80
-                )
+                videoAudioVolumePercent()
             );
+
+
+            if(
+                Boolean(
+                    alertSettings
+                        .videoMuted
+                )
+
+                ||
+
+                videoAudioVolumePercent()
+                <=
+                0
+            ){
+
+                if(
+                    typeof youtubePlayer.mute
+                    ===
+                    "function"
+                ){
+
+                    youtubePlayer.mute();
+                }
+
+            }else if(
+                typeof youtubePlayer.unMute
+                ===
+                "function"
+            ){
+
+                youtubePlayer.unMute();
+            }
         }
 
     }catch(error){
@@ -1512,6 +1889,45 @@ function applyCurrentVolumes(){
             "Apply Video Volume:",
             error
         );
+    }
+
+
+    /*
+    SpeechSynthesisUtterance ไม่รองรับปรับ volume/rate/pitch
+    ระหว่างกำลังอ่านแบบ reliable
+
+    ถ้า Mute TTS หรือ Master = 0 ระหว่างอ่าน
+    ให้หยุดเสียงทันที
+    */
+
+    if(
+        Boolean(
+            alertSettings
+                .ttsMuted
+        )
+
+        ||
+
+        normalizeVolumePercent(
+            alertSettings
+                .masterVolume,
+            100
+        )
+        <=
+        0
+
+        ||
+
+        normalizeVolumePercent(
+            alertSettings
+                .ttsVolume,
+            100
+        )
+        <=
+        0
+    ){
+
+        cancelTTS();
     }
 }
 
@@ -2745,13 +3161,7 @@ async function playYouTubeClip(
 
                                             event.target.setVolume(
 
-                                                normalizeVolumePercent(
-
-                                                    alertSettings
-                                                        .videoVolume,
-
-                                                    80
-                                                )
+                                                videoAudioVolumePercent()
                                             );
 
 
@@ -2794,13 +3204,7 @@ async function playYouTubeClip(
                                                 event.target
                                                     .setVolume(
 
-                                                        normalizeVolumePercent(
-
-                                                            alertSettings
-                                                                .videoVolume,
-
-                                                            80
-                                                        )
+                                                        videoAudioVolumePercent()
                                                     );
 
                                             }catch{}
@@ -3394,39 +3798,27 @@ async function playAlertSound(
 
         const selectedVolume =
 
-            donation.customSound
+            alertAudioVolumePercent(
 
-                ?
-
-                alertSettings
-                    .customSoundVolume
-
-                :
-
-                alertSettings
-                    .alertVolume;
+                Boolean(
+                    donation.customSound
+                )
+            );
 
 
         const fallbackVolume =
-
-            donation.customSound
-
-                ?
-
-                70
-
-                :
-
-                70;
+            selectedVolume;
 
 
         alertSound.volume =
 
-            volumeToAudioLevel(
-
-                selectedVolume,
-
-                fallbackVolume
+            (
+                normalizeVolumePercent(
+                    selectedVolume,
+                    fallbackVolume
+                )
+                /
+                100
             );
 
 
@@ -3455,12 +3847,24 @@ async function playAlertSound(
 
         alertSound.volume =
 
-            volumeToAudioLevel(
-
-                selectedVolume,
-
-                fallbackVolume
+            (
+                normalizeVolumePercent(
+                    selectedVolume,
+                    fallbackVolume
+                )
+                /
+                100
             );
+
+
+        if(
+            selectedVolume
+            <=
+            0
+        ){
+
+            return;
+        }
 
 
         const playPromise =
@@ -3769,8 +4173,32 @@ function speak(
                 );
 
 
+            const preferredVoice =
+                findPreferredSpeechVoice();
+
+
+            if(
+                preferredVoice
+            ){
+
+                utterance.voice =
+                    preferredVoice;
+            }
+
+
             utterance.lang =
-                "th-TH";
+
+                preferredVoice
+                    ?.lang
+
+                ||
+
+                String(
+                    alertSettings
+                        .ttsLang
+                    ||
+                    "th-TH"
+                );
 
 
             utterance.rate =
@@ -3792,7 +4220,22 @@ function speak(
 
 
             utterance.pitch =
-                1;
+
+                clamp(
+
+                    Number(
+                        alertSettings
+                            .ttsPitch
+                    )
+
+                    ||
+
+                    1,
+
+                    .5,
+
+                    2
+                );
 
 
             /*
@@ -3803,14 +4246,26 @@ function speak(
             */
 
             utterance.volume =
+                ttsAudioVolumeLevel();
 
-                volumeToAudioLevel(
 
+            if(
+                utterance.volume
+                <=
+                0
+
+                ||
+
+                Boolean(
                     alertSettings
-                        .ttsVolume,
+                        .ttsMuted
+                )
+            ){
 
-                    100
-                );
+                resolve();
+
+                return;
+            }
 
 
             let finished =

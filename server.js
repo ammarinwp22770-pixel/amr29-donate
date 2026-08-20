@@ -958,7 +958,37 @@ const defaultSettings = {
         "100",
 
     alert_video_volume:
-        "80"
+        "80",
+
+
+    /* AUDIO CONTROL CENTER PRO MAX */
+
+    alert_master_volume:
+        "100",
+
+    alert_sound_muted:
+        "0",
+
+    alert_custom_sound_muted:
+        "0",
+
+    alert_tts_muted:
+        "0",
+
+    alert_video_muted:
+        "0",
+
+    alert_tts_pitch:
+        "1",
+
+    alert_tts_voice_uri:
+        "auto",
+
+    alert_tts_voice_name:
+        "",
+
+    alert_tts_lang:
+        "th-TH"
 };
 
 
@@ -1748,6 +1778,106 @@ async function getAlertSettings() {
                 ),
                 0,
                 100
+            ),
+
+
+        /* ===============================
+           AUDIO CONTROL CENTER PRO MAX
+        =============================== */
+
+        masterVolume:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_master_volume,
+                    100
+                ),
+                0,
+                100
+            ),
+
+
+        alertMuted:
+
+            settings
+                .alert_sound_muted
+
+            ===
+
+            "1",
+
+
+        customSoundMuted:
+
+            settings
+                .alert_custom_sound_muted
+
+            ===
+
+            "1",
+
+
+        ttsMuted:
+
+            settings
+                .alert_tts_muted
+
+            ===
+
+            "1",
+
+
+        videoMuted:
+
+            settings
+                .alert_video_muted
+
+            ===
+
+            "1",
+
+
+        ttsPitch:
+
+            clamp(
+                numberOr(
+                    settings
+                        .alert_tts_pitch,
+                    1
+                ),
+                .5,
+                2
+            ),
+
+
+        ttsVoiceURI:
+
+            String(
+                settings
+                    .alert_tts_voice_uri
+                ||
+                "auto"
+            ),
+
+
+        ttsVoiceName:
+
+            String(
+                settings
+                    .alert_tts_voice_name
+                ||
+                ""
+            ),
+
+
+        ttsLang:
+
+            String(
+                settings
+                    .alert_tts_lang
+                ||
+                "th-TH"
             )
     };
 }
@@ -5794,6 +5924,200 @@ app.post(
 
 
             /* =================================================
+               AUDIO CONTROL CENTER PRO MAX
+            ================================================= */
+
+            const masterVolume =
+                normalizeVolumeValue(
+
+                    req.body.masterVolume,
+
+                    current.masterVolume
+                );
+
+
+            const alertMuted =
+
+                req.body.alertMuted
+                ===
+                undefined
+
+                    ?
+
+                    current.alertMuted
+
+                    :
+
+                    toBoolean(
+                        req.body.alertMuted
+                    );
+
+
+            const customSoundMuted =
+
+                req.body.customSoundMuted
+                ===
+                undefined
+
+                    ?
+
+                    current.customSoundMuted
+
+                    :
+
+                    toBoolean(
+                        req.body.customSoundMuted
+                    );
+
+
+            const ttsMuted =
+
+                req.body.ttsMuted
+                ===
+                undefined
+
+                    ?
+
+                    current.ttsMuted
+
+                    :
+
+                    toBoolean(
+                        req.body.ttsMuted
+                    );
+
+
+            const videoMuted =
+
+                req.body.videoMuted
+                ===
+                undefined
+
+                    ?
+
+                    current.videoMuted
+
+                    :
+
+                    toBoolean(
+                        req.body.videoMuted
+                    );
+
+
+            const ttsPitch =
+
+                req.body.ttsPitch
+                ===
+                undefined
+
+                    ?
+
+                    current.ttsPitch
+
+                    :
+
+                    Number(
+                        req.body.ttsPitch
+                    );
+
+
+            const ttsVoiceURI =
+
+                req.body.ttsVoiceURI
+                ===
+                undefined
+
+                    ?
+
+                    String(
+                        current.ttsVoiceURI
+                        ||
+                        "auto"
+                    )
+
+                    :
+
+                    (
+                        String(
+                            req.body.ttsVoiceURI
+                            ||
+                            "auto"
+                        )
+                        .trim()
+                        .slice(
+                            0,
+                            255
+                        )
+
+                        ||
+
+                        "auto"
+                    );
+
+
+            const ttsVoiceName =
+
+                req.body.ttsVoiceName
+                ===
+                undefined
+
+                    ?
+
+                    String(
+                        current.ttsVoiceName
+                        ||
+                        ""
+                    )
+
+                    :
+
+                    String(
+                        req.body.ttsVoiceName
+                        ||
+                        ""
+                    )
+                    .trim()
+                    .slice(
+                        0,
+                        255
+                    );
+
+
+            const ttsLang =
+
+                req.body.ttsLang
+                ===
+                undefined
+
+                    ?
+
+                    String(
+                        current.ttsLang
+                        ||
+                        "th-TH"
+                    )
+
+                    :
+
+                    (
+                        String(
+                            req.body.ttsLang
+                            ||
+                            "th-TH"
+                        )
+                        .trim()
+                        .slice(
+                            0,
+                            40
+                        )
+
+                        ||
+
+                        "th-TH"
+                    );
+
+
+            /* =================================================
                VALIDATION
             ================================================= */
 
@@ -5824,6 +6148,37 @@ app.post(
 
                         message:
                             "ความเร็ว TTS ต้องอยู่ระหว่าง 0.5 - 2.0"
+                    });
+            }
+
+
+            if (
+                !Number.isFinite(
+                    ttsPitch
+                )
+
+                ||
+
+                ttsPitch <
+                .5
+
+                ||
+
+                ttsPitch >
+                2
+            ) {
+
+                return res
+                    .status(
+                        400
+                    )
+                    .json({
+
+                        success:
+                            false,
+
+                        message:
+                            "Pitch TTS ต้องอยู่ระหว่าง 0.5 - 2.0"
                     });
             }
 
@@ -6027,6 +6382,80 @@ app.post(
                 setSetting(
                     "alert_video_volume",
                     videoVolume
+                ),
+
+
+                /* ===============================
+                   AUDIO CONTROL CENTER PRO MAX
+                =============================== */
+
+                setSetting(
+                    "alert_master_volume",
+                    masterVolume
+                ),
+
+
+                setSetting(
+                    "alert_sound_muted",
+                    alertMuted
+                        ?
+                        "1"
+                        :
+                        "0"
+                ),
+
+
+                setSetting(
+                    "alert_custom_sound_muted",
+                    customSoundMuted
+                        ?
+                        "1"
+                        :
+                        "0"
+                ),
+
+
+                setSetting(
+                    "alert_tts_muted",
+                    ttsMuted
+                        ?
+                        "1"
+                        :
+                        "0"
+                ),
+
+
+                setSetting(
+                    "alert_video_muted",
+                    videoMuted
+                        ?
+                        "1"
+                        :
+                        "0"
+                ),
+
+
+                setSetting(
+                    "alert_tts_pitch",
+                    ttsPitch
+                ),
+
+
+                setSetting(
+                    "alert_tts_voice_uri",
+                    ttsVoiceURI
+                ),
+
+
+                setSetting(
+                    "alert_tts_voice_name",
+                    ttsVoiceName
+                ),
+
+
+                setSetting(
+                    "alert_tts_lang",
+                    ttsLang
                 )
             ]);
 
