@@ -1060,8 +1060,8 @@ body{
     top:10px;
     bottom:auto;
 
-    width:240px;
-    height:205px;
+    width:160px;
+    height:135px;
 
     transform:
         translateX(-50%)
@@ -1180,8 +1180,8 @@ body{
     left:50%;
     bottom:8px;
 
-    width:190px;
-    height:170px;
+    width:150px;
+    height:125px;
 
     object-fit:contain;
 
@@ -3061,8 +3061,15 @@ function positionNormalDonationGif(){
             ".alert-card"
         );
 
+    const content =
+        alertWrap.querySelector(
+            ".content"
+        );
+
     if(
         !card
+        ||
+        !content
     ){
         return;
     }
@@ -3070,47 +3077,52 @@ function positionNormalDonationGif(){
     const cardRect =
         card.getBoundingClientRect();
 
+    const contentRect =
+        content.getBoundingClientRect();
+
     const stageHeight =
-        Math.max(
-            120,
-            normalGifStage.offsetHeight
-            ||
-            205
-        );
+        135;
 
     /*
-       วาง GIF เหนือกล่อง Donation
-       แต่ถ้า Browser Source / Preview เตี้ย
-       จะบังคับให้อยู่ใน viewport ไม่หลุดจอ
+       ตำแหน่งใหม่:
+       - จัดกึ่งกลางตามคอลัมน์ข้อความ ไม่ใช่กึ่งกลางทั้งการ์ด
+       - วางชิดเหนือชื่อ/ข้อความ และให้ล้ำขอบการ์ดเล็กน้อย
     */
+    const centerX =
+        contentRect.left
+        +
+        (contentRect.width / 2);
+
     const wantedTop =
         cardRect.top
         -
         stageHeight
         +
-        20;
+        42;
 
     const safeTop =
         Math.max(
-            8,
-            Math.min(
-                wantedTop,
-                Math.max(
-                    8,
-                    window.innerHeight
-                    -
-                    stageHeight
-                    -
-                    8
-                )
-            )
+            4,
+            wantedTop
         );
 
-    normalGifStage.style.top =
-        `${safeTop}px`;
+    normalGifStage.style.setProperty(
+        "left",
+        `${centerX}px`,
+        "important"
+    );
 
-    normalGifStage.style.bottom =
-        "auto";
+    normalGifStage.style.setProperty(
+        "top",
+        `${safeTop}px`,
+        "important"
+    );
+
+    normalGifStage.style.setProperty(
+        "bottom",
+        "auto",
+        "important"
+    );
 }
 
 function showNormalDonationGif(){
@@ -3129,40 +3141,134 @@ function showNormalDonationGif(){
     const nextSource =
         `/anya-wow.gif?play=${Date.now()}`;
 
+    /*
+       FORCE MODE
+       ไม่พึ่ง transition / parent / viewport calculation
+       เหมาะกับ OBS Chromium และ Browser ทั่วไป
+    */
     normalGifStage.classList.remove(
-        "active",
         "hide"
     );
+    normalGifStage.classList.add(
+        "active"
+    );
 
-    normalGifStage.style.display =
-        "block";
+    normalGifStage.style.setProperty(
+        "display",
+        "block",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "visibility",
+        "visible",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "opacity",
+        "1",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "position",
+        "fixed",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "z-index",
+        "2147483647",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "width",
+        "160px",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "height",
+        "135px",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "transform",
+        "translateX(-50%)",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "pointer-events",
+        "none",
+        "important"
+    );
 
-    normalGifStage.style.visibility =
-        "visible";
-
+    /* จัด GIF ให้อยู่กึ่งกลางเหนือคอลัมน์ชื่อ/ข้อความ */
     positionNormalDonationGif();
+
+    normalGifImage.style.setProperty(
+        "display",
+        "block",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "visibility",
+        "visible",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "opacity",
+        "1",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "position",
+        "absolute",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "z-index",
+        "2147483647",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "left",
+        "50%",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "bottom",
+        "-4px",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "width",
+        "150px",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "height",
+        "125px",
+        "important"
+    );
+    normalGifImage.style.setProperty(
+        "object-fit",
+        "contain",
+        "important"
+    );
+
+    /* ล้างก่อน เพื่อบังคับเริ่ม GIF ใหม่ */
+    normalGifImage.removeAttribute(
+        "src"
+    );
+
+    void normalGifImage.offsetWidth;
 
     normalGifImage.src =
         nextSource;
 
-    void normalGifStage.offsetWidth;
-
-    requestAnimationFrame(
-        () => {
-            positionNormalDonationGif();
-
-            normalGifStage.classList.add(
-                "active"
-            );
-        }
-    );
-
     console.log(
-        "🎀 Normal Donation GIF SHOW",
+        "🎀 FORCE ANYA GIF SHOW",
         {
             src: nextSource,
-            viewport: `${window.innerWidth}x${window.innerHeight}`,
-            top: normalGifStage.style.top
+            stage: normalGifStage.getBoundingClientRect(),
+            image: normalGifImage.getBoundingClientRect()
         }
     );
 }
@@ -3181,6 +3287,17 @@ function hideNormalDonationGif(){
 
     normalGifStage.classList.add(
         "hide"
+    );
+
+    normalGifStage.style.setProperty(
+        "opacity",
+        "0",
+        "important"
+    );
+    normalGifStage.style.setProperty(
+        "visibility",
+        "hidden",
+        "important"
     );
 }
 
