@@ -906,41 +906,9 @@ body{
     pointer-events:none;
 }
 
-.video-gif-wrap{
-    position:absolute;
-    left:18px;
-    bottom:22px;
-    width:140px;
-    height:140px;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    filter:drop-shadow(0 14px 28px rgba(0,0,0,.45));
-}
-
-.video-gif{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    animation:gifFloat 2.2s ease-in-out infinite;
-    transform-origin:center bottom;
-}
-
-@keyframes gifFloat{
-    0%{
-        transform:translateY(0) rotate(-1.5deg) scale(1);
-    }
-    50%{
-        transform:translateY(-8px) rotate(1.5deg) scale(1.03);
-    }
-    100%{
-        transform:translateY(0) rotate(-1.5deg) scale(1);
-    }
-}
-
 .video-donation-card{
     position:absolute;
-    left:145px;
+    left:20px;
     right:20px;
     bottom:18px;
     min-height:112px;
@@ -1046,15 +1014,8 @@ body{
 
 @media(max-width:750px){
 
-    .video-gif-wrap{
-        left:10px;
-        bottom:10px;
-        width:88px;
-        height:88px;
-    }
-
     .video-donation-card{
-        left:88px;
+        left:10px;
         right:10px;
         bottom:10px;
         min-height:86px;
@@ -1083,6 +1044,370 @@ body{
         line-clamp:2;
     }
 }
+
+
+/* =========================================================
+   NORMAL DONATION GIF — ANYA WOW PRO MAX
+   แสดงเฉพาะ Donation ที่ "ไม่มีวิดีโอ"
+========================================================= */
+
+.normal-gif-stage{
+    position:absolute;
+    z-index:12;
+
+    left:50%;
+    top:-168px;
+
+    width:220px;
+    height:185px;
+
+    transform:
+        translateX(-50%)
+        translateY(34px)
+        scale(.64)
+        rotate(-5deg);
+
+    transform-origin:
+        center bottom;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .28s ease,
+        transform .58s cubic-bezier(.16,1,.3,1),
+        visibility .28s ease;
+
+    pointer-events:none;
+}
+
+.alert-wrap.show
+.normal-gif-stage{
+    opacity:1;
+    visibility:visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1)
+        rotate(0deg);
+}
+
+.alert-wrap.hiding
+.normal-gif-stage{
+    opacity:0;
+
+    transform:
+        translateX(-50%)
+        translateY(20px)
+        scale(.82)
+        rotate(3deg);
+}
+
+.normal-gif-glow{
+    position:absolute;
+
+    left:50%;
+    bottom:18px;
+
+    width:170px;
+    height:85px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(255,91,127,.34) 0%,
+            rgba(255,125,165,.18) 38%,
+            rgba(255,91,127,0) 72%
+        );
+
+    filter:
+        blur(14px);
+
+    animation:
+        normalGifGlow
+        1.35s
+        ease-in-out
+        infinite
+        alternate;
+}
+
+.normal-gif-ring{
+    position:absolute;
+
+    left:50%;
+    bottom:24px;
+
+    width:145px;
+    height:55px;
+
+    transform:
+        translateX(-50%)
+        scale(.6);
+
+    border:
+        2px solid
+        rgba(255,155,185,.46);
+
+    border-radius:50%;
+
+    opacity:0;
+
+    animation:
+        normalGifRing
+        1.7s
+        ease-out
+        infinite;
+}
+
+.normal-gif-ring.r2{
+    animation-delay:
+        .58s;
+}
+
+.normal-gif-image{
+    position:absolute;
+
+    z-index:3;
+
+    left:50%;
+    bottom:8px;
+
+    width:190px;
+    height:170px;
+
+    object-fit:contain;
+
+    transform:
+        translateX(-50%);
+
+    transform-origin:
+        center bottom;
+
+    filter:
+        drop-shadow(
+            0 15px 18px
+            rgba(0,0,0,.48)
+        )
+        drop-shadow(
+            0 0 14px
+            rgba(255,100,145,.18)
+        );
+
+    animation:
+        normalGifBob
+        1.45s
+        cubic-bezier(.45,.05,.55,.95)
+        infinite
+        alternate;
+}
+
+.normal-gif-spark{
+    position:absolute;
+    z-index:4;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#fff1b7;
+
+    box-shadow:
+        0 0 9px rgba(255,239,171,.95),
+        0 0 18px rgba(255,127,163,.60);
+
+    opacity:0;
+
+    animation:
+        normalGifSpark
+        1.5s
+        ease-in-out
+        infinite;
+}
+
+.normal-gif-spark.s1{
+    left:22px;
+    top:63px;
+    animation-delay:.08s;
+}
+
+.normal-gif-spark.s2{
+    right:27px;
+    top:36px;
+    animation-delay:.42s;
+}
+
+.normal-gif-spark.s3{
+    right:17px;
+    top:102px;
+    width:6px;
+    height:6px;
+    animation-delay:.78s;
+}
+
+.normal-gif-spark.s4{
+    left:38px;
+    top:25px;
+    width:5px;
+    height:5px;
+    animation-delay:1.05s;
+}
+
+.alert-wrap.big
+.normal-gif-stage{
+    width:235px;
+    height:195px;
+    top:-178px;
+}
+
+.alert-wrap.big
+.normal-gif-image{
+    width:205px;
+    height:180px;
+
+    filter:
+        drop-shadow(
+            0 16px 20px
+            rgba(0,0,0,.50)
+        )
+        drop-shadow(
+            0 0 20px
+            rgba(255,208,100,.28)
+        );
+}
+
+.alert-wrap.big
+.normal-gif-glow{
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(255,205,85,.40) 0%,
+            rgba(255,160,70,.20) 42%,
+            rgba(255,190,70,0) 74%
+        );
+}
+
+.alert-wrap.big
+.normal-gif-ring{
+    border-color:
+        rgba(255,215,115,.62);
+}
+
+.alert-wrap.mega
+.normal-gif-stage{
+    width:255px;
+    height:215px;
+    top:-195px;
+
+    animation:
+        megaGifStage
+        1.25s
+        ease-in-out
+        infinite
+        alternate;
+}
+
+.alert-wrap.mega
+.normal-gif-image{
+    width:225px;
+    height:200px;
+}
+
+@keyframes normalGifBob{
+    from{
+        transform:
+            translateX(-50%)
+            translateY(1px)
+            rotate(-1.4deg)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translateX(-50%)
+            translateY(-9px)
+            rotate(1.4deg)
+            scale(1.025);
+    }
+}
+
+@keyframes normalGifGlow{
+    from{
+        opacity:.58;
+        transform:
+            translateX(-50%)
+            scale(.88);
+    }
+
+    to{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1.08);
+    }
+}
+
+@keyframes normalGifRing{
+    0%{
+        opacity:.72;
+        transform:
+            translateX(-50%)
+            scale(.48);
+    }
+
+    75%{
+        opacity:.14;
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translateX(-50%)
+            scale(1.34);
+    }
+}
+
+@keyframes normalGifSpark{
+    0%,
+    100%{
+        opacity:0;
+        transform:
+            translateY(6px)
+            scale(.45);
+    }
+
+    45%{
+        opacity:1;
+        transform:
+            translateY(-4px)
+            scale(1.15);
+    }
+}
+
+@keyframes megaGifStage{
+    from{
+        filter:
+            drop-shadow(
+                0 0 0
+                rgba(255,210,100,0)
+            );
+    }
+
+    to{
+        filter:
+            drop-shadow(
+                0 0 18px
+                rgba(255,210,100,.38)
+            );
+    }
+}
+
 
 /* =========================================================
    RESPONSIVE
@@ -1168,6 +1493,61 @@ body{
     }
 }
 
+
+@media(max-width:750px){
+
+    .normal-gif-stage{
+        top:-118px;
+        width:150px;
+        height:130px;
+    }
+
+    .normal-gif-image{
+        width:132px;
+        height:120px;
+        bottom:4px;
+    }
+
+    .normal-gif-glow{
+        width:118px;
+        height:58px;
+        bottom:9px;
+    }
+
+    .normal-gif-ring{
+        width:105px;
+        height:40px;
+        bottom:14px;
+    }
+
+    .alert-wrap.big
+    .normal-gif-stage{
+        width:162px;
+        height:138px;
+        top:-126px;
+    }
+
+    .alert-wrap.big
+    .normal-gif-image{
+        width:145px;
+        height:128px;
+    }
+
+    .alert-wrap.mega
+    .normal-gif-stage{
+        width:175px;
+        height:150px;
+        top:-138px;
+    }
+
+    .alert-wrap.mega
+    .normal-gif-image{
+        width:157px;
+        height:140px;
+    }
+}
+
+
 </style>
 </head>
 
@@ -1210,15 +1590,6 @@ body{
         >
 
             <div class="video-donation-backdrop"></div>
-
-            <div class="video-gif-wrap">
-                <img
-                    src="/anya-wow.gif"
-                    alt="Anya Wow"
-                    class="video-gif"
-                    id="video-gif"
-                />
-            </div>
 
             <div class="video-donation-card">
 
@@ -1272,6 +1643,32 @@ body{
         class="alert-wrap"
         id="alert-wrap"
     >
+
+        <!-- =================================================
+             NORMAL DONATION GIF
+             แสดงเฉพาะตอน Alert ปกติ (ไม่มี Video)
+        ================================================== -->
+        <div
+            class="normal-gif-stage"
+            id="normal-gif-stage"
+            aria-hidden="true"
+        >
+            <div class="normal-gif-glow"></div>
+            <div class="normal-gif-ring"></div>
+            <div class="normal-gif-ring r2"></div>
+
+            <span class="normal-gif-spark s1"></span>
+            <span class="normal-gif-spark s2"></span>
+            <span class="normal-gif-spark s3"></span>
+            <span class="normal-gif-spark s4"></span>
+
+            <img
+                src="/anya-wow.gif"
+                alt=""
+                class="normal-gif-image"
+                id="normal-gif-image"
+            />
+        </div>
 
 
         <div
@@ -1600,6 +1997,12 @@ const videoDonationName =
 const videoDonationMessage =
     document.getElementById(
         "video-donation-message"
+    );
+
+
+const normalGifImage =
+    document.getElementById(
+        "normal-gif-image"
     );
 
 
@@ -2666,6 +3069,33 @@ async function playNextDonation(){
 
 
 /* =========================================================
+   NORMAL DONATION GIF
+========================================================= */
+
+function restartNormalDonationGif(){
+
+    if(
+        !normalGifImage
+    ){
+        return;
+    }
+
+
+    /*
+    ให้ GIF เริ่มใหม่ทุกครั้งที่ Donation ใหม่ขึ้น
+    ใช้ query timestamp เพื่อบังคับ OBS/Chromium reload frame แรก
+    */
+
+    const nextSource =
+        `/anya-wow.gif?play=${Date.now()}`;
+
+
+    normalGifImage.src =
+        nextSource;
+}
+
+
+/* =========================================================
    NORMAL DONATION
 ========================================================= */
 
@@ -2678,6 +3108,9 @@ async function showNormalDonation(
 
 
     resetAlertClasses();
+
+
+    restartNormalDonationGif();
 
 
     const amount =
