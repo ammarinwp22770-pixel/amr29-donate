@@ -41,3 +41,12 @@ Thumbs.db
 # =========================
 .vscode/
 .idea/
+# Google OAuth
+tokens.json
+
+# Local / backup
+package-backup.json
+server-sqlite-backup.js
+
+# Private
+.amr29-private/

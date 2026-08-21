@@ -1,24 +1,35 @@
 {
-  "name": "donateamr29",
+  "name": "amr29-control-center",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "AMR29 Donate + YouTube BOT Control Center",
+  "main": "server.js",
   "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js"
+  },
+  "keywords": [
+    "amr29",
+    "youtube",
+    "bot",
+    "donation",
+    "streaming"
+  ],
+  "author": "AMR29",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "form-data": "^4.0.6",
+    "express-session": "^1.19.0",
+    "googleapis": "^176.0.0",
     "multer": "^2.2.0",
     "pg": "^8.23.0",
     "promptpay-qr": "^0.5.0",
     "qrcode": "^1.5.4",
-    "socket.io": "^4.8.3",
-    "sqlite3": "^6.0.1"
+    "socket.io": "^4.8.3"
   }
 }
