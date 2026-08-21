@@ -1051,27 +1051,29 @@ body{
    แสดงเฉพาะ Donation ที่ "ไม่มีวิดีโอ"
 ========================================================= */
 
+/* Normal GIF is a standalone viewport layer, not a child-dependent animation. */
 .normal-gif-stage{
-    position:absolute;
-    z-index:12;
+    position:fixed;
+    z-index:9999;
 
     left:50%;
-    top:-168px;
+    top:10px;
+    bottom:auto;
 
-    width:220px;
-    height:185px;
+    width:240px;
+    height:205px;
 
     transform:
         translateX(-50%)
-        translateY(34px)
-        scale(.64)
+        translateY(36px)
+        scale(.62)
         rotate(-5deg);
 
-    transform-origin:
-        center bottom;
+    transform-origin:center bottom;
 
     opacity:0;
     visibility:hidden;
+    display:block;
 
     transition:
         opacity .28s ease,
@@ -1082,8 +1084,9 @@ body{
 }
 
 .normal-gif-stage.active{
-    opacity:1;
-    visibility:visible;
+    opacity:1 !important;
+    visibility:visible !important;
+    display:block !important;
 
     transform:
         translateX(-50%)
@@ -1093,12 +1096,12 @@ body{
 }
 
 .normal-gif-stage.hide{
-    opacity:0;
-    visibility:hidden;
+    opacity:0 !important;
+    visibility:hidden !important;
 
     transform:
         translateX(-50%)
-        translateY(20px)
+        translateY(24px)
         scale(.82)
         rotate(3deg);
 }
@@ -1259,13 +1262,6 @@ body{
 }
 
 .alert-wrap.big
-.normal-gif-stage{
-    width:235px;
-    height:195px;
-    top:-178px;
-}
-
-.alert-wrap.big
 .normal-gif-image{
     width:205px;
     height:180px;
@@ -1296,20 +1292,6 @@ body{
 .normal-gif-ring{
     border-color:
         rgba(255,215,115,.62);
-}
-
-.alert-wrap.mega
-.normal-gif-stage{
-    width:255px;
-    height:215px;
-    top:-195px;
-
-    animation:
-        megaGifStage
-        1.25s
-        ease-in-out
-        infinite
-        alternate;
 }
 
 .alert-wrap.mega
@@ -1496,9 +1478,9 @@ body{
 @media(max-width:750px){
 
     .normal-gif-stage{
-        top:-118px;
-        width:150px;
-        height:130px;
+        bottom:185px;
+        width:165px;
+        height:145px;
     }
 
     .normal-gif-image{
@@ -1520,23 +1502,9 @@ body{
     }
 
     .alert-wrap.big
-    .normal-gif-stage{
-        width:162px;
-        height:138px;
-        top:-126px;
-    }
-
-    .alert-wrap.big
     .normal-gif-image{
         width:145px;
         height:128px;
-    }
-
-    .alert-wrap.mega
-    .normal-gif-stage{
-        width:175px;
-        height:150px;
-        top:-138px;
     }
 
     .alert-wrap.mega
@@ -1635,18 +1603,9 @@ body{
 
 
     <!-- =====================================================
-         NORMAL DONATION
+         NORMAL DONATION GIF — STANDALONE LAYER
+         โชว์เฉพาะ Donation ที่ไม่มี Video
     ====================================================== -->
-
-    <div
-        class="alert-wrap"
-        id="alert-wrap"
-    >
-
-        <!-- =================================================
-             NORMAL DONATION GIF
-             แสดงเฉพาะตอน Alert ปกติ (ไม่มี Video)
-        ================================================== -->
         <div
             class="normal-gif-stage"
             id="normal-gif-stage"
@@ -1668,6 +1627,17 @@ body{
                 id="normal-gif-image"
             />
         </div>
+
+    <!-- =====================================================
+         NORMAL DONATION
+    ====================================================== -->
+
+    <div
+        class="alert-wrap"
+        id="alert-wrap"
+    >
+
+
 
 
         <div
@@ -3076,6 +3046,73 @@ async function playNextDonation(){
    NORMAL DONATION GIF
 ========================================================= */
 
+function positionNormalDonationGif(){
+
+    if(
+        !normalGifStage
+        ||
+        !alertWrap
+    ){
+        return;
+    }
+
+    const card =
+        alertWrap.querySelector(
+            ".alert-card"
+        );
+
+    if(
+        !card
+    ){
+        return;
+    }
+
+    const cardRect =
+        card.getBoundingClientRect();
+
+    const stageHeight =
+        Math.max(
+            120,
+            normalGifStage.offsetHeight
+            ||
+            205
+        );
+
+    /*
+       วาง GIF เหนือกล่อง Donation
+       แต่ถ้า Browser Source / Preview เตี้ย
+       จะบังคับให้อยู่ใน viewport ไม่หลุดจอ
+    */
+    const wantedTop =
+        cardRect.top
+        -
+        stageHeight
+        +
+        20;
+
+    const safeTop =
+        Math.max(
+            8,
+            Math.min(
+                wantedTop,
+                Math.max(
+                    8,
+                    window.innerHeight
+                    -
+                    stageHeight
+                    -
+                    8
+                )
+            )
+        );
+
+    normalGifStage.style.top =
+        `${safeTop}px`;
+
+    normalGifStage.style.bottom =
+        "auto";
+}
+
 function showNormalDonationGif(){
 
     if(
@@ -3083,29 +3120,50 @@ function showNormalDonationGif(){
         ||
         !normalGifImage
     ){
-        console.warn(
-            "Normal Donation GIF elements not found"
+        console.error(
+            "❌ Normal Donation GIF elements not found"
         );
         return;
     }
+
+    const nextSource =
+        `/anya-wow.gif?play=${Date.now()}`;
 
     normalGifStage.classList.remove(
         "active",
         "hide"
     );
 
+    normalGifStage.style.display =
+        "block";
+
+    normalGifStage.style.visibility =
+        "visible";
+
+    positionNormalDonationGif();
+
     normalGifImage.src =
-        `/anya-wow.gif?play=${Date.now()}`;
+        nextSource;
 
     void normalGifStage.offsetWidth;
 
-    normalGifStage.classList.add(
-        "active"
+    requestAnimationFrame(
+        () => {
+            positionNormalDonationGif();
+
+            normalGifStage.classList.add(
+                "active"
+            );
+        }
     );
 
     console.log(
         "🎀 Normal Donation GIF SHOW",
-        normalGifImage.src
+        {
+            src: nextSource,
+            viewport: `${window.innerWidth}x${window.innerHeight}`,
+            top: normalGifStage.style.top
+        }
     );
 }
 
@@ -3130,11 +3188,21 @@ if(
     normalGifImage
 ){
     normalGifImage.addEventListener(
+        "load",
+        () => {
+            console.log(
+                "✅ anya-wow.gif loaded",
+                normalGifImage.currentSrc
+            );
+        }
+    );
+
+    normalGifImage.addEventListener(
         "error",
         () => {
             console.error(
-                "❌ โหลด anya-wow.gif ไม่สำเร็จ:",
-                normalGifImage.src
+                "❌ anya-wow.gif 404 / โหลดไม่ได้:",
+                normalGifImage.currentSrc || normalGifImage.src
             );
         }
     );
@@ -5696,6 +5764,57 @@ function delay(
                 resolve,
                 milliseconds
             )
+    );
+}
+
+
+/* =========================================================
+   GIF VIEWPORT / DEBUG
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    () => {
+        if(
+            normalGifStage
+            &&
+            normalGifStage.classList.contains(
+                "active"
+            )
+        ){
+            positionNormalDonationGif();
+        }
+    }
+);
+
+/*
+   เปิด URL แบบ ?debugGif=1
+   เพื่อทดสอบ GIF โดยไม่ต้องยิง Donation
+*/
+try{
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    if(
+        params.get(
+            "debugGif"
+        )
+        ===
+        "1"
+    ){
+        setTimeout(
+            () => {
+                showNormalDonationGif();
+            },
+            350
+        );
+    }
+}catch(error){
+    console.warn(
+        "GIF debug query error:",
+        error
     );
 }
 
