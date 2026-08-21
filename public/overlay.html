@@ -1081,8 +1081,7 @@ body{
     pointer-events:none;
 }
 
-.alert-wrap.show
-.normal-gif-stage{
+.normal-gif-stage.active{
     opacity:1;
     visibility:visible;
 
@@ -1093,9 +1092,9 @@ body{
         rotate(0deg);
 }
 
-.alert-wrap.hiding
-.normal-gif-stage{
+.normal-gif-stage.hide{
     opacity:0;
+    visibility:hidden;
 
     transform:
         translateX(-50%)
@@ -1999,6 +1998,11 @@ const videoDonationMessage =
         "video-donation-message"
     );
 
+
+const normalGifStage =
+    document.getElementById(
+        "normal-gif-stage"
+    );
 
 const normalGifImage =
     document.getElementById(
@@ -3072,26 +3076,68 @@ async function playNextDonation(){
    NORMAL DONATION GIF
 ========================================================= */
 
-function restartNormalDonationGif(){
+function showNormalDonationGif(){
 
     if(
+        !normalGifStage
+        ||
         !normalGifImage
+    ){
+        console.warn(
+            "Normal Donation GIF elements not found"
+        );
+        return;
+    }
+
+    normalGifStage.classList.remove(
+        "active",
+        "hide"
+    );
+
+    normalGifImage.src =
+        `/anya-wow.gif?play=${Date.now()}`;
+
+    void normalGifStage.offsetWidth;
+
+    normalGifStage.classList.add(
+        "active"
+    );
+
+    console.log(
+        "🎀 Normal Donation GIF SHOW",
+        normalGifImage.src
+    );
+}
+
+function hideNormalDonationGif(){
+
+    if(
+        !normalGifStage
     ){
         return;
     }
 
+    normalGifStage.classList.remove(
+        "active"
+    );
 
-    /*
-    ให้ GIF เริ่มใหม่ทุกครั้งที่ Donation ใหม่ขึ้น
-    ใช้ query timestamp เพื่อบังคับ OBS/Chromium reload frame แรก
-    */
+    normalGifStage.classList.add(
+        "hide"
+    );
+}
 
-    const nextSource =
-        `/anya-wow.gif?play=${Date.now()}`;
-
-
-    normalGifImage.src =
-        nextSource;
+if(
+    normalGifImage
+){
+    normalGifImage.addEventListener(
+        "error",
+        () => {
+            console.error(
+                "❌ โหลด anya-wow.gif ไม่สำเร็จ:",
+                normalGifImage.src
+            );
+        }
+    );
 }
 
 
@@ -3110,7 +3156,7 @@ async function showNormalDonation(
     resetAlertClasses();
 
 
-    restartNormalDonationGif();
+    showNormalDonationGif();
 
 
     const amount =
@@ -5337,6 +5383,9 @@ function hideAlert(){
         .remove(
             "show"
         );
+
+
+    hideNormalDonationGif();
 
 
     stopAlertAudio();
