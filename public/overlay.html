@@ -851,6 +851,238 @@ body{
     }
 }
 
+/* =========================================================
+   VIDEO DONATION UI PRO MAX
+========================================================= */
+
+.video-top-shine{
+    content:"";
+    position:absolute;
+    z-index:7;
+    left:18px;
+    right:18px;
+    top:0;
+    height:3px;
+    border-radius:0 0 999px 999px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #ff7ea1,
+        #8cdcff,
+        transparent
+    );
+    box-shadow:
+        0 0 18px rgba(255,126,161,.35),
+        0 0 24px rgba(140,220,255,.25);
+}
+
+.video-donation-ui{
+    position:absolute;
+    inset:0;
+    z-index:9;
+    pointer-events:none;
+    opacity:0;
+    transform:translateY(16px) scale(.98);
+    transition:
+        opacity .35s ease,
+        transform .45s cubic-bezier(.16,1,.3,1);
+}
+
+.video-donation-ui.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.video-donation-backdrop{
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.06) 0%,
+            rgba(0,0,0,.00) 25%,
+            rgba(0,0,0,.18) 100%
+        );
+    pointer-events:none;
+}
+
+.video-gif-wrap{
+    position:absolute;
+    left:18px;
+    bottom:22px;
+    width:140px;
+    height:140px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    filter:drop-shadow(0 14px 28px rgba(0,0,0,.45));
+}
+
+.video-gif{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    animation:gifFloat 2.2s ease-in-out infinite;
+    transform-origin:center bottom;
+}
+
+@keyframes gifFloat{
+    0%{
+        transform:translateY(0) rotate(-1.5deg) scale(1);
+    }
+    50%{
+        transform:translateY(-8px) rotate(1.5deg) scale(1.03);
+    }
+    100%{
+        transform:translateY(0) rotate(-1.5deg) scale(1);
+    }
+}
+
+.video-donation-card{
+    position:absolute;
+    left:145px;
+    right:20px;
+    bottom:18px;
+    min-height:112px;
+    padding:16px 18px 16px 18px;
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.16);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,91,127,.16),
+            rgba(112,203,255,.10)
+        ),
+        rgba(8,8,14,.78);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:
+        0 16px 50px rgba(0,0,0,.38),
+        0 0 0 1px rgba(255,255,255,.03) inset;
+}
+
+.video-donation-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:8px;
+}
+
+.video-donation-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px;
+    border-radius:999px;
+    color:#ffd8e3;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.2px;
+    background:rgba(255,91,127,.14);
+    border:1px solid rgba(255,91,127,.22);
+    text-shadow:0 2px 6px rgba(0,0,0,.6);
+}
+
+.video-donation-amount{
+    color:#ffe18f;
+    font-size:30px;
+    font-weight:900;
+    line-height:1;
+    white-space:nowrap;
+    letter-spacing:-.8px;
+    text-shadow:
+        0 3px 8px rgba(0,0,0,.85),
+        0 0 18px rgba(255,210,100,.26);
+}
+
+.video-donation-name{
+    color:#ffffff;
+    font-size:28px;
+    font-weight:900;
+    line-height:1.15;
+    letter-spacing:-.4px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    text-shadow:
+        0 3px 8px rgba(0,0,0,.9),
+        0 1px 2px rgba(0,0,0,.9);
+}
+
+.video-donation-message{
+    margin-top:8px;
+    color:#f5f7ff;
+    font-size:17px;
+    font-weight:700;
+    line-height:1.4;
+    text-shadow:
+        0 3px 7px rgba(0,0,0,.9),
+        0 1px 2px rgba(0,0,0,.9);
+
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    line-clamp:2;
+    overflow:hidden;
+    word-break:break-word;
+}
+
+.video-donation-message.hide{
+    display:none;
+}
+
+/* เพิ่ม glow เวลาวิดีโอโชว์ */
+.video-wrap.show .video-shell{
+    box-shadow:
+        0 28px 90px rgba(0,0,0,.78),
+        0 0 50px rgba(255,91,127,.10),
+        0 0 50px rgba(120,202,255,.10);
+}
+
+/* =========================================================
+   RESPONSIVE - VIDEO DONATION UI
+========================================================= */
+
+@media(max-width:750px){
+
+    .video-gif-wrap{
+        left:10px;
+        bottom:10px;
+        width:88px;
+        height:88px;
+    }
+
+    .video-donation-card{
+        left:88px;
+        right:10px;
+        bottom:10px;
+        min-height:86px;
+        padding:12px 12px 12px 12px;
+        border-radius:16px;
+    }
+
+    .video-donation-pill{
+        font-size:9px;
+        padding:6px 9px;
+    }
+
+    .video-donation-amount{
+        font-size:20px;
+    }
+
+    .video-donation-name{
+        font-size:19px;
+    }
+
+    .video-donation-message{
+        margin-top:6px;
+        font-size:12px;
+        line-height:1.35;
+        -webkit-line-clamp:2;
+        line-clamp:2;
+    }
+}
 
 /* =========================================================
    RESPONSIVE
@@ -957,30 +1189,79 @@ body{
     ====================================================== -->
 
     <div
-        class="video-wrap"
-        id="video-wrap"
-    >
+    class="video-wrap"
+    id="video-wrap"
+>
 
-        <div class="video-shell">
+    <div class="video-shell">
 
+        <div class="video-top-shine"></div>
 
-            <div
-                id="video-player"
-            ></div>
+        <div
+            id="video-player"
+        ></div>
 
+        <!-- =================================================
+             VIDEO DONATION OVERLAY CARD
+        ================================================== -->
+        <div
+            class="video-donation-ui"
+            id="video-donation-ui"
+        >
 
-            <div class="video-progress">
+            <div class="video-donation-backdrop"></div>
 
-                <div
-                    class="video-progress-fill"
-                    id="video-progress-fill"
-                ></div>
-
+            <div class="video-gif-wrap">
+                <img
+                    src="/anya-wow.gif"
+                    alt="Anya Wow"
+                    class="video-gif"
+                    id="video-gif"
+                />
             </div>
 
+            <div class="video-donation-card">
+
+                <div class="video-donation-head">
+                    <div class="video-donation-pill">
+                        🎬 VIDEO DONATION
+                    </div>
+
+                    <div
+                        class="video-donation-amount"
+                        id="video-donation-amount"
+                    >
+                        ฿0
+                    </div>
+                </div>
+
+                <div
+                    class="video-donation-name"
+                    id="video-donation-name"
+                >
+                    Anonymous
+                </div>
+
+                <div
+                    class="video-donation-message"
+                    id="video-donation-message"
+                >
+                    ข้อความผู้โดเนท
+                </div>
+
+            </div>
+        </div>
+
+        <div class="video-progress">
+            <div
+                class="video-progress-fill"
+                id="video-progress-fill"
+            ></div>
         </div>
 
     </div>
+
+</div>
 
 
     <!-- =====================================================
@@ -1299,6 +1580,26 @@ const videoWrap =
 const videoProgressFill =
     document.getElementById(
         "video-progress-fill"
+    );
+
+    const videoDonationUI =
+    document.getElementById(
+        "video-donation-ui"
+    );
+
+const videoDonationAmount =
+    document.getElementById(
+        "video-donation-amount"
+    );
+
+const videoDonationName =
+    document.getElementById(
+        "video-donation-name"
+    );
+
+const videoDonationMessage =
+    document.getElementById(
+        "video-donation-message"
     );
 
 
@@ -2166,6 +2467,83 @@ socket.on(
 
 
 /* =========================================================
+   VIDEO DONATION INFO UI
+========================================================= */
+
+function showVideoDonationInfo(
+    donation
+){
+
+
+    const amount =
+        Number(
+            donation.amount
+        ) || 0;
+
+    const name =
+        String(
+            donation.name ||
+            "Anonymous"
+        ).trim() || "Anonymous";
+
+    const message =
+        String(
+            donation.message ||
+            ""
+        ).trim();
+
+    videoDonationName.innerText =
+        name;
+
+    videoDonationAmount.innerText =
+        "฿" +
+        amount.toLocaleString(
+            "th-TH"
+        );
+
+    if(
+        message
+    ){
+        videoDonationMessage.classList.remove(
+            "hide"
+        );
+        videoDonationMessage.innerText =
+            message;
+    }else{
+        videoDonationMessage.classList.add(
+            "hide"
+        );
+        videoDonationMessage.innerText =
+            "";
+    }
+
+    videoDonationUI.classList.add(
+        "show"
+    );
+}
+
+function hideVideoDonationInfo(){
+
+    videoDonationUI.classList.remove(
+        "show"
+    );
+
+    videoDonationName.innerText =
+        "Anonymous";
+
+    videoDonationAmount.innerText =
+        "฿0";
+
+    videoDonationMessage.classList.remove(
+        "hide"
+    );
+
+    videoDonationMessage.innerText =
+        "";
+}
+
+
+/* =========================================================
    QUEUE
 ========================================================= */
 
@@ -2677,25 +3055,28 @@ async function playVideoDonation(
 
 
     videoWrap
-        .classList
-        .remove(
-            "hiding"
-        );
-
-
-    void videoWrap.offsetWidth;
-
-
-    videoWrap
-        .classList
-        .add(
-            "show"
-        );
-
-
-    await delay(
-        VIDEO_SHOW_DELAY
+    .classList
+    .remove(
+        "hiding"
     );
+
+void videoWrap.offsetWidth;
+
+showVideoDonationInfo(
+    donation
+);
+
+createParticles(20);
+
+videoWrap
+    .classList
+    .add(
+        "show"
+    );
+
+await delay(
+    VIDEO_SHOW_DELAY
+);
 
 
     const result =
@@ -3384,6 +3765,7 @@ async function destroyYouTubePlayer(){
 
 function hideVideo(){
 
+    hideVideoDonationInfo();
 
     if(
         videoProgressAnimation
@@ -3392,17 +3774,14 @@ function hideVideo(){
         videoProgressAnimation
             .cancel();
 
-
         videoProgressAnimation =
             null;
     }
-
 
     videoProgressFill
         .style
         .transform =
         "scaleX(1)";
-
 
     videoWrap
         .classList
@@ -3410,13 +3789,11 @@ function hideVideo(){
             "hiding"
         );
 
-
     videoWrap
         .classList
         .remove(
             "show"
         );
-
 
     destroyYouTubePlayer()
         .catch(
